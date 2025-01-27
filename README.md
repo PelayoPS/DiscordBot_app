@@ -49,13 +49,38 @@ discord-bot
    gradle build
    ```
 
+## Configuración
+
+Antes de ejecutar el bot, asegúrate de configurar las credenciales y parámetros necesarios en el archivo `src/main/resources/config.properties`. Aquí hay un ejemplo de cómo debería verse el archivo:
+
+```properties
+# Configuración del bot de Discord
+token=TU_TOKEN_DE_DISCORD
+prefix=!
+
+# Configuración de la base de datos
+db.url=jdbc:mysql://localhost:3306/discordbot
+db.username=root
+db.password=contraseña
+```
+
 ## Uso
 
-Para ejecutar el bot, asegúrate de tener configuradas las credenciales de la base de datos y otros parámetros necesarios en el archivo `src/main/resources/config.properties`. Luego, ejecuta la clase `Main.java`:
+Para ejecutar el bot, utiliza el siguiente comando:
 
 ```sh
 gradle run
 ```
+
+## Comandos Disponibles
+
+El bot incluye los siguientes comandos por defecto:
+
+- `/ban` - Banear a un usuario
+- `/kick` - Expulsar a un usuario
+- `/mute` - Silenciar a un usuario
+
+Puedes agregar más comandos según sea necesario en los módulos correspondientes.
 
 ## Contribuciones
 
@@ -64,3 +89,7 @@ Las contribuciones son bienvenidas. Si deseas agregar nuevas funcionalidades o m
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENSE) para más detalles.
+
+## Contacto
+
+Para cualquier consulta o soporte, puedes contactarnos a través de [correo electrónico](mailto:soporte@discordbot.com).
