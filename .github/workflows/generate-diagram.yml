@@ -30,10 +30,23 @@ jobs:
         cd git2plantuml
         ./gradlew build
 
+    - name: Update config.yaml
+      run: |
+        echo "repo-path: 'https://github.com/PelayoPS/DiscordBot_app'" >> git2plantuml/config.yaml
+        echo "result-file: 'class-diagram.puml'" >> git2plantuml/config.yaml
+        echo "show-branches: true" >> git2plantuml/config.yaml
+        echo "console-debug: false" >> git2plantuml/config.yaml
+        echo "plantuml-jekyll: false" >> git2plantuml/config.yaml
+        echo "show-tree-blob: true" >> git2plantuml/config.yaml
+        echo "single-arrow-tree: false" >> git2plantuml/config.yaml
+        echo "hash-limit: 8" >> git2plantuml/config.yaml
+        echo "resolve:" >> git2plantuml/config.yaml
+        echo "  - 'main'" >> git2plantuml/config.yaml
+
     - name: Generate UML diagram
       run: |
         cd git2plantuml
-        ./gradlew run --args="../.."
+        ./gradlew run --args="../.. --config ../config.yaml"
 
     - name: Move UML diagram to root
       run: mv git2plantuml/build/plantuml/class-diagram.puml class-diagram.puml
