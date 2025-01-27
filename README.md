@@ -92,4 +92,4 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENS
 
 ## Contacto
 
-Para cualquier consulta o soporte, puedes contactarnos a través de [correo electrónico](mailto:soporte@discordbot.com).
+Para cualquier consulta o soporte, puedes contactarnos a través de [correo electrónico](mailto:pelayops1041@gmail.com).
