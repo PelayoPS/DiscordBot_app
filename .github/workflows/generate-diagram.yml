@@ -44,4 +44,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: class-diagram
-        path: class-diagram.png
+        path: ./class-diagram.png
