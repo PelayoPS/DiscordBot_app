@@ -39,9 +39,3 @@ jobs:
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload UML diagram
-      uses: actions/upload-artifact@v3
-      with:
-        name: class-diagram
-        path: ./
