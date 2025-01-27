@@ -25,14 +25,12 @@ jobs:
         sudo apt-get install -y plantuml graphviz
 
     - name: Generate Javadoc
-      run: |
-        mkdir -p build/docs
-        javadoc -d build/docs -sourcepath src/main/java -subpackages bot
+      run: ./gradlew javadoc
 
     - name: Generate UML diagram
       run: |
         mkdir -p build/plantuml
-        plantuml -tpng -o build/plantuml build/docs
+        plantuml -tpng -o build/plantuml build/docs/javadoc
 
     - name: Upload UML diagram
       uses: actions/upload-artifact@v3
