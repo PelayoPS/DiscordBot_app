@@ -14,11 +14,11 @@ discord-bot
 │   │   │   ├── bot
 │   │   │   │   ├── Main.java               # Punto de entrada de la aplicación
 │   │   │   │   ├── commands
-│   │   │   │   │   └── CommandHandler.java  # Gestión de comandos
-│   │   │   │   ├── database
-│   │   │   │   │   └── DatabaseManager.java # Manejo de la base de datos SQL
-│   │   │   │   ├── events
-│   │   │   │   │   └── EventListener.java   # Manejo de eventos de Discord
+│   │   │   │   │   ├── ModuleManager.java  # Gestión de módulos de comandos
+│   │   │   │   │   ├── modules
+│   │   │   │   │   │   ├── ManageCommands.java # Comandos de gestión
+│   │   │   │   │   │   ├── ModCommands.java    # Comandos de moderación
+│   │   │   │   │   │   └── UserCommands.java   # Comandos de usuario
 │   │   │   │   ├── gui
 │   │   │   │   │   └── GuiManager.java      # Gestión de la interfaz gráfica
 │   │   │   │   └── utils
@@ -63,4 +63,4 @@ Las contribuciones son bienvenidas. Si deseas agregar nuevas funcionalidades o m
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.# DiscordBot_app
+Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
