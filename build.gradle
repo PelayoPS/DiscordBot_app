@@ -19,15 +19,8 @@ dependencies {
         // exclude(module="opus-java")
     }
     implementation 'org.xerial:sqlite-jdbc:3.48.0.0'
-    implementation 'net.sourceforge.plantuml:plantuml:1.2023.9'
 }
 
 application {
     mainClassName = 'bot.Main'
-}
-
-task generateUML(type: JavaExec) {
-    main = 'net.sourceforge.plantuml.Run'
-    classpath = sourceSets.main.runtimeClasspath
-    args = ['-tpng', '-o', '.', 'src/main/java/**/*.java'] // Guarda la imagen en la raíz del repositorio
 }
