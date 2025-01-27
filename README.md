@@ -33,19 +33,19 @@ discord-bot
 ## Instalación
 
 1. Clona el repositorio en tu máquina local:
-   ```
+   ```sh
    git clone <URL_DEL_REPOSITORIO>
    ```
 
 2. Navega al directorio del proyecto:
-   ```
+   ```sh
    cd discord-bot
    ```
 
 3. Asegúrate de tener [Gradle](https://gradle.org/install/) instalado en tu sistema.
 
 4. Ejecuta el siguiente comando para construir el proyecto:
-   ```
+   ```sh
    gradle build
    ```
 
@@ -53,7 +53,7 @@ discord-bot
 
 Para ejecutar el bot, asegúrate de tener configuradas las credenciales de la base de datos y otros parámetros necesarios en el archivo `src/main/resources/config.properties`. Luego, ejecuta la clase `Main.java`:
 
-```
+```sh
 gradle run
 ```
 
@@ -63,4 +63,4 @@ Las contribuciones son bienvenidas. Si deseas agregar nuevas funcionalidades o m
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENSE) para más detalles.
