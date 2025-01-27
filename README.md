@@ -93,3 +93,54 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENS
 ## Contacto
 
 Para cualquier consulta o soporte, puedes contactarnos a través de [correo electrónico](mailto:pelayops1041@gmail.com).
+
+## Diagrama UML
+
+A continuación se muestra un diagrama UML del proyecto:
+
+```mermaid
+classDiagram
+    class Main {
+        +main(String[] args)
+    }
+
+    class ModuleManager {
+        +registerModule(String name, ListenerAdapter module)
+    }
+
+    class ManageCommands {
+        +onSlashCommandInteraction(SlashCommandInteractionEvent event)
+    }
+
+    class ModCommands {
+        +onSlashCommandInteraction(SlashCommandInteractionEvent event)
+        -banUser(SlashCommandInteractionEvent event)
+        -kickUser(SlashCommandInteractionEvent event)
+        -muteUser(SlashCommandInteractionEvent event)
+    }
+
+    class UserCommands {
+        +onSlashCommandInteraction(SlashCommandInteractionEvent event)
+    }
+
+    class EventListener {
+        +onMessageReceived(MessageReceivedEvent event)
+        +onMessageReactionAdd(MessageReactionAddEvent event)
+    }
+
+    class GuiManager {
+        // Métodos de gestión de la interfaz gráfica
+    }
+
+    class Utils {
+        // Métodos de utilidad
+    }
+
+    Main --> ModuleManager
+    ModuleManager --> ManageCommands
+    ModuleManager --> ModCommands
+    ModuleManager --> UserCommands
+    Main --> EventListener
+    Main --> GuiManager
+    Main --> Utils
+```
