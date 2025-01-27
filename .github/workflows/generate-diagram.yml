@@ -30,6 +30,16 @@ jobs:
     - name: Generate UML diagram
       run: ./gradlew generateUML
 
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add class-diagram.png
+        git commit -m 'Add generated UML diagram'
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Upload UML diagram
       uses: actions/upload-artifact@v3
       with:
