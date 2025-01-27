@@ -26,7 +26,7 @@ jobs:
       run: ./gradlew plantuml
 
     - name: Upload UML diagram
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: class-diagram
         path: build/plantuml
