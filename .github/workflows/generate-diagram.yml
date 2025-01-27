@@ -33,7 +33,7 @@ jobs:
     - name: Generate UML diagram
       run: |
         mkdir -p build/plantuml
-        plantuml -tpng -o build/plantuml src/main/java/**/*.java
+        plantuml -tpng -o build/plantuml build/docs/javadoc
 
     - name: Upload UML diagram
       uses: actions/upload-artifact@v3
