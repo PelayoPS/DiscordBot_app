@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("net.dv8tion:JDA:5.2.3") {
+        // Optionally disable audio natives to reduce jar size by excluding `opus-java`
+        // Gradle DSL:
+        // exclude module: 'opus-java'
+        // Kotlin DSL:
+        // exclude(module="opus-java")
+    }
+    implementation 'org.xerial:sqlite-jdbc:3.48.0.0'
+}
+
+application {
+    mainClassName = 'bot.Main'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
