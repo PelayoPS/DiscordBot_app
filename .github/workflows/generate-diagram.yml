@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
+
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
@@ -22,20 +22,34 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y plantuml graphviz
+        sudo apt-get install -y graphviz
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
+    - name: Clone git2plantuml
+      run: |
+        git clone https://github.com/tsypuk/git2plantuml.git
+        cd git2plantuml
+        ./gradlew build
 
     - name: Generate UML diagram
-      run: ./gradlew generateUML
+      run: |
+        cd git2plantuml
+        ./gradlew run --args="../.."
+
+    - name: Move UML diagram to root
+      run: mv git2plantuml/build/plantuml/class-diagram.puml class-diagram.puml
 
     - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add class-diagram.png
+        git add class-diagram.puml
         git commit -m 'Add generated UML diagram'
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload UML diagram
+      uses: actions/upload-artifact@v3
+      with:
+        name: class-diagram
+        path: class-diagram.puml
