@@ -25,6 +25,8 @@ application {
     mainClassName = 'bot.Main'
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+task generateUML(type: JavaExec) {
+    main = 'net.sourceforge.plantuml.Run'
+    classpath = configurations.compileClasspath
+    args = ['-tpng', '-o', 'build/plantuml', 'src/main/java/**/*.java']
 }
