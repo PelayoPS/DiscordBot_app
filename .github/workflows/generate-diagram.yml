@@ -37,7 +37,7 @@ jobs:
     - name: Update config.yaml
       run: |
         echo "repo-path: 'repo-path'" > git2plantuml/config.yaml
-        echo "result-file: 'class-diagram.puml'" >> git2plantuml/config.yaml
+        echo "result-file: 'repo-path/class-diagram.puml'" >> git2plantuml/config.yaml
         echo "show-branches: true" >> git2plantuml/config.yaml
         echo "console-debug: false" >> git2plantuml/config.yaml
         echo "plantuml-jekyll: false" >> git2plantuml/config.yaml
