@@ -29,5 +29,5 @@ application {
 task generateUML(type: JavaExec) {
     main = 'net.sourceforge.plantuml.Run'
     classpath = sourceSets.main.runtimeClasspath
-    args = ['-tpng', '-o', '.', 'src/main/java/**/*.java'] // Guarda la imagen en la raíz del repositorio
+    args = ['-tpng', '-o', 'build/uml', 'src/main/java/**/*.java'] 
 }
