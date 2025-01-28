@@ -1,7 +1,7 @@
 package bot;
 
 import bot.commands.ModuleManager;
-import bot.commands.modules.ModCommandsextends;
+import bot.commands.modules.ModCommands;
 import bot.commands.modules.ManageCommands;
 import bot.commands.modules.UserCommands;
 import net.dv8tion.jda.api.JDA;
@@ -19,7 +19,7 @@ public class Main {
             jda = builder.build();
 
             moduleManager = new ModuleManager();
-            moduleManager.registerModule("mod", new ModCommandsextends());
+            moduleManager.registerModule("mod", new ModCommands());
             moduleManager.registerModule("manage", new ManageCommands());
             moduleManager.registerModule("user", new UserCommands());
 
