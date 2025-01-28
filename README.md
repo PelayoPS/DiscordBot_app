@@ -16,12 +16,19 @@ discord-bot
 │   │   ├── java
 │   │   │   ├── bot
 │   │   │   │   ├── Main.java               # Punto de entrada de la aplicación
+│   │   │   │   ├── Bot.java                # Clase principal del bot
 │   │   │   │   ├── commands
+│   │   │   │   │   ├── ICommand.java       # Interfaz de comandos
 │   │   │   │   │   ├── ModuleManager.java  # Gestión de módulos de comandos
 │   │   │   │   │   ├── modules
 │   │   │   │   │   │   ├── ManageCommands.java # Comandos de gestión
 │   │   │   │   │   │   ├── ModCommands.java    # Comandos de moderación
-│   │   │   │   │   │   └── UserCommands.java   # Comandos de usuario
+│   │   │   │   │   │   ├── UserCommands.java   # Comandos de usuario
+│   │   │   │   │   │   ├── CommandManager.java # Gestión de comandos
+│   │   │   │   │   └── mod
+│   │   │   │   │       ├── Ban.java            # Comando de ban
+│   │   │   │   │       ├── Kick.java           # Comando de kick
+│   │   │   │   │       └── Mute.java           # Comando de mute
 │   │   │   │   ├── database
 │   │   │   │   │   └── DatabaseManager.java    # Gestión de la base de datos
 │   │   │   │   ├── events
