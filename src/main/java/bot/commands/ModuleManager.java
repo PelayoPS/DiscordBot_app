@@ -1,35 +1,37 @@
 package bot.commands;
 
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import bot.Main;
+import bot.events.EventListener;
 
 public class ModuleManager {
-    private final Map<String, ListenerAdapter> modules = new HashMap<>();
+    private final Map<String, EventListener> modules = new HashMap<>();
 
-    public void registerModule(String name, ListenerAdapter module) {
+    public void registerModule(String name, EventListener module) {
         modules.put(name, module);
     }
 
     public void enableModule(String name) {
-        ListenerAdapter module = modules.get(name);
+        EventListener module = modules.get(name);
         if (module != null) {
-            Main.jda.addEventListener(module);
+            module.setCommandEnabled(true);
         }
     }
 
     public void disableModule(String name) {
-        ListenerAdapter module = modules.get(name);
+        EventListener module = modules.get(name);
         if (module != null) {
-            Main.jda.removeEventListener(module);
+            module.setCommandEnabled(false);
         }
     }
 
     public boolean isModuleEnabled(String name) {
-        ListenerAdapter module = modules.get(name);
-        return module != null && Main.jda.getRegisteredListeners().contains(module);
+        EventListener module = modules.get(name);
+        return module.isCommandEnabled();
+    }
+
+    public Map<String, EventListener> getModules() {
+        return modules;
     }
 }
