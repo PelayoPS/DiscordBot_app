@@ -1,4 +1,4 @@
-@startuml
+@startuml diagrama
 class Bot {
   jda
   moduleManager
