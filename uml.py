@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import javalang
 
@@ -59,8 +60,7 @@ def save_and_render_uml(uml_code, output_path):
     os.system(f"plantuml {plantuml_file}")
 
 # Ruta al proyecto Java y carpeta de salida
-# Pregunta al usuario por la ruta del proyecto
-project_path = input("Introduce la ruta al proyecto Java: ")
+project_path = sys.argv[1] if len(sys.argv) > 1 else "."
 output_path = "./uml_output"
 
 # Crear carpeta de salida si no existe
