@@ -144,3 +144,63 @@ classDiagram
     Main --> GuiManager
     Main --> Utils
 ```
+## Diagrama UML
+@startuml
+class Main {
+  jda
+  moduleManager
+  main()
+}
+class EventListener {
+  onMessageReceived()
+  onMessageReactionAdd()
+}
+EventListener --|> ListenerAdapter
+class CommandHandler {
+  commands
+  registerCommands()
+  onMessageReceived()
+}
+CommandHandler --|> ListenerAdapter
+class ModuleManager {
+  modules
+  registerModule()
+  enableModule()
+  disableModule()
+  isModuleEnabled()
+}
+class ModCommands {
+  onSlashCommandInteraction()
+  banUser()
+  kickUser()
+  muteUser()
+}
+ModCommands --|> ListenerAdapter
+class ManageCommands {
+  onSlashCommandInteraction()
+}
+ManageCommands --|> ListenerAdapter
+class UserCommands {
+  onSlashCommandInteraction()
+}
+UserCommands --|> ListenerAdapter
+class DatabaseManager {
+  url
+  user
+  password
+  connection
+  connect()
+  addPenalty()
+  getPenalties()
+  close()
+}
+class Utils {
+  isValidUserId()
+  formatPenaltyMessage()
+  formatDuration()
+}
+class GuiManager {
+  initializeGui()
+  updateGui()
+}
+@enduml
