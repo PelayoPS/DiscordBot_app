@@ -1,0 +1,82 @@
+@startuml
+class Bot {
+  jda
+  moduleManager
+  start()
+}
+class Main {
+  main()
+}
+Main ..> Bot
+class ModuleManager {
+  modules
+  registerModule()
+  enableModule()
+  disableModule()
+  isModuleEnabled()
+  getModules()
+}
+class CommandManager {
+  commands
+  getSlash()
+  onSlashCommandInteraction()
+}
+CommandManager --|> EventListener
+class ManageCommands {
+}
+ManageCommands --|> CommandManager
+class ModCommands {
+}
+ModCommands --|> CommandManager
+class UserCommands {
+}
+UserCommands --|> CommandManager
+class Ban {
+  name
+  execute()
+  getSlash()
+  getName()
+}
+Ban ..|> ICommand
+class Kick {
+  name
+  execute()
+  getSlash()
+  getName()
+}
+Kick ..|> ICommand
+class Mute {
+  name
+  execute()
+  getSlash()
+  getName()
+}
+Mute ..|> ICommand
+class DatabaseManager {
+  url
+  user
+  password
+  connection
+  connect()
+  addPenalty()
+  getPenalties()
+  close()
+}
+class EventListener {
+  isCommandEnabled
+  onMessageReceived()
+  onMessageReactionAdd()
+  setCommandEnabled()
+  isCommandEnabled()
+}
+EventListener --|> ListenerAdapter
+class GuiManager {
+  initializeGui()
+  updateGui()
+}
+class Utils {
+  isValidUserId()
+  formatPenaltyMessage()
+  formatDuration()
+}
+@enduml
