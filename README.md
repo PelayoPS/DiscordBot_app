@@ -204,3 +204,5 @@ class GuiManager {
   updateGui()
 }
 @enduml
+## Diagrama UML
+
