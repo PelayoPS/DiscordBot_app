@@ -31,7 +31,9 @@ jobs:
     - name: Update README.md
       run: |
         echo "## Diagrama UML" >> README.md
+        echo "```plantuml" >> README.md
         cat uml_output/diagram.puml >> README.md
+        echo "```" >> README.md
 
     - name: Commit and push changes
       run: |
