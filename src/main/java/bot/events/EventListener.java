@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class EventListener extends ListenerAdapter {
 
+    boolean isCommandEnabled = true;
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         // Manejar el evento de mensaje recibido
@@ -15,5 +17,13 @@ public class EventListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         // Manejar el evento de reacción añadida
+    }
+
+    public void setCommandEnabled(boolean enabled) {
+        isCommandEnabled = enabled;
+    }
+
+    public boolean isCommandEnabled() {
+        return isCommandEnabled;
     }
 }
