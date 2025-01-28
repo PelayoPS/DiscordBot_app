@@ -20,23 +20,8 @@ def analyze_java_project(project_path):
                         methods = [method.name for method in node.methods]
                         extends = node.extends.name if node.extends else None
                         implements = [impl.name for impl in node.implements] if node.implements else []
-                        associations = []
-                        aggregations = []
-                        compositions = []
                         dependencies = []
-                        for field in node.fields:
-                            field_type = field.type.name
-                            if field_type in class_map:
-                                if field.modifiers:
-                                    if any(modifier == "static" for modifier in field.modifiers):
-                                        associations.append(field_type)
-                                    elif any(modifier == "final" for modifier in field.modifiers):
-                                        aggregations.append(field_type)
-                                    else:
-                                        compositions.append(field_type)
-                                else:
-                                    associations.append(field_type)
-                            
+                                                    
                         for method in node.methods:
                             dependencies.extend(
                                 method_node.qualifier
@@ -58,9 +43,6 @@ def analyze_java_project(project_path):
                             "methods": methods,
                             "extends": extends,
                             "implements": implements,
-                            "associations": associations,
-                            "aggregations": aggregations,
-                            "compositions": compositions,
                             "dependencies": dependencies
                         })
                         class_map[class_name] = node
