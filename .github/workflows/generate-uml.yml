@@ -24,14 +24,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y plantuml
 
-    - name: Clone repo
+    - name: Update repository
       run: |
-        git clone https://github.com/PelayoPS/DiscordBot_app.git
-
-    - name: Move to repo
-      run: |
-        cd DiscordBot_app
-    
+        git pull
+      
     - name: Generate UML diagram
       run: |
         python uml.py ${{ github.workspace }}
