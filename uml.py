@@ -51,7 +51,7 @@ def analyze_java_project(project_path):
     return classes, class_map
 
 def generate_plantuml(classes, class_map):
-    uml_code = "@startuml\n"
+    uml_code = "@startuml diagrama\n"
     for cls in classes:
         uml_code += f"class {cls['name']} {{\n"
         for field in cls['fields']:
