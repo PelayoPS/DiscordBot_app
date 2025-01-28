@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bot.commands.ModuleManager;
-import bot.commands.modules.ICommandManager;
+import bot.commands.modules.CommandManager;
 import bot.commands.modules.ManageCommands;
 import bot.commands.modules.ModCommands;
 import bot.commands.modules.UserCommands;
@@ -47,8 +47,8 @@ public class Bot {
 
             // Obtener los comandos de los módulos
             for (EventListener module : modules) {
-                if (module instanceof ICommandManager) {
-                    slashCommands.addAll(((ICommandManager) module).getSlash());
+                if (module instanceof CommandManager) {
+                    slashCommands.addAll(((CommandManager) module).getSlash());
                 }
             }
 
