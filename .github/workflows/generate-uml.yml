@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: diagram
-        path: uml_output/diagram.png
+        path: uml_output/diagrama.png
 
     - name: Commit and push changes
       run: |
