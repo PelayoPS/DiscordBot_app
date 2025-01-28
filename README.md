@@ -123,4 +123,4 @@ Para cualquier consulta o soporte, puedes contactarnos a través de [correo elec
 
 A continuación se muestra un diagrama UML del proyecto:
 
-![Diagrama UML](./uml_output/diagram.png)
+![Diagrama UML](./uml_output/diagrama.png)
