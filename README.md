@@ -8,6 +8,9 @@ El proyecto está organizado de la siguiente manera:
 
 ```
 discord-bot
+├── .github
+│   └── workflows
+│       └── generate-uml.yml                  # Workflow para generar diagramas UML
 ├── src
 │   ├── main
 │   │   ├── java
@@ -19,15 +22,25 @@ discord-bot
 │   │   │   │   │   │   ├── ManageCommands.java # Comandos de gestión
 │   │   │   │   │   │   ├── ModCommands.java    # Comandos de moderación
 │   │   │   │   │   │   └── UserCommands.java   # Comandos de usuario
+│   │   │   │   ├── database
+│   │   │   │   │   └── DatabaseManager.java    # Gestión de la base de datos
+│   │   │   │   ├── events
+│   │   │   │   │   └── EventListener.java      # Gestión de eventos
 │   │   │   │   ├── gui
 │   │   │   │   │   └── GuiManager.java      # Gestión de la interfaz gráfica
 │   │   │   │   └── utils
 │   │   │   │       └── Utils.java           # Métodos de utilidad
 │   │   └── resources
 │   │       └── config.properties             # Archivo de configuración
+├── uml_output                                 # Carpeta de salida para diagramas UML
+│   └── diagram.png                            # Diagrama UML generado
 ├── build.gradle                               # Script de construcción de Gradle
+├── gradlew                                    # Script para ejecutar Gradle en Unix
+├── gradlew.bat                                # Script para ejecutar Gradle en Windows
+├── LICENSE                                    # Licencia del proyecto
+├── README.md                                  # Documentación del proyecto
 ├── settings.gradle                            # Configuración del proyecto en Gradle
-└── README.md                                  # Documentación del proyecto
+└── uml.py                                     # Script para generar diagramas UML
 ```
 
 ## Instalación
@@ -47,6 +60,11 @@ discord-bot
 4. Ejecuta el siguiente comando para construir el proyecto:
    ```sh
    gradle build
+   ```
+
+5. Para generar el diagrama de clases UML, ejecuta el siguiente script con el argumento del path del proyecto:
+   ```sh
+   python uml.py <ruta_al_proyecto_java>
    ```
 
 ## Configuración
