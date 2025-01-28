@@ -24,23 +24,25 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y plantuml
 
+    - name: Clone repo
+      run: |
+        git clone https://github.com/PelayoPS/DiscordBot_app.git
+
+    - name: Move to repo
+      run: |
+        cd DiscordBot_app
+    
     - name: Generate UML diagram
       run: |
         python uml.py ${{ github.workspace }}
         plantuml -tpng uml_output/diagram.puml -o uml_output/
-
-    - name: Upload uml diagram image
-      uses: actions/upload-artifact@v3
-      with:
-        name: diagram
-        path: uml_output/diagrama.png
 
     - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add .
-        git commit -m 'Update with action'
+        git commit -m 'Update'
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
