@@ -45,6 +45,12 @@ def generate_plantuml(classes, class_map):
             uml_code += f"{cls['name']} --|> {cls['extends']}\n"
         for impl in cls['implements']:
             uml_code += f"{cls['name']} ..|> {impl}\n"
+        for assoc in cls.get('associations', []):
+            uml_code += f"{cls['name']} --> {assoc}\n"
+        for aggr in cls.get('aggregations', []):
+            uml_code += f"{cls['name']} o-- {aggr}\n"
+        for comp in cls.get('compositions', []):
+            uml_code += f"{cls['name']} *-- {comp}\n"
     uml_code += "@enduml\n"
     return uml_code
 
