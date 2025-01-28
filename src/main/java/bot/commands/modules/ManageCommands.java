@@ -22,24 +22,4 @@ public class ManageCommands extends ICommandManager {
     public ManageCommands() {
         // TODO Agregar los comandos de gestión a la lista de comandos
     }
-
-    /**
-     * Maneja la interacción de comandos de barra.
-     * 
-     * @param event El evento de interacción del comando.
-     */
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!isCommandEnabled()) {
-            event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
-            return;
-        } else {
-            switch (event.getName()) {
-                // Agrega aquí los comandos de gestión
-                default:
-                    event.reply("Comando no reconocido").setEphemeral(true).queue();
-                    break;
-            }
-        }
-    }
 }
