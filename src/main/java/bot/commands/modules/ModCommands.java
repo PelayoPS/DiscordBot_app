@@ -1,10 +1,35 @@
 package bot.commands.modules;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
+import bot.commands.modules.mod.Ban;
+import bot.commands.modules.mod.Kick;
+import bot.commands.modules.mod.Mute;
 import bot.events.EventListener;
 
-public class ModCommands extends EventListener {
+/**
+ * Clase que maneja los comandos de moderación del bot.
+ * Extiende de {@link EventListener} para manejar eventos de interacción de
+ * comandos.
+ */
+public class ModCommands extends ICommandManager {
 
+    /**
+     * Constructor de la clase ModCommands.
+     * 
+     * Agrega los comandos de moderación a la lista de comandos.
+     */
+    public ModCommands() {
+        commands.add(Ban.class);
+        commands.add(Kick.class);
+        commands.add(Mute.class);
+    }
+
+    /**
+     * Maneja la interacción de comandos de barra.
+     * 
+     * @param event El evento de interacción del comando.
+     */
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!isCommandEnabled()) {
@@ -13,13 +38,13 @@ public class ModCommands extends EventListener {
         } else {
             switch (event.getName()) {
                 case "ban":
-                    banUser(event);
+                    Ban.banUser(event);
                     break;
                 case "kick":
-                    kickUser(event);
+                    Kick.kickUser(event);
                     break;
                 case "mute":
-                    muteUser(event);
+                    Mute.muteUser(event);
                     break;
                 default:
                     event.reply("Comando no reconocido").setEphemeral(true).queue();
@@ -27,17 +52,5 @@ public class ModCommands extends EventListener {
             }
 
         }
-    }
-
-    private void banUser(SlashCommandInteractionEvent event) {
-
-    }
-
-    private void kickUser(SlashCommandInteractionEvent event) {
-
-    }
-
-    private void muteUser(SlashCommandInteractionEvent event) {
-
     }
 }
