@@ -20,12 +20,48 @@ def analyze_java_project(project_path):
                         methods = [method.name for method in node.methods]
                         extends = node.extends.name if node.extends else None
                         implements = [impl.name for impl in node.implements] if node.implements else []
+                        associations = []
+                        aggregations = []
+                        compositions = []
+                        dependencies = []
+                        for field in node.fields:
+                            field_type = field.type.name
+                            if field_type in class_map:
+                                if field.modifiers:
+                                    if any(modifier == "static" for modifier in field.modifiers):
+                                        associations.append(field_type)
+                                    elif any(modifier == "final" for modifier in field.modifiers):
+                                        aggregations.append(field_type)
+                                    else:
+                                        compositions.append(field_type)
+                                else:
+                                    associations.append(field_type)
+                            
+                        for method in node.methods:
+                            dependencies.extend(
+                                method_node.qualifier
+                                for _, method_node in method.filter(
+                                    javalang.tree.MethodInvocation
+                                )
+                                if method_node.qualifier in class_map
+                            )
+                            dependencies.extend(
+                                creation_node.type.name
+                                for _, creation_node in method.filter(
+                                    javalang.tree.ClassCreator
+                                )
+                                if creation_node.type.name in class_map
+                            )
                         classes.append({
                             "name": class_name,
                             "fields": fields,
                             "methods": methods,
                             "extends": extends,
-                            "implements": implements
+                            "implements": implements,
+                            "associations": associations,
+                            "aggregations": aggregations,
+                            "compositions": compositions,
+                            "dependencies": dependencies
                         })
                         class_map[class_name] = node
                 except javalang.parser.JavaSyntaxError as e:
@@ -51,19 +87,16 @@ def generate_plantuml(classes, class_map):
             uml_code += f"{cls['name']} o-- {aggr}\n"
         for comp in cls.get('compositions', []):
             uml_code += f"{cls['name']} *-- {comp}\n"
+        for dep in cls.get('dependencies', []):
+            uml_code += f"{cls['name']} ..> {dep}\n"
     uml_code += "@enduml\n"
     return uml_code
 
 def save_and_render_uml(uml_code, output_path):
-    """
-    Guarda el código PlantUML y renderiza el diagrama.
-    """
-    plantuml_file = os.path.join(output_path, "diagram.puml")
-    with open(plantuml_file, "w", encoding="utf-8") as f:
+    uml_file = os.path.join(output_path, "diagram.puml")
+    with open(uml_file, "w", encoding="utf-8") as f:
         f.write(uml_code)
-
-    # Usa PlantUML para generar la imagen
-    os.system(f"plantuml {plantuml_file}")
+    os.system(f"plantuml {uml_file}")
 
 # Ruta al proyecto Java y carpeta de salida
 project_path = sys.argv[1] if len(sys.argv) > 1 else "."
