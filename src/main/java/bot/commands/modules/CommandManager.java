@@ -8,7 +8,7 @@ import bot.events.EventListener;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-public abstract class ICommandManager extends EventListener {
+public abstract class CommandManager extends EventListener {
 
     List<ICommand> commands = new ArrayList<ICommand>();
 

@@ -1,7 +1,5 @@
 package bot.commands.modules;
 
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import bot.commands.ICommand;
 import bot.commands.modules.mod.Ban;
 import bot.commands.modules.mod.Kick;
 import bot.commands.modules.mod.Mute;
@@ -12,7 +10,7 @@ import bot.events.EventListener;
  * Extiende de {@link EventListener} para manejar eventos de interacción de
  * comandos.
  */
-public class ModCommands extends ICommandManager {
+public class ModCommands extends CommandManager {
 
     /**
      * Constructor de la clase ModCommands.
