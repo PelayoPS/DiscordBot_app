@@ -3,6 +3,51 @@ import sys
 from pathlib import Path
 import javalang
 
+def analyze_java_file(file_path, class_map):
+    with open(file_path, "r", encoding="utf-8") as f:
+        java_code = f.read()
+    try:
+        tree = javalang.parse.parse(java_code)
+        return extract_classes_from_tree(tree, class_map)
+    except javalang.parser.JavaSyntaxError as e:
+        print(f"Error parsing {file_path}: {e}")
+        return []
+
+def extract_classes_from_tree(tree, class_map):
+    classes = []
+    for path, node in tree.filter(javalang.tree.ClassDeclaration):
+        class_name = node.name
+        fields = [var.name for field in node.fields for var in field.declarators]
+        methods = [method.name for method in node.methods]
+        extends = node.extends.name if node.extends else None
+        implements = [impl.name for impl in node.implements] if node.implements else []
+        dependencies = extract_dependencies(node, class_map)
+        classes.append({
+            "name": class_name,
+            "fields": fields,
+            "methods": methods,
+            "extends": extends,
+            "implements": implements,
+            "dependencies": dependencies
+        })
+        class_map[class_name] = node
+    return classes
+
+def extract_dependencies(node, class_map):
+    dependencies = []
+    for method in node.methods:
+        dependencies.extend(
+            method_node.qualifier
+            for _, method_node in method.filter(javalang.tree.MethodInvocation)
+            if method_node.qualifier in class_map
+        )
+        dependencies.extend(
+            creation_node.type.name
+            for _, creation_node in method.filter(javalang.tree.ClassCreator)
+            if creation_node.type.name in class_map
+        )
+    return dependencies
+
 def analyze_java_project(project_path):
     classes = []
     class_map = {}
@@ -10,44 +55,7 @@ def analyze_java_project(project_path):
         for file in files:
             if file.endswith(".java"):
                 file_path = os.path.join(root, file)
-                with open(file_path, "r", encoding="utf-8") as f:
-                    java_code = f.read()
-                try:
-                    tree = javalang.parse.parse(java_code)
-                    for path, node in tree.filter(javalang.tree.ClassDeclaration):
-                        class_name = node.name
-                        fields = [var.name for field in node.fields for var in field.declarators]
-                        methods = [method.name for method in node.methods]
-                        extends = node.extends.name if node.extends else None
-                        implements = [impl.name for impl in node.implements] if node.implements else []
-                        dependencies = []
-                                                    
-                        for method in node.methods:
-                            dependencies.extend(
-                                method_node.qualifier
-                                for _, method_node in method.filter(
-                                    javalang.tree.MethodInvocation
-                                )
-                                if method_node.qualifier in class_map
-                            )
-                            dependencies.extend(
-                                creation_node.type.name
-                                for _, creation_node in method.filter(
-                                    javalang.tree.ClassCreator
-                                )
-                                if creation_node.type.name in class_map
-                            )
-                        classes.append({
-                            "name": class_name,
-                            "fields": fields,
-                            "methods": methods,
-                            "extends": extends,
-                            "implements": implements,
-                            "dependencies": dependencies
-                        })
-                        class_map[class_name] = node
-                except javalang.parser.JavaSyntaxError as e:
-                    print(f"Error parsing {file}: {e}")
+                classes.extend(analyze_java_file(file_path, class_map))
     return classes, class_map
 
 def generate_plantuml(classes, class_map):
