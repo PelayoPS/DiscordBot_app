@@ -42,9 +42,6 @@ Directory structure:
     │           └── config.properties  # Archivo de configuración del proyecto
     ├── uml_output/  # Directorio que contiene la salida de los diagramas UML generados
     │   └── diagram.puml  # Archivo de diagrama UML generado
-    └── .github/  # Directorio que contiene configuraciones específicas de GitHub
-        └── workflows/  # Directorio que contiene flujos de trabajo de GitHub Actions
-            └── generate-uml.yml  # Archivo de configuración para generar diagramas UML automáticamente
 
 ```
 
