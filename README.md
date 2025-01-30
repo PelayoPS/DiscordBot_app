@@ -7,47 +7,45 @@ Este proyecto es un bot de Discord desarrollado en Java utilizando la biblioteca
 El proyecto está organizado de la siguiente manera:
 
 ```
-discord-bot
-├── .github
-│   └── workflows
-│       └── generate-uml.yml                  # Workflow para generar diagramas UML
-├── src
-│   ├── main
-│   │   ├── java
-│   │   │   ├── bot
-│   │   │   │   ├── Main.java               # Punto de entrada de la aplicación
-│   │   │   │   ├── Bot.java                # Clase principal del bot
-│   │   │   │   ├── commands
-│   │   │   │   │   ├── ICommand.java       # Interfaz de comandos
-│   │   │   │   │   ├── ModuleManager.java  # Gestión de módulos de comandos
-│   │   │   │   │   ├── modules
-│   │   │   │   │   │   ├── ManageCommands.java # Comandos de gestión
-│   │   │   │   │   │   ├── ModCommands.java    # Comandos de moderación
-│   │   │   │   │   │   ├── UserCommands.java   # Comandos de usuario
-│   │   │   │   │   │   ├── CommandManager.java # Gestión de comandos
-│   │   │   │   │   └── mod
-│   │   │   │   │       ├── Ban.java            # Comando de ban
-│   │   │   │   │       ├── Kick.java           # Comando de kick
-│   │   │   │   │       └── Mute.java           # Comando de mute
-│   │   │   │   ├── database
-│   │   │   │   │   └── DatabaseManager.java    # Gestión de la base de datos
-│   │   │   │   ├── events
-│   │   │   │   │   └── EventListener.java      # Gestión de eventos
-│   │   │   │   ├── gui
-│   │   │   │   │   └── GuiManager.java      # Gestión de la interfaz gráfica
-│   │   │   │   └── utils
-│   │   │   │       └── Utils.java           # Métodos de utilidad
-│   │   └── resources
-│   │       └── config.properties             # Archivo de configuración
-├── uml_output                                 # Carpeta de salida para diagramas UML
-│   └── diagram.png                            # Diagrama UML generado
-├── build.gradle                               # Script de construcción de Gradle
-├── gradlew                                    # Script para ejecutar Gradle en Unix
-├── gradlew.bat                                # Script para ejecutar Gradle en Windows
-├── LICENSE                                    # Licencia del proyecto
-├── README.md                                  # Documentación del proyecto
-├── settings.gradle                            # Configuración del proyecto en Gradle
-└── uml.py                                     # Script para generar diagramas UML
+Directory structure:
+└── pelayops-discordbot_app/  # Directorio raíz del proyecto
+    ├── README.md  # Archivo de documentación principal del proyecto
+    ├── LICENSE  # Archivo que contiene la licencia del proyecto
+    ├── uml.py  # Script en Python para generar diagramas UML
+    ├── src/  # Directorio que contiene el código fuente del proyecto
+    │   └── main/  # Directorio principal de código fuente
+    │       ├── java/  # Directorio que contiene el código fuente en Java
+    │       │   └── bot/  # Paquete principal del bot
+    │       │       ├── Bot.java  # Clase principal del bot
+    │       │       ├── Main.java  # Clase que contiene el método main para iniciar el bot
+    │       │       ├── commands/  # Paquete que contiene las clases relacionadas con los comandos del bot
+    │       │       │   ├── ICommand.java  # Interfaz para definir comandos
+    │       │       │   ├── ModuleManager.java  # Clase para gestionar los módulos de comandos
+    │       │       │   └── modules/  # Subpaquete que contiene los módulos de comandos específicos
+    │       │       │       ├── CommandManager.java  # Clase para gestionar los comandos
+    │       │       │       ├── ManageCommands.java  # Clase para gestionar comandos administrativos
+    │       │       │       ├── ModCommands.java  # Clase para comandos de moderación
+    │       │       │       ├── UserCommands.java  # Clase para comandos de usuario
+    │       │       │       └── mod/  # Subpaquete que contiene comandos específicos de moderación
+    │       │       │           ├── Ban.java  # Clase para el comando de banear usuarios
+    │       │       │           ├── Kick.java  # Clase para el comando de expulsar usuarios
+    │       │       │           └── Mute.java  # Clase para el comando de silenciar usuarios
+    │       │       ├── database/  # Paquete que contiene las clases relacionadas con la base de datos
+    │       │       │   └── DatabaseManager.java  # Clase para gestionar la conexión y operaciones con la base de datos
+    │       │       ├── events/  # Paquete que contiene las clases relacionadas con los eventos del bot
+    │       │       │   └── EventListener.java  # Clase para escuchar y manejar eventos
+    │       │       ├── gui/  # Paquete que contiene las clases relacionadas con la interfaz gráfica de usuario
+    │       │       │   └── GuiManager.java  # Clase para gestionar la interfaz gráfica de usuario
+    │       │       └── utils/  # Paquete que contiene clases utilitarias
+    │       │           └── Utils.java  # Clase con métodos utilitarios
+    │       └── resources/  # Directorio que contiene recursos adicionales del proyecto
+    │           └── config.properties  # Archivo de configuración del proyecto
+    ├── uml_output/  # Directorio que contiene la salida de los diagramas UML generados
+    │   └── diagram.puml  # Archivo de diagrama UML generado
+    └── .github/  # Directorio que contiene configuraciones específicas de GitHub
+        └── workflows/  # Directorio que contiene flujos de trabajo de GitHub Actions
+            └── generate-uml.yml  # Archivo de configuración para generar diagramas UML automáticamente
+
 ```
 
 ## Instalación
