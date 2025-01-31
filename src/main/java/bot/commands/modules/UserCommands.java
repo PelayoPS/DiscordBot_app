@@ -1,6 +1,6 @@
 package bot.commands.modules;
 
-
+import bot.commands.modules.user.Avatar;
 import bot.events.EventListener;
 
 /**
@@ -16,6 +16,6 @@ public class UserCommands extends CommandManager {
      * Agrega los comandos de usuario a la lista de comandos.
      */
     public UserCommands() {
-        // TODO Agregar los comandos de usuario a la lista de comandos
+        commands.add(new Avatar());
     }
 }

@@ -18,6 +18,7 @@ public class EventListener extends ListenerAdapter {
         // Manejar el evento de reacción añadida
     }
 
+
     public void setCommandEnabled(boolean enabled) {
         isCommandEnabled = enabled;
     }
