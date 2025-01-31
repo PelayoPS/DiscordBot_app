@@ -8,40 +8,51 @@ El proyecto está organizado de la siguiente manera:
 
 ```
 Directory structure:
-└── pelayops-discordbot_app/  # Directorio raíz del proyecto
-    ├── README.md  # Archivo de documentación principal del proyecto
-    ├── LICENSE  # Archivo que contiene la licencia del proyecto
-    ├── uml.py  # Script en Python para generar diagramas UML
-    ├── src/  # Directorio que contiene el código fuente del proyecto
-    │   └── main/  # Directorio principal de código fuente
-    │       ├── java/  # Directorio que contiene el código fuente en Java
-    │       │   └── bot/  # Paquete principal del bot
-    │       │       ├── Bot.java  # Clase principal del bot
-    │       │       ├── Main.java  # Clase que contiene el método main para iniciar el bot
-    │       │       ├── commands/  # Paquete que contiene las clases relacionadas con los comandos del bot
-    │       │       │   ├── ICommand.java  # Interfaz para definir comandos
-    │       │       │   ├── ModuleManager.java  # Clase para gestionar los módulos de comandos
-    │       │       │   └── modules/  # Subpaquete que contiene los módulos de comandos específicos
-    │       │       │       ├── CommandManager.java  # Clase para gestionar los comandos
-    │       │       │       ├── ManageCommands.java  # Clase para gestionar comandos administrativos
-    │       │       │       ├── ModCommands.java  # Clase para comandos de moderación
-    │       │       │       ├── UserCommands.java  # Clase para comandos de usuario
-    │       │       │       └── mod/  # Subpaquete que contiene comandos específicos de moderación
-    │       │       │           ├── Ban.java  # Clase para el comando de banear usuarios
-    │       │       │           ├── Kick.java  # Clase para el comando de expulsar usuarios
-    │       │       │           └── Mute.java  # Clase para el comando de silenciar usuarios
-    │       │       ├── database/  # Paquete que contiene las clases relacionadas con la base de datos
-    │       │       │   └── DatabaseManager.java  # Clase para gestionar la conexión y operaciones con la base de datos
-    │       │       ├── events/  # Paquete que contiene las clases relacionadas con los eventos del bot
-    │       │       │   └── EventListener.java  # Clase para escuchar y manejar eventos
-    │       │       ├── gui/  # Paquete que contiene las clases relacionadas con la interfaz gráfica de usuario
-    │       │       │   └── GuiManager.java  # Clase para gestionar la interfaz gráfica de usuario
-    │       │       └── utils/  # Paquete que contiene clases utilitarias
-    │       │           └── Utils.java  # Clase con métodos utilitarios
-    │       └── resources/  # Directorio que contiene recursos adicionales del proyecto
-    │           └── config.properties  # Archivo de configuración del proyecto
-    ├── uml_output/  # Directorio que contiene la salida de los diagramas UML generados
-    │   └── diagram.puml  # Archivo de diagrama UML generado
+└── pelayops-discordbot_app/
+    ├── README.md
+    ├── LICENSE
+    ├── git-upload.bat
+    ├── gradlew
+    ├── gradlew.bat
+    ├── uml.py
+    ├── gradle/
+    │   └── wrapper/
+    │       └── gradle-wrapper.properties
+    ├── logs/
+    ├── src/
+    │   └── main/
+    │       ├── java/
+    │       │   └── bot/
+    │       │       ├── Bot.java
+    │       │       ├── Main.java
+    │       │       ├── commands/
+    │       │       │   ├── ICommand.java
+    │       │       │   ├── ModuleManager.java
+    │       │       │   └── modules/
+    │       │       │       ├── CommandManager.java
+    │       │       │       ├── ManageCommands.java
+    │       │       │       ├── ModCommands.java
+    │       │       │       ├── UserCommands.java
+    │       │       │       ├── mod/
+    │       │       │       │   ├── Ban.java
+    │       │       │       │   ├── Kick.java
+    │       │       │       │   └── Mute.java
+    │       │       │       └── user/
+    │       │       │           └── Avatar.java
+    │       │       ├── database/
+    │       │       │   └── DatabaseManager.java
+    │       │       ├── events/
+    │       │       │   └── EventListener.java
+    │       │       ├── gui/
+    │       │       │   └── GuiManager.java
+    │       │       └── utils/
+    │       │           └── Utils.java
+    │       └── resources/
+    │           ├── config.properties
+    │           └── logback.xml
+    └── uml_output/
+        ├── diagram.puml
+        └── uml_output/
 
 ```
 
@@ -99,6 +110,7 @@ El bot incluye los siguientes comandos por defecto:
 - `/ban` - Banear a un usuario
 - `/kick` - Expulsar a un usuario
 - `/mute` - Silenciar a un usuario
+- `/avatar` - Mostrar el avatar de un usuario
 
 Puedes agregar más comandos según sea necesario en los módulos correspondientes.
 
