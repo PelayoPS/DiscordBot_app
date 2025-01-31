@@ -1,20 +1,14 @@
 @startuml diagrama
-class Main {
-  main()
-}
 class Bot {
+  logger
   jda
   moduleManager
   start()
 }
-class EventListener {
-  isCommandEnabled
-  onMessageReceived()
-  onMessageReactionAdd()
-  setCommandEnabled()
-  isCommandEnabled()
+class Main {
+  main()
 }
-EventListener --|> ListenerAdapter
+Main ..> Bot
 class ModuleManager {
   modules
   registerModule()
@@ -29,12 +23,12 @@ class CommandManager {
   onSlashCommandInteraction()
 }
 CommandManager --|> EventListener
-class ModCommands {
-}
-ModCommands --|> CommandManager
 class ManageCommands {
 }
 ManageCommands --|> CommandManager
+class ModCommands {
+}
+ModCommands --|> CommandManager
 class UserCommands {
 }
 UserCommands --|> CommandManager
@@ -59,6 +53,15 @@ class Mute {
   getName()
 }
 Mute ..|> ICommand
+class Avatar {
+  name
+  execute()
+  buildAvatarEmbed()
+  buildBannerEmbed()
+  getSlash()
+  getName()
+}
+Avatar ..|> ICommand
 class DatabaseManager {
   url
   user
@@ -69,13 +72,21 @@ class DatabaseManager {
   getPenalties()
   close()
 }
+class EventListener {
+  isCommandEnabled
+  onMessageReceived()
+  onMessageReactionAdd()
+  setCommandEnabled()
+  isCommandEnabled()
+}
+EventListener --|> ListenerAdapter
+class GuiManager {
+  initializeGui()
+  updateGui()
+}
 class Utils {
   isValidUserId()
   formatPenaltyMessage()
   formatDuration()
-}
-class GuiManager {
-  initializeGui()
-  updateGui()
 }
 @enduml
