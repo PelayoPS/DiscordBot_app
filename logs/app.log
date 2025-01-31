@@ -1,0 +1,26 @@
+2025-01-31 13:54:16 INFO  bot.Bot - Iniciando bot...
+2025-01-31 13:54:16 INFO  bot.Bot - Token válido
+2025-01-31 13:54:16 INFO  bot.Bot - Intents añadidos
+2025-01-31 13:54:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [90a9d9746d9960d1-MAD]
+2025-01-31 13:54:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-01-31 13:54:17 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-01-31 13:54:17 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-01-31 13:54:17 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-01-31 13:54:17 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-01-31 13:54:17 INFO  bot.Bot - Módulos registrados
+2025-01-31 13:54:17 INFO  bot.Bot - EventListeners registrados
+2025-01-31 13:54:17 INFO  bot.Bot - Comandos de slash registrados
+2025-01-31 13:54:17 INFO  bot.Bot - Módulos activados
+2025-01-31 13:54:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [90a9d976ffbf60d1-MAD]
+2025-01-31 13:54:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-01-31 13:54:18 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-01-31 13:54:18 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-01-31 13:54:18 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-01-31 13:54:18 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-01-31 13:54:18 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 2
+2025-01-31 13:54:18 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 2 guilds
+2025-01-31 13:54:18 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-z9vq",{"micros":51064,"calls":["id_created",{"micros":662,"calls":[]},"session_lookup_time",{"micros":270,"calls":[]},"session_lookup_finished",{"micros":21,"calls":[]},"discord-sessions-prd-1-176",{"micros":49767,"calls":["start_session",{"micros":40885,"calls":["discord-api-rpc-5d98648655-8sq97",{"micros":37273,"calls":["get_user",{"micros":4292},"get_guilds",{"micros":15417},"send_scheduled_deletion_message",{"micros":9},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":9}]}]},"starting_guild_connect",{"micros":103,"calls":[]},"presence_started",{"micros":465,"calls":[]},"guilds_started",{"micros":164,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":8108,"calls":[]},"connect_finished",{"micros":8114,"calls":[]},"build_ready",{"micros":31,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-01-31 13:54:18 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1154678622821548063 firing cached events 0
+2025-01-31 13:54:18 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-01-31 13:54:18 INFO  bot.Bot - Bot listo
+2025-01-31 13:54:18 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0

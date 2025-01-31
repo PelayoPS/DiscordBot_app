@@ -28,15 +28,15 @@ public abstract class CommandManager extends EventListener {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!isCommandEnabled()) {
-            event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
+            //event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
             return;
         } else {
-            String name = event.getName();
-            // Busca el comando en la lista de comandos
-            commands.stream().filter(command -> command.getName().equals(name)).findFirst()
-                    .ifPresentOrElse(command -> command.execute(event),
-                            () -> event.reply("Comando no reconocido").setEphemeral(true).queue());
-
+            for (ICommand command : commands) {
+                if (event.getName().equals(command.getName())) {
+                    command.execute(event);
+                    return;
+                }
+            }
         }
     }
 
