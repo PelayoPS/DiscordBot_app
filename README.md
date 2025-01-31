@@ -9,51 +9,43 @@ El proyecto está organizado de la siguiente manera:
 ```
 Directory structure:
 └── pelayops-discordbot_app/
-    ├── README.md
-    ├── LICENSE
-    ├── git-upload.bat
-    ├── gradlew
-    ├── gradlew.bat
-    ├── uml.py
-    ├── gradle/
-    │   └── wrapper/
-    │       └── gradle-wrapper.properties
-    ├── logs/
-    ├── src/
-    │   └── main/
-    │       ├── java/
-    │       │   └── bot/
-    │       │       ├── Bot.java
-    │       │       ├── Main.java
-    │       │       ├── commands/
-    │       │       │   ├── ICommand.java
-    │       │       │   ├── ModuleManager.java
-    │       │       │   └── modules/
-    │       │       │       ├── CommandManager.java
-    │       │       │       ├── ManageCommands.java
-    │       │       │       ├── ModCommands.java
-    │       │       │       ├── UserCommands.java
-    │       │       │       ├── mod/
-    │       │       │       │   ├── Ban.java
-    │       │       │       │   ├── Kick.java
-    │       │       │       │   └── Mute.java
-    │       │       │       └── user/
-    │       │       │           └── Avatar.java
-    │       │       ├── database/
-    │       │       │   └── DatabaseManager.java
-    │       │       ├── events/
-    │       │       │   └── EventListener.java
-    │       │       ├── gui/
-    │       │       │   └── GuiManager.java
-    │       │       └── utils/
-    │       │           └── Utils.java
-    │       └── resources/
-    │           ├── config.properties
-    │           └── logback.xml
-    └── uml_output/
-        ├── diagram.puml
-        └── uml_output/
-
+    ├── README.md                # Archivo que contiene la documentación del proyecto.
+    ├── LICENSE                  # Archivo que contiene la licencia del proyecto.
+    ├── git-upload.bat           # Script para automatizar el proceso de commit y push a Git.
+    ├── src/                     # Directorio que contiene el código fuente del proyecto.
+    │   └── main/                # Directorio principal del código fuente.
+    │       ├── java/            # Directorio que contiene el código fuente en Java.
+    │       │   └── bot/         # Paquete principal del bot.
+    │       │       ├── Bot.java             # Clase principal del bot.
+    │       │       ├── Main.java            # Clase que contiene el método `main` para ejecutar el bot.
+    │       │       ├── commands/            # Paquete que contiene las interfaces y clases relacionadas con los comandos del bot.
+    │       │       │   ├── ICommand.java        # Interfaz para definir comandos.
+    │       │       │   ├── ModuleManager.java    # Clase para gestionar los módulos de comandos.
+    │       │       │   └── modules/              # Paquete que contiene las implementaciones de los comandos.
+    │       │       │       ├── CommandManager.java    # Clase para gestionar los comandos.
+    │       │       │       ├── ManageCommands.java    # Clase para gestionar comandos específicos.
+    │       │       │       ├── ModCommands.java       # Clase para comandos de moderación.
+    │       │       │       ├── UserCommands.java      # Clase para comandos de usuario.
+    │       │       │       ├── mod/                   # Paquete que contiene comandos de moderación.
+    │       │       │       │   ├── Ban.java               # Clase para el comando de banear usuarios.
+    │       │       │       │   ├── Kick.java              # Clase para el comando de expulsar usuarios.
+    │       │       │       │   └── Mute.java              # Clase para el comando de silenciar usuarios.
+    │       │       │       └── user/                  # Paquete que contiene comandos de usuario.
+    │       │       │           └── Avatar.java            # Clase para el comando de mostrar el avatar de un usuario.
+    │       │       ├── database/            # Paquete que contiene clases relacionadas con la gestión de la base de datos.
+    │       │       │   └── DatabaseManager.java    # Clase para gestionar la conexión y operaciones con la base de datos.
+    │       │       ├── events/              # Paquete que contiene clases relacionadas con la gestión de eventos.
+    │       │       │   └── EventListener.java    # Clase para escuchar y manejar eventos de Discord.
+    │       │       ├── gui/                 # Paquete que contiene clases relacionadas con la interfaz gráfica de usuario.
+    │       │       │   └── GuiManager.java    # Clase para gestionar la interfaz gráfica de usuario.
+    │       │       └── utils/               # Paquete que contiene clases utilitarias.
+    │       │           └── Utils.java    # Clase con métodos utilitarios.
+    │       └── resources/            # Directorio que contiene recursos del proyecto.
+    │           ├── config.properties    # Archivo de configuración del bot.
+    │           └── logback.xml          # Archivo de configuración para el registro de logs.
+    └── uml_output/              # Directorio que contiene los diagramas UML generados.
+        ├── diagrama.puml    # Archivo fuente del diagrama UML.
+        └── diagrama.png     # Imagen del diagrama UML.
 ```
 
 ## Instalación
