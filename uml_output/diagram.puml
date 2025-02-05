@@ -32,10 +32,25 @@ ModCommands --|> CommandManager
 class UserCommands {
 }
 UserCommands --|> CommandManager
+class CreateRole {
+  name
+  execute()
+  getSlash()
+  getName()
+}
+CreateRole ..|> ICommand
+class DeleteRole {
+  name
+  execute()
+  getSlash()
+  getName()
+}
+DeleteRole ..|> ICommand
 class Ban {
   name
   execute()
   getSlash()
+  onCommandAutoCompleteInteraction()
   getName()
 }
 Ban ..|> ICommand
