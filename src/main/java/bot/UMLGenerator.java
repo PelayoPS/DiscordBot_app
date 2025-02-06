@@ -102,15 +102,19 @@ public class UMLGenerator {
     }
 
     private static void generatePlantUML() throws Exception {
-        FileWriter writer = new FileWriter("uml_diagram.puml");
-        writer.write("@startuml Diagrama\n");
+        File outputDir = new File("uml_output");
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        FileWriter writer = new FileWriter(new File(outputDir, "diagrama.puml"));
+        writer.write("@startuml diagrama\n");
         for (String clazz : classes)
             writer.write(clazz + "\n");
         for (String rel : relationships)
             writer.write(rel + "\n");
         writer.write("@enduml\n");
         writer.close();
-        System.out.println("Diagrama generado en uml_diagram.puml");
+        System.out.println("Diagrama generado en uml_output/diagrama.puml");
     }
 
     private static void generateImageFromPlantUML() throws Exception {
@@ -121,11 +125,11 @@ public class UMLGenerator {
                 plantUmlCommand = "plantuml.bat"; // Cambiar a la ruta correcta en Windows
             }
 
-            ProcessBuilder processBuilder = new ProcessBuilder(plantUmlCommand, "-tsvg", "uml_diagram.puml");
+            ProcessBuilder processBuilder = new ProcessBuilder(plantUmlCommand, "-tsvg", "uml_output/diagrama.puml");
             processBuilder.inheritIO();
             Process process = processBuilder.start();
             process.waitFor();
-            System.out.println("Imagen SVG generada a partir de uml_diagram.puml");
+            System.out.println("Imagen SVG generada en uml_output/diagrama.svg");
         } catch (IOException e) {
             System.err.println("Error al ejecutar el comando plantuml: " + e.getMessage());
             e.printStackTrace();
