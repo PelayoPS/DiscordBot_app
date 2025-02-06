@@ -69,7 +69,7 @@ Directory structure:
 
 5. Para generar el diagrama de clases UML, ejecuta el siguiente script con el argumento del path del proyecto:
    ```sh
-   python uml.py <ruta_al_proyecto_java>
+   ./gradlew runUmlGenerator"
    ```
 
 ## Configuración
@@ -122,4 +122,4 @@ Para cualquier consulta o soporte, puedes contactarnos a través de [correo elec
 
 A continuación se muestra un diagrama UML del proyecto:
 
-![Diagrama UML](./uml_output/diagrama.png)
+![Diagrama UML](./uml_output/diagrama.svg)
