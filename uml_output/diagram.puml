@@ -50,7 +50,7 @@ class Ban {
   name
   execute()
   getSlash()
-  onCommandAutoCompleteInteraction()
+  parseTime()
   getName()
 }
 Ban ..|> ICommand
@@ -65,6 +65,7 @@ class Mute {
   name
   execute()
   getSlash()
+  parseTime()
   getName()
 }
 Mute ..|> ICommand

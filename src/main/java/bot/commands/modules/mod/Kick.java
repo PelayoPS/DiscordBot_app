@@ -1,6 +1,8 @@
 package bot.commands.modules.mod;
 
 import bot.commands.ICommand;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -16,7 +18,17 @@ public class Kick implements ICommand {
      * @param event El evento de interacción del comando.
      */
     public void execute(SlashCommandInteractionEvent event) {
-        // TODO Implementar la expulsión de un usuario
+        // Obtiene el usuario a expulsar
+        User user = event.getOption("usuario").getAsUser();
+
+        // Obtiene la razón de la expulsión
+        String razon = event.getOption("razon") != null ? event.getOption("razon").getAsString() : "No especificada";
+
+        // Expulsa al usuario
+        event.getGuild().kick(user).reason(razon).queue();
+
+        // Responde al usuario
+        event.reply("Usuario expulsado correctamente").setEphemeral(true).queue();
     }
 
     /**

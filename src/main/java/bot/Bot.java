@@ -74,9 +74,9 @@ public class Bot {
             logger.info("Comandos de slash registrados");
 
             // Activar módulos por defecto
-            moduleManager.enableModule("mod");
-            moduleManager.enableModule("manage");
-            moduleManager.enableModule("user");
+            moduleManager.getModules().forEach((name, module) -> {
+                module.setCommandEnabled(true);
+            });
 
             logger.info("Módulos activados");
 

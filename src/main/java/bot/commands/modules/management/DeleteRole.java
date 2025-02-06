@@ -1,6 +1,7 @@
 package bot.commands.modules.management;
 
 import bot.commands.ICommand;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -48,4 +49,5 @@ public class DeleteRole implements ICommand {
     public String getName() {
         return name;
     }
+
 }
