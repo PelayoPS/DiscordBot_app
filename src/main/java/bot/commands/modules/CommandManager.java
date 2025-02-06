@@ -28,7 +28,7 @@ public abstract class CommandManager extends EventListener {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!isCommandEnabled()) {
-            //event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
+            event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
             return;
         } else {
             for (ICommand command : commands) {
