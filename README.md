@@ -9,43 +9,45 @@ El proyecto está organizado de la siguiente manera:
 ```
 Directory structure:
 └── pelayops-discordbot_app/
-    ├── README.md                # Archivo que contiene la documentación del proyecto.
-    ├── LICENSE                  # Archivo que contiene la licencia del proyecto.
-    ├── git-upload.bat           # Script para automatizar el proceso de commit y push a Git.
-    ├── src/                     # Directorio que contiene el código fuente del proyecto.
-    │   └── main/                # Directorio principal del código fuente.
-    │       ├── java/            # Directorio que contiene el código fuente en Java.
-    │       │   └── bot/         # Paquete principal del bot.
-    │       │       ├── Bot.java             # Clase principal del bot.
-    │       │       ├── Main.java            # Clase que contiene el método `main` para ejecutar el bot.
-    │       │       ├── commands/            # Paquete que contiene las interfaces y clases relacionadas con los comandos del bot.
-    │       │       │   ├── ICommand.java        # Interfaz para definir comandos.
-    │       │       │   ├── ModuleManager.java    # Clase para gestionar los módulos de comandos.
-    │       │       │   └── modules/              # Paquete que contiene las implementaciones de los comandos.
-    │       │       │       ├── CommandManager.java    # Clase para gestionar los comandos.
-    │       │       │       ├── ManageCommands.java    # Clase para gestionar comandos específicos.
-    │       │       │       ├── ModCommands.java       # Clase para comandos de moderación.
-    │       │       │       ├── UserCommands.java      # Clase para comandos de usuario.
-    │       │       │       ├── mod/                   # Paquete que contiene comandos de moderación.
-    │       │       │       │   ├── Ban.java               # Clase para el comando de banear usuarios.
-    │       │       │       │   ├── Kick.java              # Clase para el comando de expulsar usuarios.
-    │       │       │       │   └── Mute.java              # Clase para el comando de silenciar usuarios.
-    │       │       │       └── user/                  # Paquete que contiene comandos de usuario.
-    │       │       │           └── Avatar.java            # Clase para el comando de mostrar el avatar de un usuario.
-    │       │       ├── database/            # Paquete que contiene clases relacionadas con la gestión de la base de datos.
-    │       │       │   └── DatabaseManager.java    # Clase para gestionar la conexión y operaciones con la base de datos.
-    │       │       ├── events/              # Paquete que contiene clases relacionadas con la gestión de eventos.
-    │       │       │   └── EventListener.java    # Clase para escuchar y manejar eventos de Discord.
-    │       │       ├── gui/                 # Paquete que contiene clases relacionadas con la interfaz gráfica de usuario.
-    │       │       │   └── GuiManager.java    # Clase para gestionar la interfaz gráfica de usuario.
-    │       │       └── utils/               # Paquete que contiene clases utilitarias.
-    │       │           └── Utils.java    # Clase con métodos utilitarios.
-    │       └── resources/            # Directorio que contiene recursos del proyecto.
-    │           ├── config.properties    # Archivo de configuración del bot.
-    │           └── logback.xml          # Archivo de configuración para el registro de logs.
-    └── uml_output/              # Directorio que contiene los diagramas UML generados.
-        ├── diagrama.puml    # Archivo fuente del diagrama UML.
-        └── diagrama.png     # Imagen del diagrama UML.
+    ├── README.md # Readme que contiene información sobre el proyecto
+    ├── LICENSE # Licencia del proyecto
+    ├── git-upload.bat # Script para subir cambios al repositorio y generar el diagrama UML
+    ├── gradlew.bat # Script para ejecutar Gradle en sistemas Windows
+    ├── logs/ # Directorio para almacenar los logs del bot
+    ├── src/ # Directorio que contiene el código fuente del proyecto
+    │   └── main/ # Directorio que contiene el código fuente principal
+    │       └── java/ # Directorio que contiene los archivos Java
+    │           └── bot/ # Directorio que contiene las clases del bot
+    │             ├── Bot.java # Clase principal del bot
+    │             ├── Main.java # Clase principal del proyecto
+    │             ├── UMLGenerator.java # Clase para generar el diagrama UML
+    │             ├── commands/ # Directorio que contiene las clases de los comandos
+    │             │   ├── ICommand.java # Interfaz para los comandos
+    │             │   ├── ModuleManager.java # Clase para gestionar los módulos
+    │             │   └── modules/ # Directorio que contiene los módulos de los comandos
+    │             │       ├── CommandManager.java # Clase para gestionar los comandos
+    │             │       ├── ManageCommands.java # Clase para gestionar los comandos de administración
+    │             │       ├── ModCommands.java # Clase para gestionar los comandos de moderación
+    │             │       ├── UserCommands.java # Clase para gestionar los comandos de usuario
+    │             │       ├── management/ # Directorio que contiene los comandos de administración
+    │             │       │   ├── CreateRole.java # Comando para crear un rol
+    │             │       │   └── DeleteRole.java # Comando para eliminar un rol
+    │             │       ├── mod/ # Directorio que contiene los comandos de moderación
+    │             │       │   ├── Ban.java # Comando para banear a un usuario
+    │             │       │   ├── Kick.java # Comando para expulsar a un usuario
+    │             │       │   └── Mute.java # Comando para silenciar a un usuario
+    │             │       └── user/ # Directorio que contiene los comandos de usuario
+    │             │           └── Avatar.java # Comando para mostrar el avatar de un usuario
+    │             ├── database/ # Directorio que contiene las clases de la base de datos
+    │             │   └── DatabaseManager.java # Clase para gestionar la base de datos
+    │             ├── events/ # Directorio que contiene las clases de los eventos
+    │             │   └── EventListener.java # Clase para gestionar los eventos
+    │             ├── gui/ # Directorio que contiene las clases de la interfaz gráfica
+    │             │   └── GuiManager.java # Clase para gestionar la interfaz gráfica
+    │             └── utils/ # Directorio que contiene las clases de utilidades
+    │                  └── Utils.java # Clase con métodos de utilidad
+    └── uml_output/ # Directorio que contiene el diagrama UML generado
+        └── diagrama.puml # Archivo PlantUML con el diagrama UML
 ```
 
 ## Instalación
