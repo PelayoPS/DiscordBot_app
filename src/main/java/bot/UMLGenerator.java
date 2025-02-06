@@ -121,11 +121,11 @@ public class UMLGenerator {
                 plantUmlCommand = "plantuml.bat"; // Cambiar a la ruta correcta en Windows
             }
 
-            ProcessBuilder processBuilder = new ProcessBuilder(plantUmlCommand, "uml_diagram.puml");
+            ProcessBuilder processBuilder = new ProcessBuilder(plantUmlCommand, "-tsvg", "uml_diagram.puml");
             processBuilder.inheritIO();
             Process process = processBuilder.start();
             process.waitFor();
-            System.out.println("Imagen generada a partir de uml_diagram.puml");
+            System.out.println("Imagen SVG generada a partir de uml_diagram.puml");
         } catch (IOException e) {
             System.err.println("Error al ejecutar el comando plantuml: " + e.getMessage());
             e.printStackTrace();
