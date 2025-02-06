@@ -3,8 +3,8 @@ plugins {
     id 'application'
 }
 
-group 'com.example'
-version '1.0-SNAPSHOT'
+group = 'com.example'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -12,17 +12,19 @@ repositories {
 
 dependencies {
     implementation("net.dv8tion:JDA:5.2.3") {
-        // Optionally disable audio natives to reduce jar size by excluding `opus-java`
-        // Gradle DSL:
-        // exclude module: 'opus-java'
-        // Kotlin DSL:
-        // exclude(module="opus-java")
+        // Optionally disable audio natives to reduce jar size
     }
     implementation 'org.xerial:sqlite-jdbc:3.48.0.0'
     implementation 'org.slf4j:slf4j-api:2.0.16'
     implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation group: 'com.github.javaparser', name: 'javaparser-core', version: '3.26.3'
 }
 
 application {
-    mainClassName = 'bot.Main'
+    mainClass = 'bot.Main'
+}
+
+task runUMLGenerator(type: JavaExec) {
+    mainClass.set("bot.UMLGenerator")
+    classpath = sourceSets.main.runtimeClasspath
 }
