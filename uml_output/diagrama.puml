@@ -1,125 +1,117 @@
 @startuml diagrama
 class Bot {
-    logger : Logger
-    jda : JDA
-    moduleManager : ModuleManager
-    start() : void
+- logger : Logger
++ jda : JDA
++ moduleManager : ModuleManager
++ start(String token) : void
 }
 interface ICommand {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    getName() : String
++ name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
++ getName() : String
 }
 class ModuleManager {
-    modules : Map<String,EventListener>
-    registerModule() : void
-    enableModule() : void
-    disableModule() : void
-    isModuleEnabled() : boolean
-    getModules() : Map<String, EventListener>
+- modules : Map<String,EventListener>
++ registerModule(String name, EventListener module) : void
++ enableModule(String name) : void
++ disableModule(String name) : void
++ isModuleEnabled(String name) : boolean
++ getModules() : Map<String,EventListener>
 }
 class CommandManager {
-    commands : List<ICommand>
-    getSlash() : List<SlashCommandData>
-    onSlashCommandInteraction() : void
++ commands : List<ICommand>
++ getSlash() : List<SlashCommandData>
++ onSlashCommandInteraction(SlashCommandInteractionEvent event) : void
 }
 class ManageCommands {
 }
 class CreateRole {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
++ getName() : String
 }
 class DeleteRole {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
++ getName() : String
 }
 class Ban {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    parseTime() : int
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
+- parseTime(String time) : int
++ getName() : String
 }
 class Kick {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
++ getName() : String
 }
 class Mute {
-    name : String
-    execute() : void
-    getSlash() : SlashCommandData
-    parseTime() : Duration
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
++ getSlash() : SlashCommandData
+- parseTime(String time) : Duration
++ getName() : String
 }
 class ModCommands {
 }
 class Avatar {
-    name : String
-    execute() : void
-    buildAvatarEmbed() : MessageEmbed
-    buildBannerEmbed() : MessageEmbed
-    getSlash() : SlashCommandData
-    getName() : String
+- name : String
++ execute(SlashCommandInteractionEvent event) : void
+- buildAvatarEmbed(String avatar, String user) : MessageEmbed
+- buildBannerEmbed(String banner, String user) : MessageEmbed
++ getSlash() : SlashCommandData
++ getName() : String
 }
 class UserCommands {
 }
 class DatabaseManager {
-    url : String
-    user : String
-    password : String
-    connection : Connection
-    connect() : void
-    addPenalty() : void
-    getPenalties() : ResultSet
-    close() : void
+- url : String
+- user : String
+- password : String
+- connection : Connection
+- connect() : void
++ addPenalty(String userId, String penaltyType) : void
++ getPenalties(String userId) : ResultSet
++ close() : void
 }
 class EventListener {
-    isCommandEnabled : boolean
-    onMessageReceived() : void
-    onMessageReactionAdd() : void
-    setCommandEnabled() : void
-    isCommandEnabled() : boolean
++ isCommandEnabled : boolean
++ onMessageReceived(MessageReceivedEvent event) : void
++ onMessageReactionAdd(MessageReactionAddEvent event) : void
++ setCommandEnabled(boolean enabled) : void
++ isCommandEnabled() : boolean
 }
 class GuiManager {
-    initializeGui() : void
-    updateGui() : void
++ initializeGui() : void
++ updateGui() : void
 }
 class Main {
-    main() : void
++ main(String[] args) : void
 }
 class UMLGenerator {
-    classes : List<String>
-    relationships : List<String>
-    javaNativeClasses : Set<String>
-    main() : void
-    processDirectory() : void
-    processFile() : void
-    isClassInDirectory() : boolean
-    generatePlantUML() : void
-    generateImageFromPlantUML() : void
+- classes : List<String>
+- relationships : List<String>
+- javaNativeClasses : Set<String>
++ main(String[] args) : void
+- processDirectory(File folder) : void
+- processFile(File file) : void
+- processClasses(CompilationUnit cu) : void
+- processAtributes(List<FieldDeclaration> fields) : void
+- processMethods(ClassOrInterfaceDeclaration clazz) : void
+- processRelationships(CompilationUnit cu) : void
+- isClassInDirectory(String className) : boolean
+- generatePlantUML() : void
+- generateImageFromPlantUML() : void
 }
 class Utils {
-    isValidUserId() : boolean
-    formatPenaltyMessage() : String
-    formatDuration() : String
++ isValidUserId(String userId) : boolean
++ formatPenaltyMessage(String userName, String action) : String
++ formatDuration(long duration) : String
 }
-EventListener <|-- CommandManager
-CommandManager <|-- ManageCommands
-ICommand <|.. CreateRole
-ICommand <|.. DeleteRole
-ICommand <|.. Ban
-ICommand <|.. Kick
-ICommand <|.. Mute
-CommandManager <|-- ModCommands
-ICommand <|.. Avatar
-CommandManager <|-- UserCommands
-ListenerAdapter <|-- EventListener
-Main --> Bot
 @enduml

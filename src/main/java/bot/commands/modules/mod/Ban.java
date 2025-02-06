@@ -1,14 +1,10 @@
 package bot.commands.modules.mod;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import bot.commands.ICommand;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -32,7 +28,8 @@ public class Ban implements ICommand {
         String razon = event.getOption("razon") != null ? event.getOption("razon").getAsString() : "No especificada";
 
         // Obtiene los días de historial a borrar
-        int tiempo = parseTime(event.getOption("borrar_mensajes") != null ? event.getOption("borrar_mensajes").getAsString() : "0");
+        int tiempo = parseTime(
+                event.getOption("borrar_mensajes") != null ? event.getOption("borrar_mensajes").getAsString() : "0");
         // Banea al usuario
         event.getGuild().ban(user, tiempo, TimeUnit.HOURS).reason(razon).queue();
 
@@ -58,7 +55,7 @@ public class Ban implements ICommand {
         return slash;
     }
 
-    private int parseTime(String time){
+    private int parseTime(String time) {
         switch (time) {
             case "1h":
                 return 1;

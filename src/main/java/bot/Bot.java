@@ -20,7 +20,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class Bot {
     private static final Logger logger = LoggerFactory.getLogger(Bot.class);
 
-
     public static JDA jda;
     public static ModuleManager moduleManager;
 
@@ -84,7 +83,6 @@ public class Bot {
             jda.awaitReady();
 
             logger.info("Bot listo");
-
 
         } catch (Exception e) {
             e.printStackTrace();

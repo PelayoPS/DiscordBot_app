@@ -12,7 +12,7 @@ public abstract class CommandManager extends EventListener {
 
     List<ICommand> commands = new ArrayList<ICommand>();
 
-    public List<SlashCommandData> getSlash(){
+    public List<SlashCommandData> getSlash() {
         List<SlashCommandData> slashCommands = new ArrayList<SlashCommandData>();
         for (ICommand command : commands) {
             slashCommands.add(command.getSlash());

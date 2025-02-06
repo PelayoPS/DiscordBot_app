@@ -1,7 +1,6 @@
 package bot.commands.modules.management;
 
 import bot.commands.ICommand;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -11,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  * Clase que implementa el comando para eliminar un rol en Discord.
  */
 public class DeleteRole implements ICommand {
-    
+
     private String name = "deleterole";
 
     /**
