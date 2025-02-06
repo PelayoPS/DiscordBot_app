@@ -13,15 +13,18 @@ REM Verifica si se proporcionó un argumento (mensaje del commit). Si no, muestr
 set COMMIT_MSG=%~1
 REM Asigna el primer argumento del script a la variable COMMIT_MSG.
 
-python uml.py
-REM Ejecuta el script de Python para generar el diagrama UML.
+call ./gradlew runUMLGenerator
+REM Ejecuta la task de Gradle para generar el diagrama UML y continuar con el proceso de subida.
 
+echo Agregando cambios...
 git add .
 REM Añade todos los cambios en el repositorio a la zona de preparación (staging area).
 
+echo Realizando el commit...
 git commit -m "%COMMIT_MSG%"
 REM Realiza un commit con el mensaje proporcionado como argumento.
 
+echo Subiendo cambios...
 git push
 REM Envía los cambios al repositorio remoto.
 

@@ -1,0 +1,125 @@
+@startuml Diagrama
+class Bot {
+    logger : Logger
+    jda : JDA
+    moduleManager : ModuleManager
+    start() : void
+}
+interface ICommand {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    getName() : String
+}
+class ModuleManager {
+    modules : Map<String,EventListener>
+    registerModule() : void
+    enableModule() : void
+    disableModule() : void
+    isModuleEnabled() : boolean
+    getModules() : Map<String, EventListener>
+}
+class CommandManager {
+    commands : List<ICommand>
+    getSlash() : List<SlashCommandData>
+    onSlashCommandInteraction() : void
+}
+class ManageCommands {
+}
+class CreateRole {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    getName() : String
+}
+class DeleteRole {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    getName() : String
+}
+class Ban {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    parseTime() : int
+    getName() : String
+}
+class Kick {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    getName() : String
+}
+class Mute {
+    name : String
+    execute() : void
+    getSlash() : SlashCommandData
+    parseTime() : Duration
+    getName() : String
+}
+class ModCommands {
+}
+class Avatar {
+    name : String
+    execute() : void
+    buildAvatarEmbed() : MessageEmbed
+    buildBannerEmbed() : MessageEmbed
+    getSlash() : SlashCommandData
+    getName() : String
+}
+class UserCommands {
+}
+class DatabaseManager {
+    url : String
+    user : String
+    password : String
+    connection : Connection
+    connect() : void
+    addPenalty() : void
+    getPenalties() : ResultSet
+    close() : void
+}
+class EventListener {
+    isCommandEnabled : boolean
+    onMessageReceived() : void
+    onMessageReactionAdd() : void
+    setCommandEnabled() : void
+    isCommandEnabled() : boolean
+}
+class GuiManager {
+    initializeGui() : void
+    updateGui() : void
+}
+class Main {
+    main() : void
+}
+class UMLGenerator {
+    classes : List<String>
+    relationships : List<String>
+    javaNativeClasses : Set<String>
+    main() : void
+    processDirectory() : void
+    processFile() : void
+    isClassInDirectory() : boolean
+    generatePlantUML() : void
+    generateImageFromPlantUML() : void
+}
+class Utils {
+    isValidUserId() : boolean
+    formatPenaltyMessage() : String
+    formatDuration() : String
+}
+EventListener <|-- CommandManager
+CommandManager <|-- ManageCommands
+ICommand <|.. CreateRole
+ICommand <|.. DeleteRole
+ICommand <|.. Ban
+ICommand <|.. Kick
+ICommand <|.. Mute
+CommandManager <|-- ModCommands
+ICommand <|.. Avatar
+CommandManager <|-- UserCommands
+ListenerAdapter <|-- EventListener
+Main --> Bot
+@enduml

@@ -12,5 +12,6 @@ public class Main {
         scanner.close();
         Bot bot = new Bot();
         bot.start(token);
+
     }
 }
