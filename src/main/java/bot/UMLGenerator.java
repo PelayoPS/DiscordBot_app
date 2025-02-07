@@ -15,7 +15,7 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
 
 /**
  * Clase UMLGenerator para generar diagramas UML a partir del código fuente
@@ -97,7 +97,6 @@ public class UMLGenerator {
             // Fin de la clase
             classes.add("}");
 
-
         }
     }
 
@@ -141,70 +140,80 @@ public class UMLGenerator {
     }
 
     private static void processRelationships(CompilationUnit cu) {
-        List<String> herencias = new ArrayList<>();
-        List<String> implementaciones = new ArrayList<>();
-        List<String> asociaciones = new ArrayList<>();
-        List<String> agregaciones = new ArrayList<>();
-        List<String> composiciones = new ArrayList<>();
-        List<String> dependencias = new ArrayList<>();
-
         cu.findAll(ClassOrInterfaceDeclaration.class).forEach(coid -> {
             String className = coid.getNameAsString();
 
-            // Herencia: Child --|> Parent
-            coid.getExtendedTypes().forEach(extendedType ->
-                herencias.add(className + " --|> " + extendedType.getNameAsString())
-            );
+            if (!isClassInDirectory(className) || isJavaNativeClass(className)) {
+                return;
+            }
 
-            // Implementación: Class ..|> Interface
-            coid.getImplementedTypes().forEach(implType ->
-                implementaciones.add(className + " ..|> " + implType.getNameAsString())
-            );
+            // 🔹 HERENCIA: Child --|> Parent
+            coid.getExtendedTypes().forEach(extendedType -> {
+                String parentClassName = extendedType.getNameAsString();
+                if (isClassInDirectory(parentClassName)) {
+                    relationships.add(className + " --|> " + parentClassName);
+                }
+            });
 
-            // Asociación: Class --> FieldType
-            coid.getFields().forEach(field ->
-                field.getVariables().forEach(var -> {
-                    if (!field.getElementType().isPrimitiveType()) {
-                        asociaciones.add(className + " --> " + field.getElementType().toString());
-                    }
-                })
-            );
+            // 🔹 IMPLEMENTACIÓN: Class ..|> Interface
+            coid.getImplementedTypes().forEach(implType -> {
+                String interfaceName = implType.getNameAsString();
+                if (isClassInDirectory(interfaceName)) {
+                    relationships.add(className + " ..|> " + interfaceName);
+                }
+            });
 
-            // Agregación y Composición:
-            // Heurística: si el campo se instancia en el constructor se considera composición, de lo contrario agregación.
-            coid.getFields().forEach(field ->
-                field.getVariables().forEach(var -> {
-                    boolean seInstanciaEnConstructor = coid.getConstructors().stream()
-                        .anyMatch(cons -> cons.toString().contains("new " + field.getElementType().toString()));
-                    if (seInstanciaEnConstructor) {
-                        composiciones.add(className + " *-- " + field.getElementType().toString());
+            // 🔹 ASOCIACIÓN: Class --> FieldType
+            coid.getFields().forEach(field -> field.getVariables().forEach(var -> {
+                String fieldType = extractGenericType(field.getElementType().toString());
+
+                if (isClassInDirectory(fieldType)) {
+                    relationships.add(className + " --> " + fieldType);
+                }
+            }));
+
+            // 🔹 COMPOSICIÓN vs AGREGACIÓN
+            coid.getFields().forEach(field -> field.getVariables().forEach(var -> {
+                String fieldType = extractGenericType(field.getElementType().toString());
+
+                if (isClassInDirectory(fieldType)) {
+                    boolean isComposition = coid.getConstructors().stream()
+                            .flatMap(cons -> cons.getBody().findAll(ObjectCreationExpr.class).stream())
+                            .anyMatch(expr -> expr.getType().toString().equals(fieldType));
+
+                    if (isComposition) {
+                        relationships.add(className + " *-- " + fieldType); // Composición
                     } else {
-                        agregaciones.add(className + " o-- " + field.getElementType().toString());
+                        relationships.add(className + " o-- " + fieldType); // Agregación
                     }
-                })
-            );
+                }
+            }));
 
-            // Dependencia: Class ..> Dependency (se detecta en parámetros de métodos)
-            coid.getMethods().forEach(method ->
-                method.getParameters().forEach(param ->
-                    dependencias.add(className + " ..> " + param.getType().toString())
-                )
-            );
+            // 🔹 DEPENDENCIA: Class ..> Dependency (parámetros de métodos)
+            coid.getMethods().forEach(method -> method.getParameters().forEach(param -> {
+                String paramType = extractGenericType(param.getType().toString());
+
+                if (isClassInDirectory(paramType)) {
+                    relationships.add(className + " ..> " + paramType);
+                }
+            }));
         });
+    }
 
-        // Imprimir el diagrama en formato PlantUML
-        System.out.println("@startuml");
-        herencias.forEach(System.out::println);
-        implementaciones.forEach(System.out::println);
-        asociaciones.forEach(System.out::println);
-        agregaciones.forEach(System.out::println);
-        composiciones.forEach(System.out::println);
-        dependencias.forEach(System.out::println);
-        System.out.println("@enduml");
+    private static String extractGenericType(String type) {
+        if (type.contains("<") && type.contains(">")) {
+            return type.substring(type.indexOf("<") + 1, type.lastIndexOf(">")).trim();
+        }
+        return type;
+    }
+    
+
+    private static boolean isJavaNativeClass(String className) {
+        return javaNativeClasses.contains(className);
     }
 
     /**
-     * Verifica si una clase está en el directorio de origen.
+     * Verifica si una clase está en el directorio de origen o sus subdirectorios.
      * 
      * @param className El nombre de la clase a verificar.
      * @return true si la clase está en el directorio, false en caso contrario.
@@ -212,7 +221,24 @@ public class UMLGenerator {
     private static boolean isClassInDirectory(String className) {
         File srcFolder = new File("src/main/java/bot");
         for (File file : srcFolder.listFiles()) {
-            if (file.getName().equals(className + ".java")) {
+            if (file.isDirectory()) {
+                if (isClassInDirectory(file, className)) {
+                    return true;
+                }
+            } else if (file.getName().equals(className + ".java")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isClassInDirectory(File folder, String className) {
+        for (File file : folder.listFiles()) {
+            if (file.isDirectory()) {
+                if (isClassInDirectory(file, className)) {
+                    return true;
+                }
+            } else if (file.getName().equals(className + ".java")) {
                 return true;
             }
         }

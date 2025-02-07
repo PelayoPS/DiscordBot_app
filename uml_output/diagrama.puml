@@ -105,7 +105,10 @@ class UMLGenerator {
 - processAtributes(List<FieldDeclaration> fields) : void
 - processMethods(ClassOrInterfaceDeclaration clazz) : void
 - processRelationships(CompilationUnit cu) : void
+- extractGenericType(String type) : String
+- isJavaNativeClass(String className) : boolean
 - isClassInDirectory(String className) : boolean
+- isClassInDirectory(File folder, String className) : boolean
 - generatePlantUML() : void
 - generateImageFromPlantUML() : void
 }
@@ -114,4 +117,19 @@ class Utils {
 + formatPenaltyMessage(String userName, String action) : String
 + formatDuration(long duration) : String
 }
+Bot --> ModuleManager
+Bot o-- ModuleManager
+ModuleManager ..> EventListener
+CommandManager --|> EventListener
+CommandManager --> ICommand
+CommandManager o-- ICommand
+ManageCommands --|> CommandManager
+CreateRole ..|> ICommand
+DeleteRole ..|> ICommand
+Ban ..|> ICommand
+Kick ..|> ICommand
+Mute ..|> ICommand
+ModCommands --|> CommandManager
+Avatar ..|> ICommand
+UserCommands --|> CommandManager
 @enduml
