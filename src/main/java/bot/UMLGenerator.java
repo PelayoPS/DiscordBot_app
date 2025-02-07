@@ -139,6 +139,11 @@ public class UMLGenerator {
         }
     }
 
+    /**
+     * Procesa las relaciones entre las clases.
+     * 
+     * @param cu La unidad de compilación a procesar.
+     */
     private static void processRelationships(CompilationUnit cu) {
         cu.findAll(ClassOrInterfaceDeclaration.class).forEach(coid -> {
             String className = coid.getNameAsString();
@@ -147,7 +152,7 @@ public class UMLGenerator {
                 return;
             }
 
-            // 🔹 HERENCIA: Child --|> Parent
+            // HERENCIA: Child --|> Parent
             coid.getExtendedTypes().forEach(extendedType -> {
                 String parentClassName = extendedType.getNameAsString();
                 if (isClassInDirectory(parentClassName)) {
@@ -155,7 +160,7 @@ public class UMLGenerator {
                 }
             });
 
-            // 🔹 IMPLEMENTACIÓN: Class ..|> Interface
+            // IMPLEMENTACIÓN: Class ..|> Interface
             coid.getImplementedTypes().forEach(implType -> {
                 String interfaceName = implType.getNameAsString();
                 if (isClassInDirectory(interfaceName)) {
@@ -163,7 +168,7 @@ public class UMLGenerator {
                 }
             });
 
-            // 🔹 ASOCIACIÓN: Class --> FieldType
+            // ASOCIACIÓN: Class --> FieldType
             coid.getFields().forEach(field -> field.getVariables().forEach(var -> {
                 String fieldType = extractGenericType(field.getElementType().toString());
 
@@ -172,7 +177,7 @@ public class UMLGenerator {
                 }
             }));
 
-            // 🔹 COMPOSICIÓN vs AGREGACIÓN
+            // COMPOSICIÓN vs AGREGACIÓN
             coid.getFields().forEach(field -> field.getVariables().forEach(var -> {
                 String fieldType = extractGenericType(field.getElementType().toString());
 
@@ -189,7 +194,7 @@ public class UMLGenerator {
                 }
             }));
 
-            // 🔹 DEPENDENCIA: Class ..> Dependency (parámetros de métodos)
+            // DEPENDENCIA: Class ..> Dependency (parámetros de métodos)
             coid.getMethods().forEach(method -> method.getParameters().forEach(param -> {
                 String paramType = extractGenericType(param.getType().toString());
 
@@ -200,13 +205,18 @@ public class UMLGenerator {
         });
     }
 
+    /**
+     * Extrae el tipo genérico de una clase.
+     * 
+     * @param type El tipo de la clase.
+     * @return El tipo genérico de la clase.
+     */
     private static String extractGenericType(String type) {
         if (type.contains("<") && type.contains(">")) {
             return type.substring(type.indexOf("<") + 1, type.lastIndexOf(">")).trim();
         }
         return type;
     }
-    
 
     private static boolean isJavaNativeClass(String className) {
         return javaNativeClasses.contains(className);
@@ -232,6 +242,13 @@ public class UMLGenerator {
         return false;
     }
 
+    /**
+     * Verifica si una clase está en un directorio o sus subdirectorios.
+     * 
+     * @param File   folder: directorio a revisar
+     * @param String className: nombre de la clase a buscar
+     * @return true si la clase está en el directorio, false en caso contrario.
+     */
     private static boolean isClassInDirectory(File folder, String className) {
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
