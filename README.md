@@ -69,10 +69,14 @@ Directory structure:
    gradle build
    ```
 
-5. Para generar el diagrama de clases UML, ejecuta el siguiente script con el argumento del path del proyecto:
+5. Para generar el diagrama de clases UML:
+   5a. Ejecuta el siguiente comando:
    ```sh
-   ./gradlew runUmlGenerator"
+   ./gradlew runUmlGenerator
    ```
+   5b. Utiliza la herramienta creada a partir del script original:
+   - [UMLGenerator](https://github.com/PelayoPS/UML-Generator.git)
+
 
 ## Configuración
 
