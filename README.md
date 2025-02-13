@@ -101,10 +101,21 @@ gradle run
 
 El bot incluye los siguientes comandos por defecto:
 
+### Comandos de moderación
+
 - `/ban` - Banear a un usuario
 - `/kick` - Expulsar a un usuario
 - `/mute` - Silenciar a un usuario
+
+### Comandos de administración
+
+- `/createrole` - Crear un rol
+- `/deleterole` - Eliminar un rol
+
+### Comandos de usuario
+
 - `/avatar` - Mostrar el avatar de un usuario
+
 
 Puedes agregar más comandos según sea necesario en los módulos correspondientes.
 
