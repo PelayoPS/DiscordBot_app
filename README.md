@@ -70,6 +70,7 @@ Directory structure:
    ```
 
 5. Para generar el diagrama de clases UML:
+
    5a. Ejecuta el siguiente comando(el script no es mantenido a largo plazo, por lo que se recomienda utilizar la herramienta mencionada en el paso 5b):
    ```sh
    ./gradlew runUmlGenerator
