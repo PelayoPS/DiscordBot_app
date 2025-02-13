@@ -71,12 +71,17 @@ Directory structure:
 
 5. Para generar el diagrama de clases UML:
 
-   5a. Ejecuta el siguiente comando(el script no es mantenido a largo plazo, por lo que se recomienda utilizar la herramienta mencionada en el paso 5b):
+   5a. Utiliza la herramienta creada a partir del script original:
+   - [UMLGenerator](https://github.com/PelayoPS/UML-Generator.git)
+
+   5b. Ejecuta el siguiente comando(el script no es mantenido a largo plazo, por lo que se recomienda utilizar la herramienta mencionada en el paso 5a):
    ```sh
    ./gradlew runUmlGenerator
    ```
-   5b. Utiliza la herramienta creada a partir del script original:
-   - [UMLGenerator](https://github.com/PelayoPS/UML-Generator.git)
+   5c. Script en python para generar el diagrama UML(no está actualizado para detectar los tipos de relaciones entre las clases, por lo que se recomienda utilizar la herramienta mencionada en el paso 5a):
+   ```sh
+   python uml.py
+   ```
 
 
 ## Configuración
