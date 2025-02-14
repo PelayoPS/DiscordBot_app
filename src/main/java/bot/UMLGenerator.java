@@ -20,6 +20,8 @@ import com.github.javaparser.ast.expr.ObjectCreationExpr;
 /**
  * Clase UMLGenerator para generar diagramas UML a partir del código fuente
  * Java.
+ * 
+ * @autor @PelayoPS
  */
 public class UMLGenerator {
     private static final List<String> classes = new ArrayList<>();
@@ -27,14 +29,34 @@ public class UMLGenerator {
     private static final Set<String> javaNativeClasses = new HashSet<>(Arrays.asList(
             "String", "Integer", "Boolean", "Long", "Double", "Float", "Character", "Byte", "Short"));
 
+    private static String path;
+
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println("Uso: java -jar UMLGenerator.jar <directorio>");
+            System.exit(1);
+        }
+        try {
+            run(args[0]);
+        } catch (Exception e) {
+            System.err.println("Error al generar el diagrama UML: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Método principal que inicia el proceso de generación del diagrama UML.
      * 
      * @param args Argumentos de la línea de comandos.
      * @throws Exception Si ocurre un error durante el procesamiento.
      */
-    public static void main(String[] args) throws Exception {
-        File srcFolder = new File("src/main/java/bot"); // Directorio donde están los archivos Java
+    public static void run(String path) throws Exception {
+        // Limpiar las listas antes de procesar un nuevo archivo
+        classes.clear();
+        relationships.clear();
+
+        UMLGenerator.path = path;
+        File srcFolder = new File(path);
         processDirectory(srcFolder);
         generatePlantUML();
         generateImageFromPlantUML();
@@ -71,7 +93,6 @@ public class UMLGenerator {
         }
         // Extraer clases, atributos y métodos
         processClasses(cu);
-
     }
 
     /**
@@ -96,7 +117,6 @@ public class UMLGenerator {
 
             // Fin de la clase
             classes.add("}");
-
         }
     }
 
@@ -229,7 +249,7 @@ public class UMLGenerator {
      * @return true si la clase está en el directorio, false en caso contrario.
      */
     private static boolean isClassInDirectory(String className) {
-        File srcFolder = new File("src/main/java/bot");
+        File srcFolder = new File(path);
         for (File file : srcFolder.listFiles()) {
             if (file.isDirectory()) {
                 if (isClassInDirectory(file, className)) {
@@ -274,6 +294,7 @@ public class UMLGenerator {
         }
         FileWriter writer = new FileWriter(new File(outputDir, "diagrama.puml"));
         writer.write("@startuml diagrama\n");
+        createSkin(writer);
         for (String clazz : classes)
             writer.write(clazz + "\n");
         for (String rel : relationships)
@@ -305,5 +326,17 @@ public class UMLGenerator {
             System.err.println("Error al ejecutar el comando plantuml: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Crea la configuración de estilo para el diagrama PlantUML.
+     * 
+     * @param writer El escritor de archivos.
+     * @throws IOException Si ocurre un error durante la escritura del archivo.
+     */
+    private static void createSkin(FileWriter writer) throws IOException {
+        writer.write("!theme mono\n");
+        writer.write("skinparam linetype ortho\n");
+        writer.write("skinparam monochrome true\n");
     }
 }

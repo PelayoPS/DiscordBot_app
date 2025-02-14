@@ -27,4 +27,6 @@ application {
 task runUMLGenerator(type: JavaExec) {
     mainClass.set("bot.UMLGenerator")
     classpath = sourceSets.main.runtimeClasspath
+    // pass as argument the path to the folder containing the .java files
+    args "src/main/java/bot"
 }
