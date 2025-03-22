@@ -1,15 +1,15 @@
-package bot.commands.modules.mod;
+package bot.commands.moderation;
 
 import java.time.Duration;
 
-import bot.commands.ICommand;
+import bot.api.Command;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-public class Mute implements ICommand{
+public class Mute implements Command {
 
     private String name = "mute";
 
@@ -18,6 +18,7 @@ public class Mute implements ICommand{
      * 
      * @param event El evento de interacción del comando.
      */
+    @Override
     public void execute(SlashCommandInteractionEvent event) {
         // Obtiene el usuario a silenciar
         User user = event.getOption("usuario").getAsUser();
@@ -43,14 +44,15 @@ public class Mute implements ICommand{
     public SlashCommandData getSlash() {
         SlashCommandData slash = Commands.slash("mute", "Silencia a un usuario")
                 .addOption(OptionType.USER, "usuario", "El usuario a silenciar", true)
-                .addOption(OptionType.STRING, "razon", "La razón del silencio", false)
-                .addOption(OptionType.STRING, "tiempo", "El tiempo del silencio(60s, 5m, 10m, 1h, 2h, 1d, 7d)", true);
+                .addOption(OptionType.STRING, "tiempo", "El tiempo del silencio(60s, 5m, 10m, 1h, 2h, 1d, 7d)", true)
+                .addOption(OptionType.STRING, "razon", "La razón del silencio", false);
         return slash;
     }
 
     /**
      * Parsea el tiempo del silencio.
      * 60s, 5m, 10m, 1h, 2h, 1d, 7d
+     * 
      * @param time
      * @return
      */

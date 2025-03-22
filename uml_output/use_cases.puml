@@ -1,0 +1,47 @@
+@startuml Uso
+left to right direction
+skinparam packageStyle rectangle
+
+' Actores principales
+actor "Usuario Normal" as user
+actor "Moderador" as mod
+actor "Administrador" as admin
+
+rectangle "Discord Bot" {
+  package "Comandos Básicos" {
+    usecase "Comandos de usuario" as UC1
+    usecase "comandos de diversión" as UC2
+    usecase "Ver Información" as UC3
+  }
+  
+  package "Comandos de Moderación" {
+    usecase "Aplicar Penalización" as UC4
+    usecase "Gestionar Timeouts" as UC5
+    usecase "Gestionar Warns" as UC6
+  }
+  
+  package "Comandos de Administración" {
+    usecase "Gestionar Roles" as UC7
+    usecase "Configurar Bot" as UC8
+    usecase "Gestionar Módulos" as UC9
+  }
+}
+
+' Relaciones de Usuario Normal
+user --> UC1
+user --> UC2
+user --> UC3
+
+' Relaciones de Moderador
+mod --> UC4
+mod --> UC5
+mod --> UC6
+
+' Relaciones de Administrador
+admin --|> mod
+admin --> UC7
+admin --> UC8
+admin --> UC9
+
+
+@enduml

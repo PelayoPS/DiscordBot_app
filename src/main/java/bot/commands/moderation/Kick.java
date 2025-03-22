@@ -1,13 +1,13 @@
-package bot.commands.modules.mod;
+package bot.commands.moderation;
 
-import bot.commands.ICommand;
+import bot.api.Command;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-public class Kick implements ICommand {
+public class Kick implements Command {
 
     private String name = "kick";
 
@@ -16,6 +16,7 @@ public class Kick implements ICommand {
      * 
      * @param event El evento de interacción del comando.
      */
+    @Override
     public void execute(SlashCommandInteractionEvent event) {
         // Obtiene el usuario a expulsar
         User user = event.getOption("usuario").getAsUser();
