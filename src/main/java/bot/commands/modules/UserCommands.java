@@ -1,6 +1,7 @@
 package bot.commands.modules;
 
-import bot.commands.modules.user.Avatar;
+import bot.api.Command;
+import bot.commands.user.*;
 import bot.events.EventListener;
 
 /**
@@ -17,5 +18,10 @@ public class UserCommands extends CommandManager {
      */
     public UserCommands() {
         commands.add(new Avatar());
+    }
+
+    @Override
+    public boolean supportsCommand(Command command) {
+        return command instanceof Avatar;
     }
 }

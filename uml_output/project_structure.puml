@@ -1,0 +1,125 @@
+@startuml DiscordBot
+skinparam linetype ortho
+
+package bot.api {
+    interface Command {
+        +execute(SlashCommandInteractionEvent)
+        +getSlash(): SlashCommandData
+        +getName(): String
+    }
+}
+
+package bot.events {
+    class EventListener {
+        #boolean isCommandEnabled
+        +setCommandEnabled(boolean)
+        +isCommandEnabled(): boolean
+        +onMessageReceived(MessageReceivedEvent)
+        +onMessageReactionAdd(MessageReactionAddEvent)
+    }
+}
+
+package bot.commands {
+    class ModuleManager {
+        -Map<String, EventListener> modules
+        +registerModule(String, EventListener)
+        +enableModule(String)
+        +disableModule(String)
+        +isModuleEnabled(String)
+        +getModules(): Map
+    }
+}
+
+package bot.commands.modules {
+    abstract class CommandManager {
+        #List<Command> commands
+        +getSlash(): List<SlashCommandData>
+        +getCommands(): List<Command>
+        +addCommand(Command)
+        +{abstract} supportsCommand(Command): boolean
+    }
+
+    class ModCommands {
+        +supportsCommand(Command): boolean
+    }
+
+    class UserCommands {
+        +supportsCommand(Command): boolean
+    }
+
+    class ManageCommands {
+        +supportsCommand(Command): boolean
+    }
+}
+
+package bot.utils {
+    class Utils {
+        +{static} isValidUserId(String): boolean
+        +{static} formatPenaltyMessage(String, String): String
+        +{static} formatDuration(long): String
+    }
+}
+
+package bot.gui {
+    class GuiManager {
+        +initializeGui()
+        +updateGui()
+    }
+}
+
+' Relaciones
+EventListener <|-- CommandManager
+CommandManager <|-- ModCommands
+CommandManager <|-- UserCommands
+CommandManager <|-- ManageCommands
+
+ModuleManager --> EventListener: manages
+
+' Relaciones de composición
+ModuleManager *-- EventListener
+CommandManager *-- Command
+Bot *-- ModuleManager
+Bot *-- GuiManager
+
+' Relaciones de agregación
+ModCommands o-- Ban
+ModCommands o-- Kick
+ModCommands o-- Mute
+ModCommands o-- Unban
+
+ManageCommands o-- CreateRole
+ManageCommands o-- DeleteRole
+
+UserCommands o-- Avatar
+
+' Dependencias
+Bot ..> Utils
+CommandManager ..> Utils
+
+package bot.commands.moderation {
+    class Ban implements Command
+    class Kick implements Command
+    class Mute implements Command
+    class Unban implements Command
+}
+
+package bot.commands.admin {
+    class CreateRole implements Command
+    class DeleteRole implements Command
+}
+
+package bot.commands.user {
+    class Avatar implements Command
+}
+
+ModCommands ..> Ban
+ModCommands ..> Kick
+ModCommands ..> Mute
+ModCommands ..> Unban
+
+ManageCommands ..> CreateRole
+ManageCommands ..> DeleteRole
+
+UserCommands ..> Avatar
+
+@enduml

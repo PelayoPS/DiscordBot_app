@@ -1,7 +1,7 @@
 package bot.commands.modules;
 
-import bot.commands.modules.management.CreateRole;
-import bot.commands.modules.management.DeleteRole;
+import bot.api.Command;
+import bot.commands.admin.*;
 import bot.events.EventListener;
 
 /**
@@ -19,5 +19,10 @@ public class ManageCommands extends CommandManager {
     public ManageCommands() {
         commands.add(new CreateRole());
         commands.add(new DeleteRole());
+    }
+
+    @Override
+    public boolean supportsCommand(Command command) {
+        return command instanceof CreateRole || command instanceof DeleteRole;
     }
 }
