@@ -5,9 +5,17 @@ import bot.commands.modules.CommandManager;
 import bot.commands.modules.ManageCommands;
 import bot.commands.modules.ModCommands;
 import bot.commands.modules.UserCommands;
+import bot.db.DatabaseManager;
+import bot.log.LoggingManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +28,16 @@ public class Bot {
     private final ModuleManager moduleManager;
     private final CommandRegistry commandRegistry;
     private final EventRegistry eventRegistry;
+    private final LoggingManager logger = new LoggingManager();
 
     public Bot(String token) {
         // Inicializar registros y managers
         this.commandRegistry = new CommandRegistry();
         this.eventRegistry = new EventRegistry();
         this.moduleManager = new ModuleManager();
+
+        // Inicializar la base de datos
+        initializeDatabase();
 
         // Inicializar JDA
         try {
@@ -36,6 +48,69 @@ public class Bot {
             updateCommands();
         } catch (Exception e) {
             throw new RuntimeException("Error initializing bot", e);
+        }
+    }
+
+    /**
+     * Inicializa la conexión a la base de datos y crea las tablas si no existen.
+     */
+    private void initializeDatabase() {
+        try {
+            // Obtener la instancia del DatabaseManager (singleton)
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+
+            // Verificar la conexión para asegurarnos que funciona
+            try (Connection conn = dbManager.getConnection()) {
+                logger.logInfo("Conexión a base de datos establecida correctamente");
+
+                // Ejecutar el script de esquema para crear las tablas si no existen
+                executeSchemaScript(conn);
+            }
+        } catch (SQLException e) {
+            logger.logError("Error al conectar con la base de datos", e);
+            throw new RuntimeException("Error crítico: No se pudo inicializar la base de datos", e);
+        }
+    }
+
+    /**
+     * Ejecuta el script SQL para crear el esquema de la base de datos.
+     * 
+     * @param conn Conexión a la base de datos
+     * @throws SQLException Si ocurre un error al ejecutar el script
+     */
+    private void executeSchemaScript(Connection conn) throws SQLException {
+        try {
+            // Cargar el script schema.sql desde los recursos
+            String schemaScript = loadSchemaScript();
+
+            // Ejecutar el script
+            try (Statement stmt = conn.createStatement()) {
+                // Dividir el script en sentencias individuales
+                String[] statements = schemaScript.split(";");
+                for (String statement : statements) {
+                    if (!statement.trim().isEmpty()) {
+                        stmt.execute(statement);
+                    }
+                }
+                logger.logInfo("Esquema de base de datos inicializado correctamente");
+            }
+        } catch (IOException e) {
+            throw new SQLException("Error al cargar el script de esquema", e);
+        }
+    }
+
+    /**
+     * Carga el script SQL desde los recursos.
+     * 
+     * @return Contenido del script SQL
+     * @throws IOException Si ocurre un error al leer el archivo
+     */
+    private String loadSchemaScript() throws IOException {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("schema.sql")) {
+            if (is == null) {
+                throw new IOException("No se pudo encontrar el archivo schema.sql");
+            }
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
 

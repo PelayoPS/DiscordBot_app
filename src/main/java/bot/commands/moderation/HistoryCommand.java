@@ -31,6 +31,7 @@ public class HistoryCommand implements Command {
 
         // Aquí se implementaría la lógica para obtener el historial desde una base de
         // datos
+        // !TODO
         var embed = new EmbedBuilder()
                 .setTitle("Historial de " + target.getUser().getName())
                 .setDescription("No hay registros disponibles")
