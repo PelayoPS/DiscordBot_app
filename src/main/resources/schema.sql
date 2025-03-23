@@ -1,7 +1,4 @@
--- Base de datos para el bot de Discord
-CREATE DATABASE IF NOT EXISTS discord_bot;
-USE discord_bot;
-
+-- Configuración del esquema de la base de datos para el bot de Discord
 
 -- Tabla de Usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
@@ -32,8 +29,8 @@ CREATE TABLE IF NOT EXISTS penalizaciones (
 );
 
 -- Índices para optimizar las búsquedas
-CREATE INDEX idx_experiencias_nivel ON experiencias(nivel);
-CREATE INDEX idx_penalizaciones_tipo ON penalizaciones(tipo);
-CREATE INDEX idx_penalizaciones_fecha ON penalizaciones(fecha);
-CREATE INDEX idx_penalizaciones_usuario ON penalizaciones(id_usuario);
-CREATE INDEX idx_penalizaciones_admin ON penalizaciones(id_admin_mod);
+CREATE INDEX IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel);
+CREATE INDEX IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo);
+CREATE INDEX IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha);
+CREATE INDEX IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod);

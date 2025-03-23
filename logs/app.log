@@ -661,3 +661,51 @@ Caused by: java.sql.SQLSyntaxErrorException: Unknown database 'discordbot'
 	at bot.db.DatabaseManager.getConnection(DatabaseManager.java:39)
 	at bot.core.Bot.initializeDatabase(Bot.java:63)
 	... 2 common frames omitted
+2025-03-23 12:59:35 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 12:59:35 ERROR bot.log.LoggingManager - Error al conectar con la base de datos
+java.sql.SQLSyntaxErrorException: Duplicate key name 'idx_experiencias_nivel'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:92)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-23 12:59:35 ERROR bot.log.LoggingManager - Error al iniciar el bot
+java.lang.RuntimeException: Error crítico: No se pudo inicializar la base de datos
+	at bot.core.Bot.initializeDatabase(Bot.java:71)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+Caused by: java.sql.SQLSyntaxErrorException: Duplicate key name 'idx_experiencias_nivel'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:92)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	... 2 common frames omitted
+2025-03-23 13:03:37 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 13:03:37 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 13:03:38 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [924dcabfb8ac030f-MAD]
+2025-03-23 13:03:38 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 13:03:38 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 13:03:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 13:03:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 13:03:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 13:03:38 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 13:03:39 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 13:03:39 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 13:03:39 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 13:03:39 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 13:03:39 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 2
+2025-03-23 13:03:39 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 2 guilds
+2025-03-23 13:03:39 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-6j6v",{"micros":180542,"calls":["id_created",{"micros":646,"calls":[]},"session_lookup_time",{"micros":296,"calls":[]},"session_lookup_finished",{"micros":19,"calls":[]},"discord-sessions-prd-1-35",{"micros":179262,"calls":["start_session",{"micros":130347,"calls":["discord-api-rpc-7bd87859f5-wg6bz",{"micros":111083,"calls":["get_user",{"micros":21378},"get_guilds",{"micros":28776},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1732},"authorized_ip_coro",{"micros":11},"pending_payments",{"micros":2969}]}]},"starting_guild_connect",{"micros":82,"calls":[]},"presence_started",{"micros":277,"calls":[]},"guilds_started",{"micros":119,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":48407,"calls":[]},"connect_finished",{"micros":48416,"calls":[]},"build_ready",{"micros":18,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}]]
+2025-03-23 13:03:39 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 13:03:39 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 13:03:39 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1154678622821548063 firing cached events 0
+2025-03-23 13:03:40 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [924dcac2aef5030f-MAD]
+2025-03-23 13:03:40 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 13:03:51 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 13:03:51 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-23 13:03:51 INFO  bot.log.LoggingManager - Bot apagado correctamente

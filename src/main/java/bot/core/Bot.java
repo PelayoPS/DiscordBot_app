@@ -83,13 +83,26 @@ public class Bot {
             // Cargar el script schema.sql desde los recursos
             String schemaScript = loadSchemaScript();
 
-            // Ejecutar el script
+            // Mejorar manejo de errores para sentencias individuales
             try (Statement stmt = conn.createStatement()) {
                 // Dividir el script en sentencias individuales
                 String[] statements = schemaScript.split(";");
                 for (String statement : statements) {
-                    if (!statement.trim().isEmpty()) {
-                        stmt.execute(statement);
+                    statement = statement.trim();
+                    if (!statement.isEmpty()) {
+                        try {
+                            stmt.execute(statement);
+                        } catch (SQLException e) {
+                            // Verificar si el error es por un índice duplicado (ignoramos este error
+                            // específico)
+                            if (e.getMessage().contains("Duplicate key name")) {
+                                logger.logInfo("Ignorando error de índice duplicado: " + e.getMessage());
+                            } else {
+                                // Para otros errores, los registramos pero continuamos con las siguientes
+                                // sentencias
+                                logger.logError("Error al ejecutar sentencia SQL: " + statement, e);
+                            }
+                        }
                     }
                 }
                 logger.logInfo("Esquema de base de datos inicializado correctamente");
