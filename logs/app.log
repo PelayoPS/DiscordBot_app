@@ -709,3 +709,391 @@ Caused by: java.sql.SQLSyntaxErrorException: Duplicate key name 'idx_experiencia
 2025-03-23 13:03:51 INFO  bot.log.LoggingManager - Apagando el bot...
 2025-03-23 13:03:51 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
 2025-03-23 13:03:51 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:11:18 ERROR bot.log.LoggingManager - Error al iniciar el bot
+java.util.NoSuchElementException: No line found
+	at java.base/java.util.Scanner.nextLine(Scanner.java:1660)
+	at bot.Main.main(Main.java:17)
+2025-03-23 22:11:56 ERROR bot.log.LoggingManager - Error al conectar con la base de datos
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:824)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:444)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:237)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:198)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:683)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at bot.db.DatabaseManager.createDatabaseIfNotExists(DatabaseManager.java:76)
+	at bot.db.DatabaseManager.getConnection(DatabaseManager.java:38)
+	at bot.core.Bot.initializeDatabase(Bot.java:63)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:944)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:814)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63)
+	... 13 common frames omitted
+2025-03-23 22:11:56 ERROR bot.log.LoggingManager - Error al iniciar el bot
+java.lang.RuntimeException: Error crítico: No se pudo inicializar la base de datos
+	at bot.core.Bot.initializeDatabase(Bot.java:71)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:824)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:444)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:237)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:198)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:683)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:230)
+	at bot.db.DatabaseManager.createDatabaseIfNotExists(DatabaseManager.java:76)
+	at bot.db.DatabaseManager.getConnection(DatabaseManager.java:38)
+	at bot.core.Bot.initializeDatabase(Bot.java:63)
+	... 2 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:120)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:944)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:814)
+	... 10 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63)
+	... 13 common frames omitted
+2025-03-23 22:12:07 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:12:07 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:12:07 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250ee33db17cf90-MAD]
+2025-03-23 22:12:08 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:12:08 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:12:08 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:12:08 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:12:08 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:12:08 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:12:08 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:12:08 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:12:08 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:12:08 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:12:08 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 0
+2025-03-23 22:12:08 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:12:08 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-9k4x",{"micros":90965,"calls":["id_created",{"micros":783,"calls":[]},"session_lookup_time",{"micros":4977,"calls":[]},"session_lookup_finished",{"micros":18,"calls":[]},"discord-sessions-prd-1-213",{"micros":84809,"calls":["start_session",{"micros":46295,"calls":["discord-api-rpc-7bd87859f5-7h5jn",{"micros":39163,"calls":["get_user",{"micros":5584},"get_guilds",{"micros":10973},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":8},"pending_payments",{"micros":423}]}]},"starting_guild_connect",{"micros":42,"calls":[]},"presence_started",{"micros":16415,"calls":[]},"guilds_started",{"micros":2,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":21980,"calls":[]},"connect_finished",{"micros":21985,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:12:08 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250ee367dfacf90-MAD]
+2025-03-23 22:12:08 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:12:37 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:13:07 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:14:04 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:14:55 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f24ddc37028a-MAD]
+2025-03-23 22:14:55 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/{user_id} -> 481e0bf1883da82f2e83411bc2da9c89
+2025-03-23 22:14:56 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f24ddc3b028a-MAD]
+2025-03-23 22:14:56 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash POST/interactions/{interaction_id}/{interaction_token}/callback -> 432f6223265d156004ac81366c5a948f
+2025-03-23 22:14:56 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f2505ae7028a-MAD]
+2025-03-23 22:14:56 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash POST/webhooks/{application_id}/{interaction_token} -> 3d2712a9e4fe17cc9d3fed4a8e672e5f
+2025-03-23 22:15:07 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 6 expired buckets
+2025-03-23 22:18:08 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:18:08 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:18:34 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:18:34 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:18:35 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f7aa7e352172-MAD]
+2025-03-23 22:18:35 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:18:35 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:18:35 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:18:35 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:18:35 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:18:35 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:18:35 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:18:35 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:18:35 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:18:35 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:18:35 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f7aca92b2172-MAD]
+2025-03-23 22:18:35 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:18:36 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:18:36 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:18:36 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-jngf",{"micros":100578,"calls":["id_created",{"micros":1661,"calls":[]},"session_lookup_time",{"micros":1408,"calls":[]},"session_lookup_finished",{"micros":17,"calls":[]},"discord-sessions-prd-1-44",{"micros":95831,"calls":["start_session",{"micros":46974,"calls":["discord-api-rpc-7bd87859f5-lxdpl",{"micros":38559,"calls":["get_user",{"micros":5365},"get_guilds",{"micros":4376},"send_scheduled_deletion_message",{"micros":5},"guild_join_requests",{"micros":0},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":1093}]}]},"starting_guild_connect",{"micros":120,"calls":[]},"presence_started",{"micros":14088,"calls":[]},"guilds_started",{"micros":97,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":34491,"calls":[]},"connect_finished",{"micros":34497,"calls":[]},"build_ready",{"micros":49,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:18:36 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:18:36 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:19:05 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:19:34 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:19:34 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:19:34 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:19:37 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:19:37 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:19:38 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f934cdfde08f-MAD]
+2025-03-23 22:19:38 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:19:38 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:19:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:19:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:19:38 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:19:38 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:19:38 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:19:38 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:19:38 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:19:38 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:19:39 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9250f937190ee08f-MAD]
+2025-03-23 22:19:39 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:19:39 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:19:39 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:19:39 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-b-w2tv",{"micros":95644,"calls":["id_created",{"micros":1293,"calls":[]},"session_lookup_time",{"micros":354,"calls":[]},"session_lookup_finished",{"micros":18,"calls":[]},"discord-sessions-prd-1-121",{"micros":91081,"calls":["start_session",{"micros":81259,"calls":["discord-api-rpc-7bd87859f5-p9gbp",{"micros":71356,"calls":["get_user",{"micros":15552},"get_guilds",{"micros":6432},"send_scheduled_deletion_message",{"micros":5},"guild_join_requests",{"micros":0},"authorized_ip_coro",{"micros":11},"pending_payments",{"micros":450}]}]},"starting_guild_connect",{"micros":41,"calls":[]},"presence_started",{"micros":6882,"calls":[]},"guilds_started",{"micros":83,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":2769,"calls":[]},"connect_finished",{"micros":2775,"calls":[]},"build_ready",{"micros":36,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:19:39 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:19:39 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:19:41 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:19:41 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-23 22:19:41 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:27:11 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:27:11 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:27:12 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92510449de13e077-MAD]
+2025-03-23 22:27:12 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:27:12 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:27:12 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:27:12 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:27:12 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:27:12 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:27:12 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:27:12 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:27:12 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:27:12 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:27:12 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9251044c48f0e077-MAD]
+2025-03-23 22:27:12 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:27:13 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:27:13 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:27:13 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-7k7b",{"micros":112363,"calls":["id_created",{"micros":954,"calls":[]},"session_lookup_time",{"micros":2020,"calls":[]},"session_lookup_finished",{"micros":18,"calls":[]},"discord-sessions-prd-1-128",{"micros":107790,"calls":["start_session",{"micros":36637,"calls":["discord-api-rpc-7bd87859f5-7zgz2",{"micros":29139,"calls":["get_user",{"micros":4607},"get_guilds",{"micros":3298},"send_scheduled_deletion_message",{"micros":5},"guild_join_requests",{"micros":0},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":366}]}]},"starting_guild_connect",{"micros":54,"calls":[]},"presence_started",{"micros":11390,"calls":[]},"guilds_started",{"micros":114,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":59562,"calls":[]},"connect_finished",{"micros":59569,"calls":[]},"build_ready",{"micros":21,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:27:13 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:27:13 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:27:19 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:27:19 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-23 22:27:19 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:28:33 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:28:33 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:28:34 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9251064a9add2fca-MAD]
+2025-03-23 22:28:34 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:28:34 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:28:34 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:28:34 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:28:34 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:28:34 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:28:34 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9251064d1e442fca-MAD]
+2025-03-23 22:28:34 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:28:34 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:28:34 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:28:34 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:28:34 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:28:35 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:28:35 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:28:35 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-5j0q",{"micros":95883,"calls":["id_created",{"micros":941,"calls":[]},"session_lookup_time",{"micros":509,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"discord-sessions-prd-1-149",{"micros":94145,"calls":["start_session",{"micros":73874,"calls":["discord-api-rpc-7bd87859f5-lxdpl",{"micros":57852,"calls":["get_user",{"micros":9214},"get_guilds",{"micros":17918},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":386},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":435}]}]},"starting_guild_connect",{"micros":41,"calls":[]},"presence_started",{"micros":10080,"calls":[]},"guilds_started",{"micros":83,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":10043,"calls":[]},"connect_finished",{"micros":10048,"calls":[]},"build_ready",{"micros":15,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:28:35 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:28:35 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:29:04 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:29:34 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:29:41 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:29:41 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:29:47 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:29:47 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:29:47 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925108148ea4f77d-MAD]
+2025-03-23 22:29:47 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:29:47 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:29:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:29:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:29:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:29:47 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:29:48 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:29:48 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:29:48 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:29:48 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:29:48 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92510816cd3cf77d-MAD]
+2025-03-23 22:29:48 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:29:48 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:29:48 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:29:48 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-05kq",{"micros":235857,"calls":["id_created",{"micros":987,"calls":[]},"session_lookup_time",{"micros":751,"calls":[]},"session_lookup_finished",{"micros":32,"calls":[]},"discord-sessions-prd-1-299",{"micros":233724,"calls":["start_session",{"micros":224401,"calls":["discord-api-rpc-7bd87859f5-72wfv",{"micros":204712,"calls":["get_user",{"micros":51677},"get_guilds",{"micros":5458},"send_scheduled_deletion_message",{"micros":8},"guild_join_requests",{"micros":598},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":1749}]}]},"starting_guild_connect",{"micros":48,"calls":[]},"presence_started",{"micros":415,"calls":[]},"guilds_started",{"micros":59,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":8767,"calls":[]},"connect_finished",{"micros":8774,"calls":[]},"build_ready",{"micros":22,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:29:48 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:29:48 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:30:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:30:59 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:30:59 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:31:00 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925109d9eef8cf8d-MAD]
+2025-03-23 22:31:00 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:31:00 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:31:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:31:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:31:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:31:00 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:31:00 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:31:00 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:31:00 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:31:00 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:31:00 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925109dc494acf8d-MAD]
+2025-03-23 22:31:00 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:31:00 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:31:00 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-9ts5",{"micros":51184,"calls":["id_created",{"micros":965,"calls":[]},"session_lookup_time",{"micros":4346,"calls":[]},"session_lookup_finished",{"micros":23,"calls":[]},"discord-sessions-prd-1-171",{"micros":45443,"calls":["start_session",{"micros":44511,"calls":["discord-api-rpc-7bd87859f5-bf9gj",{"micros":35195,"calls":["get_user",{"micros":6340},"get_guilds",{"micros":3041},"send_scheduled_deletion_message",{"micros":5},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":530}]}]},"starting_guild_connect",{"micros":38,"calls":[]},"presence_started",{"micros":456,"calls":[]},"guilds_started",{"micros":76,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":335,"calls":[]},"connect_finished",{"micros":340,"calls":[]},"build_ready",{"micros":18,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:31:00 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:31:00 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:31:00 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:31:29 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:31:31 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:31:31 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:31:31 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:31:59 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:31:59 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:32:00 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92510b51cd570341-MAD]
+2025-03-23 22:32:00 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:32:00 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:32:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:32:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:32:00 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:32:00 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:32:00 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:32:00 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:32:00 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:32:00 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:32:01 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92510b54ac1f0341-MAD]
+2025-03-23 22:32:01 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:32:01 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:32:01 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:32:01 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-b-kvhd",{"micros":113143,"calls":["id_created",{"micros":1544,"calls":[]},"session_lookup_time",{"micros":712,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"discord-sessions-prd-1-151",{"micros":106512,"calls":["start_session",{"micros":94367,"calls":["discord-api-rpc-7bd87859f5-7zgz2",{"micros":80370,"calls":["get_user",{"micros":9815},"get_guilds",{"micros":5603},"send_scheduled_deletion_message",{"micros":10},"guild_join_requests",{"micros":557},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":2422}]}]},"starting_guild_connect",{"micros":42,"calls":[]},"presence_started",{"micros":392,"calls":[]},"guilds_started",{"micros":89,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":11591,"calls":[]},"connect_finished",{"micros":11597,"calls":[]},"build_ready",{"micros":20,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:32:01 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:32:01 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:32:30 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:33:00 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:40:49 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:40:49 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:40:50 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9251184418d4ec96-MAD]
+2025-03-23 22:40:50 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:40:50 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:40:50 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:40:50 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:40:50 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:40:50 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:40:51 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:40:51 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:40:51 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:40:51 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:40:51 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511846481cec96-MAD]
+2025-03-23 22:40:51 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:40:51 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:40:51 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:40:51 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-tb0p",{"micros":172689,"calls":["id_created",{"micros":1009,"calls":[]},"session_lookup_time",{"micros":2213,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-1-21",{"micros":168430,"calls":["start_session",{"micros":125862,"calls":["discord-api-rpc-7bd87859f5-wg6bz",{"micros":113381,"calls":["get_user",{"micros":11591},"get_guilds",{"micros":9146},"send_scheduled_deletion_message",{"micros":5},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":2809}]}]},"starting_guild_connect",{"micros":35,"calls":[]},"presence_started",{"micros":31758,"calls":[]},"guilds_started",{"micros":128,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":10619,"calls":[]},"connect_finished",{"micros":10624,"calls":[]},"build_ready",{"micros":18,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:40:51 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:40:51 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:41:20 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:41:42 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:41:42 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:41:42 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:41:46 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:41:46 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:41:47 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925119a78cdff77d-MAD]
+2025-03-23 22:41:47 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:41:47 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:41:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:41:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:41:47 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:41:47 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:41:47 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:41:47 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:41:47 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:41:47 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:41:48 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925119a9bac0f77d-MAD]
+2025-03-23 22:41:48 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:41:48 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:41:48 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:41:48 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-h1tq",{"micros":171030,"calls":["id_created",{"micros":1422,"calls":[]},"session_lookup_time",{"micros":5316,"calls":[]},"session_lookup_finished",{"micros":21,"calls":[]},"discord-sessions-prd-1-125",{"micros":163995,"calls":["start_session",{"micros":118265,"calls":["discord-api-rpc-7bd87859f5-wzbr8",{"micros":84825,"calls":["get_user",{"micros":6244},"get_guilds",{"micros":7932},"send_scheduled_deletion_message",{"micros":6},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":24890}]}]},"starting_guild_connect",{"micros":65,"calls":[]},"presence_started",{"micros":8291,"calls":[]},"guilds_started",{"micros":183,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":37156,"calls":[]},"connect_finished",{"micros":37162,"calls":[]},"build_ready",{"micros":24,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:41:48 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:41:48 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:42:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:42:47 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-23 22:43:48 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:43:48 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:43:49 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511c9fab592fa1-MAD]
+2025-03-23 22:43:49 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:43:49 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:43:49 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:43:49 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:43:49 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:43:49 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:43:49 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:43:49 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:43:49 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:43:49 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:43:49 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511ca1fd442fa1-MAD]
+2025-03-23 22:43:49 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:43:50 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:43:50 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:43:50 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-xmmj",{"micros":474265,"calls":["id_created",{"micros":1334,"calls":[]},"session_lookup_time",{"micros":874,"calls":[]},"session_lookup_finished",{"micros":20,"calls":[]},"discord-sessions-prd-1-263",{"micros":470267,"calls":["start_session",{"micros":465318,"calls":["discord-api-rpc-7bd87859f5-47j8v",{"micros":245478,"calls":["get_user",{"micros":25621},"get_guilds",{"micros":6059},"send_scheduled_deletion_message",{"micros":9},"guild_join_requests",{"micros":417},"authorized_ip_coro",{"micros":8},"pending_payments",{"micros":1887}]}]},"starting_guild_connect",{"micros":40,"calls":[]},"presence_started",{"micros":313,"calls":[]},"guilds_started",{"micros":142,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":4412,"calls":[]},"connect_finished",{"micros":4419,"calls":[]},"build_ready",{"micros":22,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":9,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-23 22:43:50 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:43:50 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:44:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d500a55cbe3-MAD]
+2025-03-23 22:44:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/channels/{channel_id}/messages -> 479c05630b7b353bb5c63f707eeef2ee
+2025-03-23 22:44:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d520cefcbe3-MAD]
+2025-03-23 22:44:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash POST/channels/{channel_id}/messages/bulk-delete -> 395d6cf0674e9291d994fd56de77ef96
+2025-03-23 22:44:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d521d0ecbe3-MAD]
+2025-03-23 22:44:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash DELETE/channels/{channel_id}/messages/{message_id} -> b5e35274c6fd5cfec77fe9bfaf059ad6
+2025-03-23 22:44:17 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d521d10cbe3-MAD]
+2025-03-23 22:44:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash POST/interactions/{interaction_id}/{interaction_token}/callback -> 432f6223265d156004ac81366c5a948f
+2025-03-23 22:44:18 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d53cf1acbe3-MAD]
+2025-03-23 22:44:18 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d5548cfcbe3-MAD]
+2025-03-23 22:44:18 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d571ad7cbe3-MAD]
+2025-03-23 22:44:18 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 9 expired buckets
+2025-03-23 22:44:18 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d588c89cbe3-MAD]
+2025-03-23 22:44:19 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511d5a2ea9cbe3-MAD]
+2025-03-23 22:44:48 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-23 22:44:54 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:44:54 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-23 22:44:57 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-23 22:44:57 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-23 22:44:58 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511e5149f3ecad-MAD]
+2025-03-23 22:44:58 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-23 22:44:58 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-23 22:44:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-23 22:44:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-23 22:44:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-23 22:44:58 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-23 22:44:58 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-23 22:44:58 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-23 22:44:58 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-23 22:44:58 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-23 22:44:59 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92511e53891decad-MAD]
+2025-03-23 22:44:59 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-23 22:44:59 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-23 22:44:59 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-23 22:44:59 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-h0kk",{"micros":180883,"calls":["id_created",{"micros":972,"calls":[]},"session_lookup_time",{"micros":1230,"calls":[]},"session_lookup_finished",{"micros":18,"calls":[]},"discord-sessions-prd-1-3",{"micros":178212,"calls":["start_session",{"micros":159459,"calls":["discord-api-rpc-7bd87859f5-ngs67",{"micros":140474,"calls":["get_user",{"micros":5489},"get_guilds",{"micros":6429},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":5930}]}]},"starting_guild_connect",{"micros":30,"calls":[]},"presence_started",{"micros":215,"calls":[]},"guilds_started",{"micros":114,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":1,"calls":[]},"presence_connect",{"micros":18366,"calls":[]},"connect_finished",{"micros":18371,"calls":[]},"build_ready",{"micros":19,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}]]
+2025-03-23 22:44:59 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-23 22:44:59 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-23 22:45:02 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-23 22:45:02 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-23 22:45:02 INFO  bot.log.LoggingManager - Bot apagado correctamente

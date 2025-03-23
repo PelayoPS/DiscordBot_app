@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'com.example'
@@ -20,15 +21,19 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.16'
     implementation 'ch.qos.logback:logback-classic:1.4.11'
     implementation group: 'com.github.javaparser', name: 'javaparser-core', version: '3.26.3'
+
+
+}
+
+javafx {
+    version = "20.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
+}
+
+java {
+    modularity.inferModulePath = true
 }
 
 application {
-    mainClass = 'bot.Main'
-}
-
-task runUMLGenerator(type: JavaExec) {
-    mainClass.set("bot.UMLGenerator")
-    classpath = sourceSets.main.runtimeClasspath
-    // pass as argument the path to the folder containing the .java files
-    args "src/main/java/bot"
+    mainClass = 'bot.gui.MainInterface'
 }

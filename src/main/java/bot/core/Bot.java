@@ -1,12 +1,12 @@
 package bot.core;
 
 import bot.commands.ModuleManager;
-import bot.commands.modules.CommandManager;
-import bot.commands.modules.ManageCommands;
-import bot.commands.modules.ModCommands;
-import bot.commands.modules.UserCommands;
 import bot.db.DatabaseManager;
 import bot.log.LoggingManager;
+import bot.modules.CommandManager;
+import bot.modules.admin.AdminCommands;
+import bot.modules.mod.ModCommands;
+import bot.modules.user.UserCommands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -129,7 +129,7 @@ public class Bot {
 
     private void initializeModules() {
         // Registrar módulos básicos
-        moduleManager.registerModule("management", new ManageCommands());
+        moduleManager.registerModule("management", new AdminCommands());
         moduleManager.registerModule("moderation", new ModCommands());
         moduleManager.registerModule("user", new UserCommands());
 

@@ -6,6 +6,7 @@ import java.util.List;
 import bot.api.Command;
 import bot.commands.user.Avatar;
 import bot.events.EventListener;
+import bot.modules.CommandManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -14,7 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  * Extiende de {@link EventListener} para manejar eventos de interacción de
  * comandos.
  */
-public class UserCommands extends EventListener {
+public class UserCommands extends CommandManager {
 
     private List<Command> commands = new ArrayList<>();
     private boolean isCommandEnabled = true;
@@ -70,4 +71,5 @@ public class UserCommands extends EventListener {
     public boolean isCommandEnabled() {
         return this.isCommandEnabled;
     }
+
 }

@@ -1,8 +1,8 @@
-package bot.commands.modules;
+package bot.modules.user;
 
-import bot.api.Command;
 import bot.commands.user.*;
 import bot.events.EventListener;
+import bot.modules.CommandManager;
 
 /**
  * Clase que maneja los comandos de usuario del bot.
@@ -18,10 +18,7 @@ public class UserCommands extends CommandManager {
      */
     public UserCommands() {
         commands.add(new Avatar());
-    }
-
-    @Override
-    public boolean supportsCommand(Command command) {
-        return command instanceof Avatar;
+        // commands.add(new HelpCommand());
+        // commands.add(new ProfileCommand());
     }
 }

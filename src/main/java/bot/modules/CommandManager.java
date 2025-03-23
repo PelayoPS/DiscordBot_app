@@ -1,4 +1,4 @@
-package bot.commands.modules;
+package bot.modules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  */
 public abstract class CommandManager extends EventListener {
     protected List<Command> commands = new ArrayList<>();
+    private boolean isCommandEnabled = true;
 
     public List<SlashCommandData> getSlash() {
         List<SlashCommandData> slashCommands = new ArrayList<>();
@@ -30,8 +31,6 @@ public abstract class CommandManager extends EventListener {
         commands.add(command);
     }
 
-    public abstract boolean supportsCommand(Command command);
-
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         // Verificar si los comandos están habilitados
@@ -47,5 +46,15 @@ public abstract class CommandManager extends EventListener {
                     cmd.execute(event);
                 });
 
+    }
+
+    @Override
+    public void setCommandEnabled(boolean enabled) {
+        this.isCommandEnabled = enabled;
+    }
+
+    @Override
+    public boolean isCommandEnabled() {
+        return this.isCommandEnabled;
     }
 }

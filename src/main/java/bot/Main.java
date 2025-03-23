@@ -2,9 +2,9 @@ package bot;
 
 import java.util.Scanner;
 
-import bot.commands.modules.CommandManager;
 import bot.core.Bot;
 import bot.log.LoggingManager;
+import bot.modules.CommandManager;
 
 public class Main {
     private static final LoggingManager logger = new LoggingManager();
