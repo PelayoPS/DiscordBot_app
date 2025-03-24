@@ -1,15 +1,9 @@
 package bot.modules.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import bot.api.Command;
 import bot.commands.admin.CreateRole;
 import bot.commands.admin.DeleteRole;
 import bot.events.EventListener;
 import bot.modules.CommandManager;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
  * Clase que maneja los comandos administrativos del bot.

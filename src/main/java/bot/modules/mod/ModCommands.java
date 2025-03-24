@@ -1,9 +1,5 @@
 package bot.modules.mod;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import bot.api.Command;
 import bot.commands.moderation.Ban;
 import bot.commands.moderation.HistoryCommand;
 import bot.commands.moderation.Kick;
@@ -14,8 +10,6 @@ import bot.commands.moderation.Unban;
 import bot.commands.moderation.WarnCommand;
 import bot.events.EventListener;
 import bot.modules.CommandManager;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
  * Clase que maneja los comandos de moderación del bot.
