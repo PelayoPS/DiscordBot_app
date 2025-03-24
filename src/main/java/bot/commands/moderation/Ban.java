@@ -21,7 +21,8 @@ public class Ban implements Command {
     public SlashCommandData getSlash() {
         return Commands.slash("ban", "Banea a un usuario del servidor")
                 .addOption(OptionType.USER, "usuario", "El usuario a banear", true)
-                .addOption(OptionType.STRING, "razon", "Razón del baneo", false);
+                .addOption(OptionType.STRING, "razon", "Razón del baneo", false)
+                .setGuildOnly(true);
     }
 
     @Override

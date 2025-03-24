@@ -27,10 +27,3 @@ CREATE TABLE IF NOT EXISTS penalizaciones (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_admin_mod) REFERENCES usuarios(id_usuario)
 );
-
--- Índices para optimizar las búsquedas
-CREATE INDEX IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel);
-CREATE INDEX IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo);
-CREATE INDEX IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha);
-CREATE INDEX IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario);
-CREATE INDEX IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod);

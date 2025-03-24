@@ -1097,3 +1097,250 @@ Caused by: java.net.ConnectException: Connection refused: connect
 2025-03-23 22:45:02 INFO  bot.log.LoggingManager - Apagando el bot...
 2025-03-23 22:45:02 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
 2025-03-23 22:45:02 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-24 10:38:47 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-24 10:38:47 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: -- Índices para optimizar las búsquedas
+CREATE INDEX IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)' at line 2
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:38:47 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:38:47 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:38:47 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:38:47 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:38:47 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-24 10:38:48 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9255329ade6a0351-MAD]
+2025-03-24 10:38:48 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-24 10:38:48 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-24 10:38:48 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-24 10:38:48 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-24 10:38:48 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-24 10:38:48 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-24 10:38:48 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9255329d8bfa0351-MAD]
+2025-03-24 10:38:48 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-24 10:38:48 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-24 10:38:48 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-24 10:38:48 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-24 10:38:48 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-24 10:38:49 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-24 10:38:49 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-24 10:38:49 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-c-x3qx",{"micros":108590,"calls":["id_created",{"micros":552,"calls":[]},"session_lookup_time",{"micros":2420,"calls":[]},"session_lookup_finished",{"micros":12,"calls":[]},"discord-sessions-prd-1-263",{"micros":105316,"calls":["start_session",{"micros":50347,"calls":["discord-api-rpc-7bd87859f5-zwd47",{"micros":42274,"calls":["get_user",{"micros":5250},"get_guilds",{"micros":3640},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":941},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":440}]}]},"starting_guild_connect",{"micros":66,"calls":[]},"presence_started",{"micros":318,"calls":[]},"guilds_started",{"micros":79,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":54458,"calls":[]},"connect_finished",{"micros":54462,"calls":[]},"build_ready",{"micros":40,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-24 10:38:49 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-24 10:38:49 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-24 10:39:17 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-24 10:39:47 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-24 10:40:04 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-24 10:40:04 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-24 10:40:08 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-24 10:40:08 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: -- Índices para optimizar las búsquedas
+CREATE INDEX IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)' at line 2
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:08 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:08 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:08 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:08 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:08 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-24 10:40:09 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925534945950384e-MAD]
+2025-03-24 10:40:09 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-24 10:40:09 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-24 10:40:09 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-24 10:40:09 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-24 10:40:09 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-24 10:40:09 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-24 10:40:09 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [92553496dbcc384e-MAD]
+2025-03-24 10:40:09 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-24 10:40:09 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-24 10:40:09 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-24 10:40:09 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-24 10:40:09 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-24 10:40:09 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-24 10:40:09 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-24 10:40:09 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-27bl",{"micros":77456,"calls":["id_created",{"micros":711,"calls":[]},"session_lookup_time",{"micros":1405,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-1-81",{"micros":73994,"calls":["start_session",{"micros":67050,"calls":["discord-api-rpc-7bd87859f5-r6gg9",{"micros":56078,"calls":["get_user",{"micros":5817},"get_guilds",{"micros":4441},"send_scheduled_deletion_message",{"micros":6},"guild_join_requests",{"micros":1},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":687}]}]},"starting_guild_connect",{"micros":79,"calls":[]},"presence_started",{"micros":6596,"calls":[]},"guilds_started",{"micros":67,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":160,"calls":[]},"connect_finished",{"micros":164,"calls":[]},"build_ready",{"micros":35,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}]]
+2025-03-24 10:40:10 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-24 10:40:10 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-24 10:40:38 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 3 expired buckets
+2025-03-24 10:40:45 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-24 10:40:45 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 1 expired buckets
+2025-03-24 10:40:45 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-24 10:40:57 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-24 10:40:57 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: -- Índices para optimizar las búsquedas
+CREATE INDEX IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_experiencias_nivel ON experiencias(nivel)' at line 2
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:57 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_tipo ON penalizaciones(tipo)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:57 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_fecha ON penalizaciones(fecha)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:57 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_usuario ON penalizaciones(id_usuario)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:57 ERROR bot.log.LoggingManager - Error al ejecutar sentencia SQL: CREATE INDEX IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF NOT EXISTS idx_penalizaciones_admin ON penalizaciones(id_admin_mod)' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:763)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:648)
+	at bot.core.Bot.executeSchemaScript(Bot.java:94)
+	at bot.core.Bot.initializeDatabase(Bot.java:67)
+	at bot.core.Bot.<init>(Bot.java:40)
+	at bot.Main.main(Main.java:25)
+2025-03-24 10:40:57 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-24 10:40:58 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925535c6cb6ee05f-MAD]
+2025-03-24 10:40:58 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-24 10:40:58 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-24 10:40:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-24 10:40:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-24 10:40:58 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-24 10:40:58 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-24 10:40:58 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [925535c90ca1e05f-MAD]
+2025-03-24 10:40:58 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-24 10:40:58 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-24 10:40:58 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-24 10:40:58 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-24 10:40:58 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-24 10:40:59 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-24 10:40:59 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-24 10:40:59 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-b-0pwx",{"micros":129973,"calls":["id_created",{"micros":765,"calls":[]},"session_lookup_time",{"micros":2174,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"discord-sessions-prd-1-280",{"micros":126783,"calls":["start_session",{"micros":47939,"calls":["discord-api-rpc-7bd87859f5-v9ngq",{"micros":31681,"calls":["get_user",{"micros":9024},"get_guilds",{"micros":2692},"send_scheduled_deletion_message",{"micros":8},"guild_join_requests",{"micros":788},"authorized_ip_coro",{"micros":8},"pending_payments",{"micros":416}]}]},"starting_guild_connect",{"micros":80,"calls":[]},"presence_started",{"micros":30714,"calls":[]},"guilds_started",{"micros":91,"calls":[]},"lobbies_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":47914,"calls":[]},"connect_finished",{"micros":47918,"calls":[]},"build_ready",{"micros":37,"calls":[]},"clean_ready",{"micros":0,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-24 10:40:59 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-24 10:40:59 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-24 10:41:05 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-24 10:41:05 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-24 10:41:05 INFO  bot.log.LoggingManager - Bot apagado correctamente
+2025-03-24 10:41:13 INFO  bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-03-24 10:41:13 INFO  bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-03-24 10:41:14 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9255362ac9daf767-MAD]
+2025-03-24 10:41:14 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash GET/users/@me -> 78bb8553d9352a5a2f89f9def401287a
+2025-03-24 10:41:14 INFO  net.dv8tion.jda.api.JDA - Login Successful!
+2025-03-24 10:41:14 DEBUG n.d.j.a.u.SessionControllerAdapter - Creating new worker handle for shard pool 0
+2025-03-24 10:41:14 DEBUG n.d.j.a.u.SessionControllerAdapter - Running worker
+2025-03-24 10:41:14 DEBUG n.d.j.a.u.SessionControllerAdapter - Running connect node for shard JDA.ShardInfo(currentShard=[0 / 1], totalShards=1)
+2025-03-24 10:41:14 INFO  bot.log.LoggingManager - Bot iniciado correctamente
+2025-03-24 10:41:14 INFO  n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-03-24 10:41:14 DEBUG n.d.j.i.requests.WebSocketClient - Connected with gateway intents: 11001100011111111111101111
+2025-03-24 10:41:14 DEBUG n.d.j.i.requests.WebSocketClient - Sending Identify-packet...
+2025-03-24 10:41:14 DEBUG n.d.j.i.requests.WebSocketClient - Got HELLO packet (OP 10). Initializing keep-alive.
+2025-03-24 10:41:14 DEBUG n.d.jda.internal.requests.Requester - Received response with following cf-rays: [9255362d5fbef767-MAD]
+2025-03-24 10:41:14 DEBUG n.d.jda.api.requests.RestRateLimiter - Caching bucket hash PUT/applications/{application_id}/commands -> 3e32a240d3716487d7d8f6dae6c54f6b
+2025-03-24 10:41:14 DEBUG n.d.j.i.handle.GuildSetupController - Setting incomplete count to 1
+2025-03-24 10:41:14 DEBUG n.d.j.i.handle.GuildSetupController - Starting 75 second timeout for 1 guilds
+2025-03-24 10:41:15 DEBUG n.d.j.i.requests.WebSocketClient - Received READY with _trace [["gateway-prd-us-east1-d-s6rs",{"micros":120172,"calls":["id_created",{"micros":1065,"calls":[]},"session_lookup_time",{"micros":315,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"discord-sessions-prd-1-222",{"micros":116420,"calls":["start_session",{"micros":57436,"calls":["discord-api-rpc-7bd87859f5-7mdwc",{"micros":47533,"calls":["get_user",{"micros":13592},"get_guilds",{"micros":4975},"send_scheduled_deletion_message",{"micros":7},"guild_join_requests",{"micros":1856},"authorized_ip_coro",{"micros":9},"pending_payments",{"micros":2249}]}]},"starting_guild_connect",{"micros":69,"calls":[]},"presence_started",{"micros":40686,"calls":[]},"guilds_started",{"micros":64,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":18105,"calls":[]},"connect_finished",{"micros":18111,"calls":[]},"build_ready",{"micros":49,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}]]
+2025-03-24 10:41:15 INFO  net.dv8tion.jda.api.JDA - Finished Loading!
+2025-03-24 10:41:15 DEBUG n.d.j.i.handle.GuildSetupController - Finished setup for guild 1215601141077905438 firing cached events 0
+2025-03-24 10:41:30 INFO  bot.log.LoggingManager - Apagando el bot...
+2025-03-24 10:41:30 DEBUG n.d.jda.api.requests.RestRateLimiter - Removed 4 expired buckets
+2025-03-24 10:41:30 INFO  bot.log.LoggingManager - Bot apagado correctamente
