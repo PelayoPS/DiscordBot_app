@@ -1,7 +1,6 @@
 package bot;
 
-import java.util.Scanner;
-
+import bot.config.ConfigManager;
 import bot.core.Bot;
 import bot.log.LoggingManager;
 import bot.modules.CommandManager;
@@ -11,21 +10,23 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            // Obtener token desde args o configuración
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Introduce el token del bot: ");
-            String token = scanner.nextLine();
+            // Cargar configuración desde config.properties
+            ConfigManager configManager = new ConfigManager();
+            configManager.loadConfig();
+
+            // Obtener token desde config.properties o args como respaldo
+            String token = configManager.getProperty("token");
+
             if (token == null || token.isEmpty()) {
-                logger.logError("No se ha proporcionado el token del bot", null);
-                scanner.close();
+                logger.logError(
+                        "Token no proporcionado. Por favor, proporcione un token válido en config.properties o como argumento.",
+                        new IllegalArgumentException("Token no válido"));
                 return;
             }
 
             // Inicializar el bot con el token
             Bot bot = new Bot(token);
             logger.logInfo("Bot iniciado correctamente");
-
-            scanner.close();
 
             // ver los comandos disponibles
             System.out.println("Comandos disponibles:");
@@ -39,7 +40,7 @@ public class Main {
                         }
                     });
 
-            // Mantener el bot en ejecución
+            // Registrar el shutdown hook para cerrar el bot correctamente
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.logInfo("Apagando el bot...");
                 bot.shutdown();

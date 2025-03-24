@@ -35,5 +35,5 @@ java {
 }
 
 application {
-    mainClass = 'bot.gui.MainInterface'
+    mainClass = 'bot.Main'
 }

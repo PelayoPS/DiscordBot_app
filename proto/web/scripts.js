@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Cambio de tema (modo oscuro/claro)
     const themeToggle = document.querySelector('.theme-toggle input');
-    const body = document.body;
+    const {body} = document;
     
     themeToggle.addEventListener('change', () => {
         if (themeToggle.checked) {
@@ -258,9 +258,15 @@ function showNotification(message, type = 'info') {
     
     // Icono según el tipo
     let icon = 'info-circle';
-    if (type === 'success') icon = 'check-circle';
-    if (type === 'warning') icon = 'exclamation-triangle';
-    if (type === 'error') icon = 'times-circle';
+    if (type === 'success') {
+      icon = 'check-circle';
+    }
+    if (type === 'warning') {
+      icon = 'exclamation-triangle';
+    }
+    if (type === 'error') {
+      icon = 'times-circle';
+    }
     
     notification.innerHTML = `
         <i class="fas fa-${icon}"></i>
