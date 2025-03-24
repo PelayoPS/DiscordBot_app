@@ -3,4 +3,4 @@
 /.vscode
 /bin
 # Config files containing sensitive information
-src\main\resources\config.properties
+*.properties
