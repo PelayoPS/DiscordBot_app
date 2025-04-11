@@ -113,6 +113,23 @@ package bot.commands.user {
         -buildAvatarEmbed(String, String): MessageEmbed
         -buildBannerEmbed(String, String): MessageEmbed
     }
+
+    class AIChat implements Command {
+        -static final Logger LOGGER
+        -static final String API_URL
+        -static final String MODEL_NAME
+        -static String apiKey
+        -static final Map<String, List<Map<String, Object>>> chatSessions
+        -static final HttpClient httpClient
+        -static final Gson gson
+        +AIChat()
+        +execute(SlashCommandInteractionEvent): void
+        +getSlash(): SlashCommandData
+        +getName(): String
+        +static sendMessageToThread(String, String): String
+        -static enviarRespuestaFragmentada(ThreadChannel, String): void
+        +static getChatSessions(): Map<String, List<Map<String, Object>>>
+    }
 }
 
 ' Paquete de base de datos
@@ -340,6 +357,14 @@ package bot.events {
     }
 }
 
+package bot.listeners {
+    class AIChatThreadListener extends ListenerAdapter {
+        -static final Logger LOGGER
+        +onMessageReceived(MessageReceivedEvent): void
+        -enviarRespuestaFragmentada(ThreadChannel, String): void
+    }
+}
+
 ' Paquete de logging
 package bot.log {
     class LoggingManager {
@@ -436,5 +461,10 @@ UserCommands o-- Avatar: contiene
 ConfigManager <.. Bot: configura
 Utils <.. CommandManager: utiliza
 Utils <.. Bot: utiliza
+
+' Relaciones para el sistema de chat con IA
+AIChatThreadListener --> AIChat: usa los métodos de
+Bot --> AIChatThreadListener: registra
+UserCommands o-- AIChat: contiene
 
 @enduml
