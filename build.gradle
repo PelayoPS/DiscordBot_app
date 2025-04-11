@@ -9,6 +9,10 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    // Añade el repositorio de Google si no está ya incluido
+    maven { url "https://maven.google.com/" }
+    // También podrías necesitar el repositorio de snapshots de Google
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -22,7 +26,11 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.11'
     implementation group: 'com.github.javaparser', name: 'javaparser-core', version: '3.26.3'
 
-
+    // Dependencia para Google Cloud Vertex AI (Gemini)
+    implementation 'com.google.cloud:google-cloud-vertexai:0.5.0'
+    
+    // Añadir Gson para procesamiento de JSON
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 javafx {

@@ -18,6 +18,7 @@ public class UserCommands extends CommandManager {
      */
     public UserCommands() {
         commands.add(new Avatar());
+        commands.add(new AIChat());
         // commands.add(new HelpCommand());
         // commands.add(new ProfileCommand());
     }

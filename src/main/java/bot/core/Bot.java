@@ -2,6 +2,7 @@ package bot.core;
 
 import bot.commands.ModuleManager;
 import bot.db.DatabaseManager;
+import bot.listeners.ai.AIChatThreadListener;
 import bot.log.LoggingManager;
 import bot.modules.CommandManager;
 import bot.modules.admin.AdminCommands;
@@ -138,6 +139,11 @@ public class Bot {
             jda.addEventListener(module);
             eventRegistry.registerEventListener(module);
         }
+
+        // Registrar el listener para los hilos de chat de IA
+        AIChatThreadListener aiChatListener = new AIChatThreadListener();
+        jda.addEventListener(aiChatListener);
+        logger.logInfo("Registrado listener para hilos de chat de IA");
     }
 
     private void updateCommands() {
