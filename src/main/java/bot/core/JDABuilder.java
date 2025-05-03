@@ -5,6 +5,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 
 /**
  * Clase para construir instancias de JDA con todos los intents habilitados.
+ * Facilita la creación de la instancia principal de JDA para el bot de Discord.
+ * 
+ * @author PelayoPS
  */
 public class JDABuilder {
 

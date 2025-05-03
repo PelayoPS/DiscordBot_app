@@ -8,6 +8,9 @@ import bot.log.LoggingManager;
 
 /**
  * Clase para gestionar la configuración del bot.
+ * Permite cargar, obtener y modificar propiedades de configuración.
+ * 
+ * @author PelayoPS
  */
 public class ConfigManager {
     private static final LoggingManager logger = new LoggingManager();
@@ -15,7 +18,7 @@ public class ConfigManager {
     private static final String DEFAULT_CONFIG_PATH = "src\\main\\resources\\config.properties";
 
     /**
-     * Carga la configuración desde un archivo properties
+     * Carga la configuración desde un archivo properties.
      * 
      * @param filePath Ruta del archivo de configuración
      * @return true si se cargó correctamente, false en caso contrario
@@ -32,7 +35,7 @@ public class ConfigManager {
     }
 
     /**
-     * Carga la configuración desde el archivo por defecto (config.properties)
+     * Carga la configuración desde el archivo por defecto (config.properties).
      * 
      * @return true si se cargó correctamente, false en caso contrario
      */
@@ -41,7 +44,7 @@ public class ConfigManager {
     }
 
     /**
-     * Obtiene una propiedad específica
+     * Obtiene una propiedad específica.
      * 
      * @param key Clave de la propiedad
      * @return Valor de la propiedad o null si no existe
@@ -51,7 +54,7 @@ public class ConfigManager {
     }
 
     /**
-     * Obtiene una propiedad específica con un valor por defecto
+     * Obtiene una propiedad específica con un valor por defecto.
      * 
      * @param key          Clave de la propiedad
      * @param defaultValue Valor por defecto si la propiedad no existe
@@ -62,7 +65,7 @@ public class ConfigManager {
     }
 
     /**
-     * Obtiene el token del bot desde la configuración
+     * Obtiene el token del bot desde la configuración.
      * 
      * @return El token del bot o null si no está configurado
      */
@@ -71,7 +74,7 @@ public class ConfigManager {
     }
 
     /**
-     * Establece una propiedad
+     * Establece una propiedad.
      * 
      * @param key   Clave de la propiedad
      * @param value Valor de la propiedad

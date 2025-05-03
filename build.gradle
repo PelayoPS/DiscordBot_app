@@ -31,11 +31,22 @@ dependencies {
     
     // Añadir Gson para procesamiento de JSON
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Spring Boot para API REST
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.4.5'
+    implementation 'org.springframework.boot:spring-boot-starter:3.4.5'
+    // Para inyección de dependencias y utilidades de Spring
+    implementation 'org.springframework:spring-context:6.1.6'
+
+    // Dependencias para JavaFX WebView
+    implementation 'org.openjfx:javafx-controls:21.0.2'
+    implementation 'org.openjfx:javafx-fxml:21.0.2'
+    implementation 'org.openjfx:javafx-web:21.0.2'
 }
 
 javafx {
-    version = "20.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
+    version = "21.0.2"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web' ]
 }
 
 java {
@@ -43,5 +54,54 @@ java {
 }
 
 application {
-    mainClass = 'bot.Main'
+    mainClass = 'bot.gui.LoginApp'
+    mainClassName = 'bot.BotApplication'
+    run {
+        if (project.hasProperty('spring')) {
+            main = 'bot.BotApplication'
+        }
+        else if (project.hasProperty('webTest')) {
+            main = 'bot.gui.WebPreviewApp'
+        } else {
+            main = 'bot.gui.LoginApp'
+        }
+    }
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-parameters']
+}
+
+// Sincroniza la versión de build.gradle con config.properties
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
+
+task syncVersionToConfig {
+    doLast {
+        def configFile = file('src/main/resources/config.properties')
+        def versionLine = "bot.version=${project.version}"
+        def lines = []
+        if (configFile.exists()) {
+            lines = configFile.readLines()
+            def found = false
+            lines = lines.collect { line ->
+                if (line.startsWith('bot.version=')) {
+                    found = true
+                    return versionLine
+                } else {
+                    return line
+                }
+            }
+            if (!found) {
+                lines = [versionLine] + lines
+            }
+        } else {
+            lines = [versionLine]
+        }
+        configFile.text = lines.join(System.lineSeparator())
+    }
+}
+
+// Ejecutar la tarea antes de compilar
+compileJava.dependsOn syncVersionToConfig

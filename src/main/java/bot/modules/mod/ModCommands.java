@@ -8,13 +8,16 @@ import bot.commands.moderation.PurgeCommand;
 import bot.commands.moderation.TimeoutCommand;
 import bot.commands.moderation.Unban;
 import bot.commands.moderation.WarnCommand;
-import bot.events.EventListener;
 import bot.modules.CommandManager;
+import bot.facade.BotFacade;
+import bot.core.ServiceFactory;
 
 /**
  * Clase que maneja los comandos de moderación del bot.
- * Extiende de {@link EventListener} para manejar eventos de interacción de
+ * Extiende de {@link CommandManager} para manejar eventos de interacción de
  * comandos.
+ * 
+ * @author PelayoPS
  */
 public class ModCommands extends CommandManager {
 
@@ -22,16 +25,19 @@ public class ModCommands extends CommandManager {
      * Constructor de la clase ModCommands.
      * 
      * Agrega los comandos de moderación a la lista de comandos.
+     * 
+     * @param botFacade      Fachada principal del bot
+     * @param serviceFactory Fábrica de servicios para los comandos
      */
-    public ModCommands() {
-        commands.add(new Ban());
-        commands.add(new HistoryCommand());
-        commands.add(new Kick());
-        commands.add(new Mute());
-        commands.add(new PurgeCommand());
-        commands.add(new TimeoutCommand());
-        commands.add(new Unban());
-        commands.add(new WarnCommand());
+    public ModCommands(BotFacade botFacade, ServiceFactory serviceFactory) {
+        commands.add(new Ban(botFacade, serviceFactory));
+        commands.add(new HistoryCommand(botFacade));
+        commands.add(new Kick(botFacade, serviceFactory));
+        commands.add(new Mute(botFacade, serviceFactory));
+        commands.add(new PurgeCommand(botFacade));
+        commands.add(new TimeoutCommand(botFacade, serviceFactory));
+        commands.add(new Unban(botFacade));
+        commands.add(new WarnCommand(botFacade, serviceFactory));
     }
 
 }

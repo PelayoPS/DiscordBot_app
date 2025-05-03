@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.Scene?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" minWidth="900" minHeight="600" prefWidth="1200" prefHeight="800" stylesheets="/gui/components/css/HomeContent.css" styleClass="home-root">
+    <HBox spacing="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" styleClass="main-content-hbox">
+        <VBox minWidth="200" maxWidth="220" prefWidth="200" alignment="TOP_LEFT" spacing="0" styleClass="sidebar">
+            <VBox alignment="TOP_LEFT" spacing="2" styleClass="sidebar-header">
+                <Label text="Admin" styleClass="sidebar-title" />
+                <HBox spacing="6" alignment="CENTER_LEFT" styleClass="sidebar-status">
+                    <Circle radius="6" styleClass="status-circle" />
+                    <Label text="Online" styleClass="status-label" />
+                </HBox>
+            </VBox>
+            <VBox spacing="4" styleClass="sidebar-menu">
+                <Button text="Dashboard" styleClass="sidebar-btn sidebar-btn-active" minHeight="44" maxHeight="44" prefWidth="200" />
+                <Button text="Configuración" styleClass="sidebar-btn" minHeight="44" maxHeight="44" prefWidth="200" />
+                <Button text="Módulos" styleClass="sidebar-btn" minHeight="44" maxHeight="44" prefWidth="200" />
+                <Button text="Logs" styleClass="sidebar-btn" minHeight="44" maxHeight="44" prefWidth="200" />
+                <Button text="Base de Datos" styleClass="sidebar-btn" minHeight="44" maxHeight="44" prefWidth="200" />
+                <Button text="Servidores" styleClass="sidebar-btn" minHeight="44" maxHeight="44" prefWidth="200" />
+            </VBox>
+            <Pane VBox.vgrow="ALWAYS" />
+            <VBox alignment="BOTTOM_LEFT" spacing="12" styleClass="sidebar-footer">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Modo Oscuro" styleClass="darkmode-label" />
+                    <StackPane fx:id="darkModeSwitch" styleClass="darkmode-switch">
+                        <Rectangle fx:id="switchTrack" width="44" height="24" arcWidth="24" arcHeight="24" styleClass="switch-track" />
+                        <Circle fx:id="switchThumb" radius="10" styleClass="switch-thumb" translateX="-10" />
+                    </StackPane>
+                </HBox>
+            </VBox>
+        </VBox>
+        <VBox spacing="20" styleClass="dashboard-content" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <Label text="Dashboard" styleClass="dashboard-title" />
+            <GridPane hgap="20" vgap="20" styleClass="dashboard-grid" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="33.33" />
+                    <ColumnConstraints percentWidth="33.33" />
+                    <ColumnConstraints percentWidth="33.33" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints percentHeight="33.33" />
+                    <RowConstraints percentHeight="33.33" />
+                    <RowConstraints percentHeight="33.33" />
+                </rowConstraints>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" spacing="5" styleClass="dashboard-card" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                    <Label text="Estado del Bot" styleClass="card-title" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Circle radius="8" styleClass="status-circle" />
+                        <Label text="Online" styleClass="status-label status-label-white" />
+                    </HBox>
+                    <Label text="Tiempo Activo: 3 días, 7 horas" styleClass="card-info" />
+                    <Label text="Versión: 1.2.3" styleClass="card-info" />
+                    <Label text="RAM: 128 MB" styleClass="card-info" />
+                    <Label text="CPU: 2%" styleClass="card-info" />
+                </VBox>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" spacing="5" styleClass="dashboard-card" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                    <Label text="Estadísticas" styleClass="card-title" />
+                    <GridPane hgap="32" vgap="16" styleClass="stats-grid">
+                        <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER" spacing="2">
+                            <Label text="8" styleClass="stats-value" />
+                            <Label text="Usuarios" styleClass="stats-label" />
+                        </VBox>
+                        <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" alignment="CENTER" spacing="2">
+                            <Label text="235" styleClass="stats-value" />
+                            <Label text="Servidores" styleClass="stats-label" />
+                        </VBox>
+                        <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" spacing="2">
+                            <Label text="583" styleClass="stats-value" />
+                            <Label text="Comandos Ejecutados" styleClass="stats-label" />
+                        </VBox>
+                        <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER" spacing="2">
+                            <Label text="87" styleClass="stats-value" />
+                            <Label text="Interacciones" styleClass="stats-label" />
+                        </VBox>
+                    </GridPane>
+                </VBox>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="2" spacing="10" styleClass="dashboard-card" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                    <Label text="Base de Datos" styleClass="card-title" />
+                    <Label text="Usuarios: 235" styleClass="card-info" />
+                    <Label text="Experiencia: 109" styleClass="card-info" />
+                    <Label text="Permisos: 87" styleClass="card-info" />
+                    <Label text="Configuraciones: 4" styleClass="card-info" />
+                    <Button text="Ver Base de Datos" styleClass="dashboard-btn" minHeight="36" maxWidth="Infinity" VBox.vgrow="ALWAYS" />
+                </VBox>
+                <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" spacing="10" styleClass="dashboard-card" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                    <Label text="Logs recientes" styleClass="card-title" />
+                    <VBox spacing="4">
+                        <Label text="[12:30:45] Bot iniciado correctamente" styleClass="log-label" />
+                        <Label text="[12:31:00] Servidor conectado" styleClass="log-label" />
+                        <Label text="[12:32:10] Usuario Pepe#1234 ejecutó !ban" styleClass="log-label" />
+                        <Label text="[12:33:20] Usuario Maria#5678 subió al nivel 5" styleClass="log-label" />
+                        <Label text="[12:34:30] Se configuró correctamente el canal de logs" styleClass="log-label" />
+                    </VBox>
+                    <Button text="Ver todos los logs" styleClass="dashboard-btn" minHeight="36" maxWidth="Infinity" VBox.vgrow="ALWAYS" />
+                </VBox>
+                <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="10" styleClass="dashboard-card" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                    <Label text="Acciones rápidas" styleClass="card-title" />
+                    <VBox spacing="8" fillWidth="true">
+                        <Button text="Iniciar Bot" styleClass="action-btn action-btn-green" minHeight="36" maxWidth="Infinity" />
+                        <Button text="Reiniciar" styleClass="action-btn action-btn-blue" minHeight="36" maxWidth="Infinity" />
+                        <Button text="Detener" styleClass="action-btn action-btn-red" minHeight="36" maxWidth="Infinity" />
+                    </VBox>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </HBox>
+</AnchorPane>

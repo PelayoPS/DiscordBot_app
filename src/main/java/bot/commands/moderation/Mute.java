@@ -3,15 +3,38 @@ package bot.commands.moderation;
 import java.time.Duration;
 
 import bot.api.Command;
+import bot.core.ServiceFactory;
+import bot.facade.BotFacade;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
+/**
+ * Comando para silenciar a un usuario en el servidor de Discord.
+ * Permite a los usuarios con permisos adecuados silenciar miembros
+ * especificando usuario, tiempo y razón.
+ * 
+ * @author PelayoPS
+ */
 public class Mute implements Command {
 
+    private final BotFacade botFacade;
+    private final ServiceFactory serviceFactory;
     private String name = "mute";
+
+    /**
+     * Constructor de la clase Mute.
+     * 
+     * @param botFacade      Fachada para operaciones del bot
+     * @param serviceFactory Fábrica de servicios para acceso a datos
+     */
+    public Mute(BotFacade botFacade, ServiceFactory serviceFactory) {
+        this.botFacade = botFacade;
+        this.serviceFactory = serviceFactory;
+    }
 
     /**
      * Silencia a un usuario.
@@ -20,6 +43,11 @@ public class Mute implements Command {
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        if (!event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
+            event.reply("No tienes permisos para usar este comando").setEphemeral(true).queue();
+            return;
+        }
+
         // Obtiene el usuario a silenciar
         User user = event.getOption("usuario").getAsUser();
 
@@ -29,11 +57,25 @@ public class Mute implements Command {
         // Obtiene el tiempo del silencio
         Duration tiempo = parseTime(event.getOption("tiempo").getAsString());
 
-        // Silencia al usuario
-        event.getGuild().getMember(user).timeoutFor(tiempo).reason(razon).queue();
-
-        // Responde al usuario
-        event.reply("Usuario silenciado correctamente").setEphemeral(true).queue();
+        // Registrar usuario si no existe
+        Long idUsuario = Long.valueOf(user.getId());
+        Long idAdminMod = Long.valueOf(event.getUser().getId());
+        var usuarioService = serviceFactory.getUsuarioService();
+        if (usuarioService.findById(idUsuario).isEmpty()) {
+            usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
+        }
+        // Registrar admin/mod si no existe
+        if (usuarioService.findById(idAdminMod).isEmpty()) {
+            usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
+        }
+        // Usar la fachada para silenciar
+        botFacade.muteUser(event.getGuild().getId(), user.getId(), razon, tiempo);
+        event.getGuild().getMember(user).timeoutFor(tiempo).reason(razon).queue(
+                success -> {
+                    event.reply("Usuario silenciado correctamente").setEphemeral(true).queue();
+                    // Guardar penalización en la base de datos
+                    serviceFactory.getPenalizacionService().registrarMute(idUsuario, razon, tiempo, idAdminMod);
+                });
     }
 
     /**
@@ -51,10 +93,9 @@ public class Mute implements Command {
 
     /**
      * Parsea el tiempo del silencio.
-     * 60s, 5m, 10m, 1h, 2h, 1d, 7d
      * 
-     * @param time
-     * @return
+     * @param time Cadena de tiempo (ej: 60s, 5m, 1h, etc.)
+     * @return Duration Duración del silencio
      */
     private Duration parseTime(String time) {
         switch (time) {
@@ -77,6 +118,11 @@ public class Mute implements Command {
         }
     }
 
+    /**
+     * Devuelve el nombre del comando.
+     * 
+     * @return El nombre del comando
+     */
     public String getName() {
         return name;
     }

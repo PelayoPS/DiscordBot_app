@@ -5,6 +5,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
  * Interfaz base para todos los comandos del bot.
+ * Define los métodos esenciales que debe implementar cualquier comando
+ * para integrarse con el sistema de comandos del bot.
+ * 
+ * @author PelayoPS
  */
 public interface Command {
     /**

@@ -16,6 +16,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * AIChat.
  * Detecta mensajes en los hilos y envía las respuestas utilizando la API de
  * Gemini.
+ * 
+ * @author PelayoPS
  */
 public class AIChatThreadListener extends ListenerAdapter {
 
@@ -72,7 +74,7 @@ public class AIChatThreadListener extends ListenerAdapter {
 
     /**
      * Envía un mensaje fragmentándolo en partes si supera el límite de caracteres
-     * de Discord
+     * de Discord.
      * 
      * @param canal   El canal donde enviar el mensaje
      * @param mensaje El mensaje a enviar

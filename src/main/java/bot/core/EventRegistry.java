@@ -3,10 +3,13 @@ package bot.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import bot.events.EventListener;
+import net.dv8tion.jda.api.hooks.EventListener;
 
 /**
  * Clase para gestionar el registro de eventos.
+ * Permite registrar y obtener todos los listeners de eventos del bot.
+ * 
+ * @author PelayoPS
  */
 public class EventRegistry {
 
@@ -27,6 +30,6 @@ public class EventRegistry {
      * @return Lista de listeners registrados.
      */
     public List<EventListener> getEventListeners() {
-        return new ArrayList<>(eventListeners);
+        return eventListeners;
     }
 }

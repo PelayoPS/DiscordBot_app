@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="bot.gui.components.BaseWindowController" stylesheets="/gui/components/css/BaseWindow.css" styleClass="basewindow-root">
+    <VBox alignment="CENTER" spacing="0" fillWidth="true">
+        <!-- Barra superior -->
+        <HBox fx:id="header" alignment="CENTER_LEFT" spacing="10" minHeight="40" maxHeight="40" styleClass="basewindow-header" fillHeight="false">
+            <Label fx:id="windowTitle" text="Discord Bot Manager" styleClass="basewindow-title" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <HBox spacing="8" alignment="CENTER_RIGHT">
+                <Circle fx:id="minimizeBtn" id="minimizeBtn" radius="7" styleClass="basewindow-minimize" />
+                <Circle fx:id="maximizeBtn" id="maximizeBtn" radius="7" styleClass="basewindow-maximize" />
+                <Circle fx:id="closeBtn" id="closeBtn" radius="7" styleClass="basewindow-close" />
+            </HBox>
+        </HBox>
+        <!-- Contenido específico de la ventana hija -->
+        <StackPane fx:id="windowContent" />
+    </VBox>
+</StackPane>

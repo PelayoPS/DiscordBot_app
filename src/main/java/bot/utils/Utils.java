@@ -1,17 +1,38 @@
 package bot.utils;
 
+/**
+ * Utilidades generales para validaciones y formateo de mensajes.
+ * 
+ * @author PelayoPS
+ */
 public class Utils {
-    // Método para validar si un ID de usuario es válido
+    /**
+     * Valida si un ID de usuario es válido (17 a 19 dígitos).
+     * 
+     * @param userId ID de usuario a validar
+     * @return true si es válido, false si no
+     */
     public static boolean isValidUserId(String userId) {
         return userId != null && userId.matches("\\d{17,19}");
     }
 
-    // Método para formatear un mensaje de penalización
+    /**
+     * Formatea un mensaje de penalización para un usuario.
+     * 
+     * @param userName Nombre del usuario
+     * @param action   Acción realizada
+     * @return Mensaje formateado
+     */
     public static String formatPenaltyMessage(String userName, String action) {
         return String.format("El usuario %s ha sido %s.", userName, action);
     }
 
-    // Método para convertir un tiempo en milisegundos a un formato legible
+    /**
+     * Formatea una duración en milisegundos a minutos y segundos.
+     * 
+     * @param duration Duración en milisegundos
+     * @return Cadena formateada en minutos y segundos
+     */
     public static String formatDuration(long duration) {
         long seconds = duration / 1000;
         long minutes = seconds / 60;

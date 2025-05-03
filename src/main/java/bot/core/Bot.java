@@ -5,9 +5,6 @@ import bot.db.DatabaseManager;
 import bot.listeners.ai.AIChatThreadListener;
 import bot.log.LoggingManager;
 import bot.modules.CommandManager;
-import bot.modules.admin.AdminCommands;
-import bot.modules.mod.ModCommands;
-import bot.modules.user.UserCommands;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -23,6 +20,9 @@ import java.util.List;
 /**
  * Clase principal del bot que delega responsabilidades a CommandRegistry y
  * EventRegistry.
+ * Gestiona la inicialización de módulos, comandos, base de datos y listeners.
+ * 
+ * @author PelayoPS
  */
 public class Bot {
     private final JDA jda;
@@ -30,8 +30,19 @@ public class Bot {
     private final CommandRegistry commandRegistry;
     private final EventRegistry eventRegistry;
     private final LoggingManager logger = new LoggingManager();
+    private final ServiceFactory serviceFactory;
+    private final DatabaseManager databaseManager;
 
-    public Bot(String token) {
+    /**
+     * Constructor de la clase Bot.
+     * 
+     * @param token           Token de autenticación de Discord
+     * @param serviceFactory  Fábrica de servicios
+     * @param databaseManager Gestor de base de datos
+     */
+    public Bot(String token, ServiceFactory serviceFactory, DatabaseManager databaseManager) {
+        this.serviceFactory = serviceFactory;
+        this.databaseManager = databaseManager;
         // Inicializar registros y managers
         this.commandRegistry = new CommandRegistry();
         this.eventRegistry = new EventRegistry();
@@ -57,11 +68,8 @@ public class Bot {
      */
     private void initializeDatabase() {
         try {
-            // Obtener la instancia del DatabaseManager (singleton)
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-
-            // Verificar la conexión para asegurarnos que funciona
-            try (Connection conn = dbManager.getConnection()) {
+            // Usar la instancia inyectada de DatabaseManager
+            try (Connection conn = databaseManager.getConnection()) {
                 logger.logInfo("Conexión a base de datos establecida correctamente");
 
                 // Ejecutar el script de esquema para crear las tablas si no existen
@@ -128,11 +136,17 @@ public class Bot {
         }
     }
 
+    /**
+     * Inicializa y registra los módulos y listeners en JDA.
+     */
     private void initializeModules() {
-        // Registrar módulos básicos
-        moduleManager.registerModule("management", new AdminCommands());
-        moduleManager.registerModule("moderation", new ModCommands());
-        moduleManager.registerModule("user", new UserCommands());
+        // Registrar módulos básicos usando la factoría
+        moduleManager.registerModule("management",
+                (net.dv8tion.jda.api.hooks.EventListener) serviceFactory.getAdminCommands());
+        moduleManager.registerModule("moderation",
+                (net.dv8tion.jda.api.hooks.EventListener) serviceFactory.getModCommands());
+        moduleManager.registerModule("user",
+                (net.dv8tion.jda.api.hooks.EventListener) serviceFactory.getUserCommands());
 
         // Registrar los módulos como event listeners en JDA
         for (var module : moduleManager.getModules().values()) {
@@ -146,37 +160,63 @@ public class Bot {
         logger.logInfo("Registrado listener para hilos de chat de IA");
     }
 
+    /**
+     * Actualiza y registra los comandos slash en Discord.
+     */
     private void updateCommands() {
         List<SlashCommandData> allCommands = new ArrayList<>();
 
         // Recolectar todos los comandos slash de todos los módulos
         moduleManager.getModules().values().stream()
-                .filter(module -> module instanceof CommandManager)
-                .map(module -> (CommandManager) module)
+                .filter(manager -> manager instanceof CommandManager)
+                .map(manager -> (CommandManager) manager)
                 .forEach(manager -> allCommands.addAll(manager.getSlash()));
 
         // Actualizar los comandos en Discord
         jda.updateCommands().addCommands(allCommands).queue(
-                success -> System.out.println("Comandos registrados correctamente"),
-                error -> System.err.println("Error al registrar los comandos: " + error.getMessage()));
+                success -> logger.logInfo("Comandos registrados correctamente"),
+                error -> logger.logError("Error al registrar los comandos: " + error.getMessage(), error));
     }
 
+    /**
+     * Obtiene la instancia de JDA.
+     * 
+     * @return JDA
+     */
     public JDA getJda() {
         return jda;
     }
 
+    /**
+     * Obtiene el gestor de módulos.
+     * 
+     * @return ModuleManager
+     */
     public ModuleManager getModuleManager() {
         return moduleManager;
     }
 
+    /**
+     * Obtiene el registro de comandos.
+     * 
+     * @return CommandRegistry
+     */
     public CommandRegistry getCommandRegistry() {
         return commandRegistry;
     }
 
+    /**
+     * Obtiene el registro de eventos.
+     * 
+     * @return EventRegistry
+     */
     public EventRegistry getEventRegistry() {
         return eventRegistry;
     }
 
+    /**
+     * Apaga el bot y desconecta JDA.
+     */
     public void shutdown() {
         // Desconectar JDA
         jda.shutdown();

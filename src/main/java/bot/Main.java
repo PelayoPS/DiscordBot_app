@@ -1,22 +1,33 @@
 package bot;
 
-import bot.config.ConfigManager;
+import bot.config.ConfigService;
+import bot.config.FileConfigService;
 import bot.core.Bot;
 import bot.log.LoggingManager;
 import bot.modules.CommandManager;
 
+/**
+ * Clase principal para lanzar el bot en modo manual (sin API REST).
+ * Permite pruebas y ejecución directa del bot desde consola.
+ * 
+ * @author PelayoPS
+ */
 public class Main {
     private static final LoggingManager logger = new LoggingManager();
 
+    /**
+     * Método principal para iniciar el bot en modo manual.
+     * 
+     * @param args Argumentos de línea de comandos
+     */
     public static void main(String[] args) {
+        System.out.println("[INFO] Lanzador manual: este modo es solo para pruebas o uso sin API REST.");
         try {
-            // Cargar configuración desde config.properties
-            ConfigManager configManager = new ConfigManager();
-            configManager.loadConfig();
+            // Usar FileConfigService para la configuración centralizada
+            ConfigService configService = new FileConfigService("src/main/resources/config.properties");
 
-            // Obtener token desde config.properties o args como respaldo
-            String token = configManager.getProperty("token");
-
+            // Obtener token desde configService
+            String token = configService.get("token");
             if (token == null || token.isEmpty()) {
                 logger.logError(
                         "Token no proporcionado. Por favor, proporcione un token válido en config.properties o como argumento.",
@@ -24,18 +35,18 @@ public class Main {
                 return;
             }
 
-            // Inicializar el bot con el token
-            Bot bot = new Bot(token);
-            logger.logInfo("Bot iniciado correctamente");
+            // Instanciar el bot directamente (sin exponer API REST)
+            Bot bot = new Bot(token, null, null);
+            logger.logInfo("Bot instanciado correctamente (modo manual)");
 
-            // ver los comandos disponibles
-            System.out.println("Comandos disponibles:");
+            // Mostrar comandos disponibles
+            logger.logInfo("Comandos disponibles:");
             bot.getJda()
                     .getRegisteredListeners()
                     .forEach(listener -> {
                         if (listener instanceof CommandManager commandManager) {
                             commandManager.getCommands().forEach(command -> {
-                                System.out.println("- " + command.getName());
+                                logger.logInfo("- " + command.getName());
                             });
                         }
                     });
@@ -47,8 +58,14 @@ public class Main {
                 logger.logInfo("Bot apagado correctamente");
             }));
 
+            // Esperar indefinidamente (simula ejecución manual)
+            System.out.println("Bot ejecutándose en modo manual. Pulsa Ctrl+C para salir.");
+            Thread.currentThread().join();
+
+        } catch (InterruptedException e) {
+            logger.logInfo("Ejecución interrumpida. Cerrando bot...");
         } catch (Exception e) {
-            logger.logError("Error al iniciar el bot", e);
+            logger.logError("Error al iniciar el bot en modo manual", e);
         }
     }
 }

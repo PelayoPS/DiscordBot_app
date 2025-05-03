@@ -47,25 +47,21 @@
     <text x="600" y="330" class="title">Discord Bot Manager</text>
     <text x="600" y="360" class="subtitle" text-anchor="middle">Inicia sesión para continuar</text>
     
-    <!-- Formulario de login -->
-    <text x="400" y="410" class="text">Nombre de usuario</text>
+    <!-- Formulario de login por API Keys -->
+    <text x="400" y="410" class="text">Token de Discord</text>
     <rect x="400" y="420" width="400" height="40" class="input-field" />
-    <text x="420" y="445" class="text-muted">admin</text>
-    
-    <text x="400" y="490" class="text">Contraseña</text>
+    <text x="420" y="445" class="text-muted">Ej: MTAxMjM0NTY3ODkw...</text>
+
+    <text x="400" y="490" class="text">Clave API de Gemini (opcional)</text>
     <rect x="400" y="500" width="400" height="40" class="input-field" />
-    <text x="420" y="525" class="text-muted">••••••••</text>
-    
-    <!-- Recordar usuario -->
-    <rect x="405" y="555" width="16" height="16" class="checkbox-checked" />
-    <text x="430" y="568" class="text">Recordar usuario</text>
-    
+    <text x="420" y="525" class="text-muted">Ej: AIzaSyA... (si aplica)</text>
+
     <!-- Botón de login -->
-    <rect x="400" y="585" width="400" height="45" class="button-primary" />
-    <text x="600" y="613" class="text" text-anchor="middle">Iniciar Sesión</text>
-    
+    <rect x="400" y="555" width="400" height="45" class="button-primary" />
+    <text x="600" y="583" class="text" text-anchor="middle">Iniciar Bot</text>
+
     <!-- Footer -->
-    <line x1="400" y1="550" x2="800" y2="550" class="divider" style="display: none;" />
-    <text x="600" y="635" class="text-muted" text-anchor="middle">Esta aplicación gestiona tu bot de Discord</text>
-    <text x="600" y="655" class="text-muted" text-anchor="middle">v1.0.0</text>
+    <text x="600" y="610" class="text-muted" text-anchor="middle">Introduce las API keys necesarias para ejecutar el bot</text>
+    <text x="600" y="630" class="text-muted" text-anchor="middle">Esta aplicación gestiona tu bot de Discord</text>
+    <text x="600" y="650" class="text-muted" text-anchor="middle">v1.0.0</text>
 </svg>

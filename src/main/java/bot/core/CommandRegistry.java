@@ -7,6 +7,9 @@ import bot.api.Command;
 
 /**
  * Clase para gestionar el registro de comandos.
+ * Permite registrar y obtener todos los comandos disponibles en el bot.
+ * 
+ * @author PelayoPS
  */
 public class CommandRegistry {
 

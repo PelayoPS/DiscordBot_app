@@ -1,0 +1,227 @@
+@startuml Diagrama
+scale 0.5
+skinparam backgroundColor #1e1e2f
+skinparam classBackgroundColor #23233a
+skinparam classBorderColor #4e4e6e
+skinparam classFontColor white
+skinparam interfaceFontColor white
+skinparam noteFontColor white
+skinparam packageTitleColor white
+skinparam packageTitleFontColor white
+skinparam defaultFontColor white
+skinparam ArrowColor #b3b3ff
+skinparam shadowing false
+skinparam linetype ortho
+
+package bot {
+  class Main
+  package core {
+    class Bot
+    class CommandRegistry
+    class EventRegistry
+    class JDABuilder
+    class ServiceFactory
+  }
+  package api {
+    interface Command
+    interface EventHandler
+    interface Module
+  }
+  package commands {
+    class ModuleManager
+    package admin {
+      class CreateRole
+      class DeleteRole
+    }
+    package moderation {
+      class Ban
+      class Kick
+      class Mute
+      class Unban
+      class WarnCommand
+      class TimeoutCommand
+      class PurgeCommand
+      class HistoryCommand
+    }
+    package user {
+      class Avatar
+      class AIChat
+    }
+  }
+  package modules {
+    abstract class CommandManager
+    package admin {
+      class AdminCommands
+    }
+    package mod {
+      class ModCommands
+    }
+    package user {
+      class UserCommands
+    }
+  }
+  package db {
+    class DatabaseManager
+  }
+  package config {
+    class ConfigManager
+    class BotConfig
+    class ConfigService
+    class FileConfigService
+  }
+  package log {
+    class LoggingManager
+  }
+  package utils {
+    class Utils
+  }
+  package facade {
+    class BotFacade
+    class BotFacadeImpl
+  }
+  package controller {
+    class AdminController
+    class UserController
+    class ModerationController
+  }
+  package listeners {
+    package ai {
+      class AIChatThreadListener
+      class AIChatListener
+    }
+  }
+  package gui {
+    class LoginApp
+    package controllers {
+      class LoginController
+      class HomeController
+    }
+    package components {
+      class BaseWindowController
+    }
+  }
+  package services {
+    class UsuarioService
+    class UserService
+    class Service
+    class RoleService
+    class PenalizacionService
+    class ModerationService
+    class ExperienciaService
+    class AIChatService
+    package impl {
+      class UsuarioServiceImpl
+      class UserServiceImpl
+      class RoleServiceImpl
+      class PenalizacionServiceImpl
+      class ExperienciaServiceImpl
+      class AIChatServiceImpl
+      class AbstractService
+    }
+  }
+  package repositories {
+    class UsuarioRepository
+    class Repository
+    class PenalizacionRepository
+    class ExperienciaRepository
+    package impl {
+      class AbstractRepository
+      class ExperienciaRepositoryImpl
+      class PenalizacionRepositoryImpl
+      class UsuarioRepositoryImpl
+    }
+  }
+  package adapters {
+    package discord {
+      class Controller
+      class ExperienciaController
+      class PenalizacionController
+      class UsuarioController
+    }
+  }
+  package models {
+    class Experiencia
+    class Penalizacion
+    class Usuario
+  }
+}
+
+' Relaciones principales
+Main --> Bot
+Bot *-- CommandRegistry : composición
+Bot *-- EventRegistry : composición
+Bot o-- ModuleManager : agregación
+Bot o-- LoggingManager : agregación
+Bot o-- DatabaseManager : agregación
+Bot o-- ServiceFactory : agregación
+Bot o-- JDABuilder : agregación
+Bot o-- BotFacade : agregación
+Bot o-- AIChatThreadListener : agregación
+
+ModuleManager o-- EventRegistry
+ModuleManager o-- CommandManager
+ModuleManager o-- AdminCommands : agregación
+ModuleManager o-- ModCommands : agregación
+ModuleManager o-- UserCommands : agregación
+
+CommandRegistry --> Command
+EventRegistry --> EventHandler
+
+CommandManager <|-- AdminCommands
+CommandManager <|-- ModCommands
+CommandManager <|-- UserCommands
+CommandManager o-- Command : agregación
+
+AdminCommands *-- AdminController : composición
+UserCommands *-- UserController : composición
+ModCommands *-- BotFacade : composición
+ModCommands o-- ServiceFactory : agregación
+
+' Comandos implementan Command
+CreateRole ..|> Command
+DeleteRole ..|> Command
+Ban ..|> Command
+Kick ..|> Command
+Mute ..|> Command
+Unban ..|> Command
+WarnCommand ..|> Command
+TimeoutCommand ..|> Command
+PurgeCommand ..|> Command
+HistoryCommand ..|> Command
+Avatar ..|> Command
+AIChat ..|> Command
+
+' Controladores y servicios
+AdminController --> services
+UserController --> services
+DatabaseManager o-- ConfigService : agregación
+DatabaseManager o-- LoggingManager : agregación
+
+' Utilidades
+Utils <.. Bot
+LoggingManager <.. Bot
+
+' GUI
+LoginApp o-- LoginController : agregación
+LoginApp o-- HomeController : agregación
+LoginApp o-- BaseWindowController : agregación
+
+' Servicios y repositorios
+UsuarioServiceImpl ..|> UsuarioService
+UserServiceImpl ..|> UserService
+RoleServiceImpl ..|> RoleService
+PenalizacionServiceImpl ..|> PenalizacionService
+ExperienciaServiceImpl ..|> ExperienciaService
+AIChatServiceImpl ..|> AIChatService
+UsuarioRepository ..|> Repository
+PenalizacionRepository ..|> Repository
+ExperienciaRepository ..|> Repository
+AbstractRepository <|-- ExperienciaRepositoryImpl
+AbstractRepository <|-- PenalizacionRepositoryImpl
+AbstractRepository <|-- UsuarioRepositoryImpl
+
+' Ejemplo de composición en modelos
+Usuario *-- Experiencia
+Usuario *-- Penalizacion
+
+@enduml

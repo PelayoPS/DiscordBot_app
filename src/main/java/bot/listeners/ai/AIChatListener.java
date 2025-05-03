@@ -13,6 +13,13 @@ import net.dv8tion.jda.api.events.channel.update.ChannelUpdateArchivedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+/**
+ * Listener para gestionar los eventos de chat IA en hilos de Discord.
+ * Permite recibir mensajes, archivar y eliminar hilos, y cerrar sesiones de
+ * chat IA.
+ * 
+ * @author PelayoPS
+ */
 public class AIChatListener extends ListenerAdapter {
 
     private final Map<String, ChatSession> chatSessions;

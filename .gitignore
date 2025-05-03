@@ -1,8 +1,36 @@
-.gradle
-/build
-/.vscode
-/bin
-# Config files containing sensitive information
-src/main/resources/config.properties
+# Archivos de configuración sensibles
+config.properties
+*.env
+*.key
+*.pem
+*.crt
+*.p12
 
-credentials.json
+# Archivos de logs y temporales
+logs/
+*.log
+*.tmp
+
+# Salidas de compilación y distribución
+/build/
+/bin/
+/dist/
+/libs/
+/reports/
+/tmp/
+
+# Archivos de Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno de desarrollo
+.idea/
+*.iml
+.vscode/
+
+# Otros
+*.class

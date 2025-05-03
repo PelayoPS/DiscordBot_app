@@ -1,6 +1,7 @@
 package bot.commands.admin;
 
 import bot.api.Command;
+import bot.controller.AdminController;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -8,15 +9,39 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 /**
- * Clase que implementa el comando para crear un rol en Discord.
+ * Comando para crear un nuevo rol en el servidor de Discord.
+ * Permite a los usuarios con permisos adecuados crear roles especificando
+ * nombre y color.
+ * 
+ * @author PelayoPS
  */
 public class CreateRole implements Command {
+    private final AdminController adminController;
 
+    /**
+     * Constructor de la clase CreateRole.
+     * 
+     * @param adminController Controlador de administración del bot
+     */
+    public CreateRole(AdminController adminController) {
+        this.adminController = adminController;
+    }
+
+    /**
+     * Devuelve el nombre del comando.
+     * 
+     * @return El nombre del comando
+     */
     @Override
     public String getName() {
         return "createrole";
     }
 
+    /**
+     * Devuelve la definición del comando slash para su registro en Discord.
+     * 
+     * @return Los datos del comando slash
+     */
     @Override
     public SlashCommandData getSlash() {
         return Commands.slash("createrole", "Crea un nuevo rol en el servidor")
@@ -24,6 +49,12 @@ public class CreateRole implements Command {
                 .addOption(OptionType.STRING, "color", "Color del rol en formato hexadecimal", false);
     }
 
+    /**
+     * Ejecuta la lógica del comando cuando es invocado por un usuario.
+     * Verifica permisos y solicita la creación del rol.
+     * 
+     * @param event El evento de interacción del comando
+     */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         // Verificar permisos
@@ -35,17 +66,12 @@ public class CreateRole implements Command {
         String name = event.getOption("nombre").getAsString();
         String color = event.getOption("color") != null ? event.getOption("color").getAsString() : "000000";
 
-        try {
-            event.getGuild().createRole()
-                    .setName(name)
-                    .setColor(Integer.parseInt(color, 16))
-                    .queue(
-                            role -> event.reply("Rol creado correctamente: " + role.getAsMention()).setEphemeral(true)
-                                    .queue(),
-                            error -> event.reply("No se pudo crear el rol: " + error.getMessage()).setEphemeral(true)
-                                    .queue());
-        } catch (NumberFormatException e) {
-            event.reply("El color debe estar en formato hexadecimal válido").setEphemeral(true).queue();
+        boolean exito = adminController.crearRol(event.getGuild(), name, color);
+        if (exito) {
+            event.reply("Solicitud de creación de rol enviada correctamente").setEphemeral(true).queue();
+        } else {
+            event.reply("No se pudo crear el rol. Verifica el color hexadecimal o los permisos.").setEphemeral(true)
+                    .queue();
         }
     }
 }

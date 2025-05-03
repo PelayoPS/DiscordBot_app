@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error DiscordBot</title>
+    <style>
+        body {
+            background: #23272A;
+            color: #FFFFFF;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-container {
+            background: #2C2F33;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 400px;
+        }
+        .error-code {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #5865F2;
+            margin-bottom: 8px;
+        }
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .error-desc {
+            color: #B9BBBE;
+            margin-bottom: 24px;
+        }
+        .discord-logo {
+            width: 64px;
+            margin-bottom: 16px;
+        }
+        a.button {
+            display: inline-block;
+            background: #5865F2;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        a.button:hover {
+            background: #4752C4;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img class="discord-logo" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f47e.svg" alt="Discord Logo">
+        <div class="error-code">[[${statusCode}]]</div>
+        <div class="error-title">[[${errorMsg}]]</div>
+        <div class="error-desc">La página que buscas no existe, ha ocurrido un error o el recurso no está disponible.<br>Si crees que esto es un error, contacta con el administrador del bot.</div>
+        <a class="button" href="/">Volver al inicio</a>
+    </div>
+</body>
+</html>
