@@ -100,7 +100,7 @@ DiscordBot_app/
 
 ## Diagrama UML de Clases
 El diagrama de clases PlantUML se encuentra en `uml_output/diagrama_clases.puml` y representa la estructura de paquetes, clases principales y relaciones clave del sistema.
-![Diagrama de Clases](uml_output/diagrama_clases.svg)
+![Diagrama de Clases](uml_output/diagrama.svg)
 
 ## Contribución
 Las contribuciones son bienvenidas. Por favor, abre un issue o pull request siguiendo las buenas prácticas de GitHub.
