@@ -13,7 +13,7 @@ REM Verifica si se proporcionó un argumento (mensaje del commit). Si no, muestr
 set COMMIT_MSG=%~1
 REM Asigna el primer argumento del script a la variable COMMIT_MSG.
 
-call ./gradlew runUMLGenerator
+call ./gradlew clean build --refresh-dependencies
 REM Ejecuta la task de Gradle para generar el diagrama UML y continuar con el proceso de subida.
 
 echo Agregando cambios...
