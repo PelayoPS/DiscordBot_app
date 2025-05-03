@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-17%2B-blue?logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7%2B-brightgreen?logo=springboot)
 ![Electron](https://img.shields.io/badge/Electron-22%2B-blue?logo=electron)
-![License](https://img.shields.io/github/license/pelay/DiscordBot_app)
+![License](https://img.shields.io/github/license/PelayoPS/DiscordBot_app)
 
 ---
 
