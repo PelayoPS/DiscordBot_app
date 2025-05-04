@@ -658,7 +658,7 @@ body.light-theme .dashboard-card.logs .card-header {
 .dashboard-card .info-value.warning {
     color: #faa61a;
 }
-.dashboard-card .info-value span {
+.dashboard-card .info-value.span {
     margin-left: 6px;
     font-size: 1.1em;
 }
@@ -886,123 +886,113 @@ body.light-theme .log-level-label {
     font-weight: bold;
 }
 
-body.light-theme .logs-table, body.light-theme .logs-table th, body.light-theme .logs-table td {
-    background: #fff !important;
-    color: #222 !important;
-    border: 1px solid #e0e0e0;
-}
-body.light-theme .logs-table th {
-    background: #f5f5f5 !important;
-    color: #222 !important;
-    font-weight: bold;
-}
-body.light-theme .logs-table tr:nth-child(even) {
-    background: #fafbfc !important;
-}
-body.light-theme .logs-table tr:hover {
-    background: #e3e8f0 !important;
+/* --- UNIFICACIÓN DE ESTILO PARA LOGS: SOLO CAMBIAN COLORES ENTRE MODOS --- */
+
+/* Estructura y layout común para ambos modos */
+.logs-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    font-size: 14px;
+    box-shadow: none;
 }
 
-body.light-theme .log-level-info {
-    background: #e3f2fd !important;
-    color: #1565c0 !important;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-weight: bold;
+.logs-table-container {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: none;
+    flex: 1;
+    overflow-y: auto;
 }
-body.light-theme .log-level-warn {
-    background: #fff8e1 !important;
-    color: #ff9800 !important;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-weight: bold;
+
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
 }
-body.light-theme .log-level-error {
-    background: #ffebee !important;
-    color: #c62828 !important;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-weight: bold;
-}
-body.light-theme .log-level-debug {
-    background: #e0f2f1 !important;
-    color: #00695c !important;
-    border-radius: 4px;
-    padding: 2px 8px;
+
+.logs-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px 16px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 14px;
     font-weight: bold;
 }
 
-body.light-theme .logs-filter, body.light-theme .logs-pagination {
-    background: #f5f5f5 !important;
-    color: #222 !important;
-    border-radius: 6px;
+.logs-table td {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--color-border);
 }
 
-.logs-filter, .logs-pagination {
-    background: #f5f5f5 !important;
-    color: #222 !important;
-    border-radius: 6px;
-}
-
+/* COLORES: solo cambian entre modos */
 body.light-theme .logs-filters {
     background: #fff !important;
     color: #23272f !important;
-    border-radius: 8px;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 8px #0001;
-    padding: 12px 18px;
-    margin-bottom: 18px;
-}
-body.light-theme .filter-label.info {
-    background: #e3f2fd !important;
-    color: #1565c0 !important;
-    border: 1px solid #bbdefb;
-}
-body.light-theme .filter-label.warning {
-    background: #fff8e1 !important;
-    color: #ff9800 !important;
-    border: 1px solid #ffe0b2;
-}
-body.light-theme .filter-label.error {
-    background: #ffebee !important;
-    color: #c62828 !important;
-    border: 1px solid #ffcdd2;
-}
-body.light-theme .filter-label.debug {
-    background: #eceff1 !important;
-    color: #607d8b !important;
-    border: 1px solid #b0bec5;
-}
-body.light-theme .filter-checkbox input:checked + .filter-label {
-    filter: brightness(1.05) contrast(1.1);
-    box-shadow: 0 1px 4px #0001;
 }
 
-.logs-filters {
-    background: var(--color-surface) !important;
+body.light-theme .logs-table-container {
+    background-color: #fff !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+body.light-theme .logs-table th {
+    background: #f5f5f5 !important;
+    color: #222 !important;
+}
+
+body.light-theme .logs-table td {
+    background: #fff !important;
+    color: #222 !important;
+}
+
+/* Etiquetas de nivel de log en el área de filtrado (ambos modos) */
+.filter-label.info {
+    background: #1976d2;
     color: #fff;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
-    padding: 12px 18px;
-    margin-bottom: 18px;
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    font-weight: bold;
+    border: none;
 }
-
-.view-all-link {
-    display: block;
-    text-align: center;
-    margin-top: 12px;
-    color: #2980b9;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s;
+.filter-label.warning {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    font-weight: bold;
+    border: none;
 }
-
-body.light-theme .view-all-link {
-    color: var(--color-info) !important;
+.filter-label.error {
+    background: #e53935;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    font-weight: bold;
+    border: none;
 }
-
-.view-all-link:hover {
-    color: #1a5276;
+.filter-label.debug {
+    background: #607d8b;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin-right: 8px;
+    font-weight: bold;
+    border: none;
 }
 
 /* Botones */
@@ -1367,91 +1357,28 @@ body.light-theme .filter-label {
 
 .logs-filters {
     background: var(--color-surface) !important;
-    color: #fff;
+    color: var(--color-text-primary) !important;
     border-radius: 8px;
     border: 1px solid var(--color-border);
     padding: 12px 18px;
     margin-bottom: 18px;
-}
-
-.logs-filters {
+    font-size: 14px;
+    box-shadow: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
     flex-wrap: wrap;
     gap: 12px;
 }
 
-.filter-group {
-    display: flex;
-    align-items: center;
-}
-
-.filter-group label {
-    margin-right: 8px;
-    color: var(--color-text-secondary);
-}
-
-.filter-checkbox {
-    display: flex;
-    align-items: center;
-    margin-right: 8px;
-    cursor: pointer;
-}
-
-.filter-checkbox input {
-    margin-right: 4px;
-}
-
-.filter-label {
-    padding: 2px 6px;
-    border-radius: var(--border-radius-sm);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.filter-label.info {
-    background-color: var(--color-info);
-    color: white;
-}
-
-.filter-label.warning {
-    background-color: var(--color-warning);
-    color: white;
-}
-
-.filter-label.error {
-    background-color: var(--color-error);
-    color: white;
-}
-
-.filter-label.debug {
-    background-color: var(--color-debug);
-    color: white;
-}
-
-.date-filter input {
-    padding: 6px 12px;
-    background-color: var(--color-input);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-md);
-    color: var(--color-text-primary);
-    font-size: 14px;
-}
-
 .logs-table-container {
-    flex: 1;
-    overflow-y: auto;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-md);
-}
-
-body.light-theme .logs-table-container {
-    background-color: var(--color-surface) !important;
-    border: 1px solid var(--color-border) !important;
-    box-shadow: 0 2px 8px #0001;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: none;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .logs-table {
@@ -1466,10 +1393,13 @@ body.light-theme .logs-table-container {
     position: sticky;
     top: 0;
     z-index: 1;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .logs-table td {
     padding: 8px 16px;
+    font-size: 14px;
     border-bottom: 1px solid var(--color-border);
 }
 
