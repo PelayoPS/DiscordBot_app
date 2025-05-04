@@ -5,12 +5,22 @@
 // =====================
 // Encapsular la lógica de inicialización del dashboard en una función reutilizable
 function initDashboardBotControls() {
+    // Selección robusta de campos de estado por el texto de la etiqueta anterior
+    function getStatusValue(label) {
+        const items = document.querySelectorAll('.estado-bot .integracion-item');
+        for (const item of items) {
+            if (item.querySelector('.integracion-label')?.textContent.trim().toLowerCase().includes(label)) {
+                return item.querySelector('.status-value');
+            }
+        }
+        return null;
+    }
     const botStatusFields = {
-        estado: document.querySelector('.status-item .status-value'),
-        tiempo: document.querySelectorAll('.status-item .status-value')[1],
-        version: document.querySelectorAll('.status-item .status-value')[2],
-        ram: document.querySelectorAll('.status-item .status-value')[3],
-        cpu: document.querySelectorAll('.status-item .status-value')[4],
+        estado: getStatusValue('estado'),
+        tiempo: getStatusValue('tiempo'),
+        version: getStatusValue('versión'),
+        ram: getStatusValue('ram'),
+        cpu: getStatusValue('cpu'),
     };
     const botControls = document.querySelector('.bot-controls');
     if (!botControls) {
@@ -18,10 +28,10 @@ function initDashboardBotControls() {
     }
     botControls.style.flexDirection = 'column';
     botControls.style.gap = '12px';
-    // Selecciona los botones ya definidos en el HTML
+    // Selecciona los botones según las clases actuales
     const startBtn = botControls.querySelector('.start-button');
     const restartBtn = botControls.querySelector('.restart-button');
-    const stopBtn = botControls.querySelector('.danger-button');
+    const stopBtn = botControls.querySelector('.stop-button');
     if (!startBtn || !restartBtn || !stopBtn) {
         return;
     }
@@ -32,18 +42,14 @@ function initDashboardBotControls() {
                 throw new Error('No se pudo obtener el estado del bot');
             }
             const data = await res.json();
-            botStatusFields.estado.textContent = data.estado;
-            if (data.estado === 'ONLINE') {
-                botStatusFields.estado.className = 'status-value online';
-            } else if (data.estado === 'OFFLINE') {
-                botStatusFields.estado.className = 'status-value offline';
-            } else {
-                botStatusFields.estado.className = 'status-value error';
+            if (botStatusFields.estado) {
+                botStatusFields.estado.textContent = data.estado;
+                botStatusFields.estado.className = 'status-value ' + (data.estado === 'ONLINE' ? 'online' : (data.estado === 'OFFLINE' ? 'offline' : 'error'));
             }
-            botStatusFields.tiempo.textContent = data.tiempoActivo || '-';
-            botStatusFields.version.textContent = data.version || '-';
-            botStatusFields.ram.textContent = data.ram || '-';
-            botStatusFields.cpu.textContent = data.cpu || '-';
+            if (botStatusFields.tiempo) botStatusFields.tiempo.textContent = data.tiempoActivo || '-';
+            if (botStatusFields.version) botStatusFields.version.textContent = data.version || '-';
+            if (botStatusFields.ram) botStatusFields.ram.textContent = data.ram || '-';
+            if (botStatusFields.cpu) botStatusFields.cpu.textContent = data.cpu || '-';
             if (data.estado === 'ONLINE') {
                 startBtn.style.display = 'none';
                 restartBtn.style.display = '';
@@ -57,12 +63,14 @@ function initDashboardBotControls() {
                 startBtn.disabled = false;
             }
         } catch (e) {
-            botStatusFields.estado.textContent = 'Desconocido';
-            botStatusFields.estado.className = 'status-value error';
-            botStatusFields.tiempo.textContent = '-';
-            botStatusFields.version.textContent = '-';
-            botStatusFields.ram.textContent = '-';
-            botStatusFields.cpu.textContent = '-';
+            if (botStatusFields.estado) {
+                botStatusFields.estado.textContent = 'Desconocido';
+                botStatusFields.estado.className = 'status-value error';
+            }
+            if (botStatusFields.tiempo) botStatusFields.tiempo.textContent = '-';
+            if (botStatusFields.version) botStatusFields.version.textContent = '-';
+            if (botStatusFields.ram) botStatusFields.ram.textContent = '-';
+            if (botStatusFields.cpu) botStatusFields.cpu.textContent = '-';
             startBtn.style.display = '';
             restartBtn.style.display = 'none';
             stopBtn.style.display = 'none';
@@ -160,50 +168,78 @@ updateRecentLogs();
 
 // =====================
 // Integraciones (JDA, AI API, Base de datos)
-const integracionesContainer = document.createElement('div');
-integracionesContainer.className = 'dashboard-card';
-integracionesContainer.innerHTML = `
-    <div class="card-header">
-        <i class="fas fa-plug"></i>
-        <h3>Integraciones</h3>
-    </div>
-    <div class="card-content" id="integraciones-content">
-        <div class="integracion-item"><span class="integracion-label">JDA:</span> <span id="jda-status">-</span> <span id="jda-ping"></span></div>
-        <div class="integracion-item"><span class="integracion-label">AI API:</span> <span id="ai-status">-</span> <span id="ai-msg"></span></div>
-        <div class="integracion-item"><span class="integracion-label">Base de datos:</span> <span id="db-status">-</span> <span id="db-ping"></span></div>
-    </div>
-`;
-
-// Insertar la tarjeta de integraciones en el dashboard (después de las estadísticas)
-window.addEventListener('DOMContentLoaded', () => {
-    const dashboardGrid = document.querySelector('.dashboard-grid');
-    if (dashboardGrid) {
-        dashboardGrid.insertBefore(integracionesContainer, dashboardGrid.children[2] || null);
-    }
-});
-
 async function updateIntegraciones() {
     try {
         const res = await fetch('/api/bot/integraciones');
-        if (!res.ok) throw new Error('No se pudo obtener el estado de integraciones');
+        if (!res.ok) {
+            throw new Error('No se pudo obtener el estado de integraciones');
+        }
         const data = await res.json();
         // JDA
-        document.getElementById('jda-status').textContent = data.jda.conectado ? 'Conectado ✅' : 'Desconectado ❌';
+        document.getElementById('jda-status').innerHTML = data.jda.conectado ? 'Conectado <span style="color:#43b581;font-weight:bold;">&#10004;</span>' : 'Desconectado <span style="color:#ed4245;font-weight:bold;">&#10008;</span>';
         document.getElementById('jda-ping').textContent = data.jda.ping >= 0 ? `| Ping: ${data.jda.ping} ms` : '';
         // AI API
-        document.getElementById('ai-status').textContent = data.aiApi.disponible ? 'Disponible ✅' : 'No disponible ❌';
+        document.getElementById('ai-status').innerHTML = data.aiApi.disponible ? 'Disponible <span style="color:#43b581;font-weight:bold;">&#10004;</span>' : 'No disponible <span style="color:#ed4245;font-weight:bold;">&#10008;</span>';
         document.getElementById('ai-msg').textContent = data.aiApi.mensaje ? `| ${data.aiApi.mensaje}` : '';
-        // Base de datos
-        document.getElementById('db-status').textContent = data.database.conectada ? 'Conectada ✅' : 'Desconectada ❌';
-        document.getElementById('db-ping').textContent = data.database.ping >= 0 ? `| Ping: ${data.database.ping} ms` : '';
+        // Backend: comprobar si responde la API de botfacade y mostrar ping
+        let backendActivo = false;
+        let backendPing = null;
+        try {
+            const start = performance.now();
+            const backendRes = await fetch('/api/botfacade/ping');
+            backendActivo = backendRes.ok;
+            backendPing = Math.round(performance.now() - start);
+        } catch (err) {
+            backendActivo = false;
+        }
+        if (backendActivo) {
+            document.getElementById('db-status').innerHTML = 'Backend activo <span style="color:#43b581;font-weight:bold;">&#10004;</span>';
+        } else {
+            document.getElementById('db-status').innerHTML = 'Backend inactivo <span style="color:#ed4245;font-weight:bold;">&#10008;</span>';
+        }
+        document.getElementById('db-ping').textContent = backendPing !== null ? `| Ping: ${backendPing} ms` : '';
     } catch (e) {
-        document.getElementById('jda-status').textContent = 'Desconocido';
+        document.getElementById('jda-status').innerHTML = 'Desconocido';
         document.getElementById('jda-ping').textContent = '';
-        document.getElementById('ai-status').textContent = 'Desconocido';
+        document.getElementById('ai-status').innerHTML = 'Desconocido';
         document.getElementById('ai-msg').textContent = '';
-        document.getElementById('db-status').textContent = 'Desconocido';
+        document.getElementById('db-status').innerHTML = 'Desconocido';
         document.getElementById('db-ping').textContent = '';
     }
 }
 setInterval(updateIntegraciones, 2000);
 updateIntegraciones();
+
+// =====================
+// Estadísticas de Base de Datos (DASHBOARD y tarjeta)
+function updateDatabaseStats() {
+    fetch('/api/db/stats')
+        .then(res => res.json())
+        .then(data => {
+            // Selección por la nueva estructura de integracion-item
+            const dbItems = document.querySelectorAll('.dashboard-card.base-datos .integracion-item');
+            if (dbItems.length >= 4) {
+                dbItems[0].querySelector('.db-count').textContent = data.userCount;
+                dbItems[1].querySelector('.db-count').textContent = data.experienceCount;
+                dbItems[2].querySelector('.db-count').textContent = data.penaltyCount;
+                const estadoSpan = dbItems[3].querySelector('.db-count');
+                estadoSpan.textContent = data.available ? 'Disponible' : 'No disponible';
+                estadoSpan.classList.remove('disponible', 'no-disponible');
+                estadoSpan.classList.add(data.available ? 'disponible' : 'no-disponible');
+            }
+        })
+        .catch(() => {
+            const dbItems = document.querySelectorAll('.dashboard-card.base-datos .integracion-item');
+            if (dbItems.length >= 4) {
+                dbItems[0].querySelector('.db-count').textContent = '-';
+                dbItems[1].querySelector('.db-count').textContent = '-';
+                dbItems[2].querySelector('.db-count').textContent = '-';
+                const estadoSpan = dbItems[3].querySelector('.db-count');
+                estadoSpan.textContent = 'No disponible';
+                estadoSpan.classList.remove('disponible');
+                estadoSpan.classList.add('no-disponible');
+            }
+        });
+}
+setInterval(updateDatabaseStats, 2000);
+updateDatabaseStats();

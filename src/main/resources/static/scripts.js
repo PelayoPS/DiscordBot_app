@@ -121,19 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Simular acciones para botones principales
-const actionButtons = document.querySelectorAll('.primary-button, .secondary-button, .danger-button');
-
-actionButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        // No hacer nada si está dentro del modal
-        if (button.closest('.modal')) {
-            return;
-        }
-
-        // Mostrar una notificación de simulación
-        showNotification('Acción simulada: ' + (button.textContent.trim() || 'Acción ejecutada'), 'info');
-    });
+// Eliminar notificaciones de acción simulada
+// (Botones generales)
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+    button.replaceWith(button.cloneNode(true));
 });
 
 // Simulación de toggles de módulos
@@ -229,268 +221,21 @@ logFilterCheckboxes.forEach(checkbox => {
 });
 
 // =====================
-// Estado del Bot (DASHBOARD)
-// =====================
-const API_BASE = "http://localhost:8080";
-
-function apiUrl(path) {
-    if (path.startsWith("/")) {
-      return API_BASE + path;
-    }
-    return API_BASE + "/" + path;
-}
-
-const botStatusFields = {
-    estado: document.querySelector('.status-item .status-value'),
-    tiempo: document.querySelectorAll('.status-item .status-value')[1],
-    version: document.querySelectorAll('.status-item .status-value')[2],
-    ram: document.querySelectorAll('.status-item .status-value')[3],
-    cpu: document.querySelectorAll('.status-item .status-value')[4],
-};
-const botControls = document.querySelector('.bot-controls');
-if (botControls) {
-    // Botones en columna
-    botControls.style.flexDirection = 'column';
-    botControls.style.gap = '12px';
-    // Botones
-    const [restartBtn, stopBtn] = botControls.querySelectorAll('button');
-    // Crear botón de iniciar si no existe
-    let startBtn = botControls.querySelector('.start-button');
-    if (!startBtn) {
-        startBtn = document.createElement('button');
-        startBtn.className = 'primary-button start-button';
-        startBtn.textContent = 'Iniciar';
-        botControls.insertBefore(startBtn, restartBtn);
-    }
-    // Función para actualizar estado
-    async function updateBotStatus() {
-        try {
-            const res = await fetch(apiUrl('/api/bot/status'));
-            if (!res.ok) {
-                throw new Error('No se pudo obtener el estado del bot');
-            }
-            const data = await res.json();
-            botStatusFields.estado.textContent = data.estado;
-            botStatusFields.estado.className = 'status-value ' + (data.estado === 'ONLINE' ? 'online' : 'error');
-            botStatusFields.tiempo.textContent = data.tiempoActivo;
-            botStatusFields.version.textContent = data.version || '-';
-            // Si la versión es 1.0.0 pero existe window.BOT_VERSION (inyectada por el backend), usarla
-            if (botStatusFields.version.textContent === '1.0.0' && window.BOT_VERSION) {
-                botStatusFields.version.textContent = window.BOT_VERSION;
-            }
-            botStatusFields.ram.textContent = data.ram;
-            botStatusFields.cpu.textContent = data.cpu;
-            // Botones según estado
-            if (data.estado === 'ONLINE') {
-                startBtn.disabled = true;
-                restartBtn.disabled = false;
-                stopBtn.disabled = false;
-            } else {
-                startBtn.disabled = false;
-                restartBtn.disabled = true;
-                stopBtn.disabled = true;
-            }
-        } catch (e) {
-            botStatusFields.estado.textContent = 'Desconocido';
-            botStatusFields.estado.className = 'status-value error';
-            botStatusFields.tiempo.textContent = '-';
-            botStatusFields.version.textContent = '-';
-            botStatusFields.ram.textContent = '-';
-            botStatusFields.cpu.textContent = '-';
-            startBtn.disabled = false;
-            restartBtn.disabled = true;
-            stopBtn.disabled = true;
-        }
-    }
-    // Acciones de los botones
-    startBtn.onclick = async (e) => {
-        e?.preventDefault?.();
-        startBtn.disabled = true;
-        showNotification('Iniciando bot...', 'info');
-        await fetch(apiUrl('/api/bot/start'), { method: 'POST' });
-        setTimeout(updateBotStatus, 1000);
-    };
-    restartBtn.onclick = async (e) => {
-        e?.preventDefault?.();
-        restartBtn.disabled = true;
-        showNotification('Reiniciando bot...', 'info');
-        await fetch(apiUrl('/api/bot/restart'), { method: 'POST' });
-        setTimeout(updateBotStatus, 2000);
-    };
-    stopBtn.onclick = async (e) => {
-        e?.preventDefault?.();
-        stopBtn.disabled = true;
-        showNotification('Deteniendo bot...', 'warning');
-        await fetch(apiUrl('/api/bot/stop'), { method: 'POST' });
-        setTimeout(updateBotStatus, 1000);
-    };
-    // Actualización periódica
-    setInterval(updateBotStatus, 1000);
-    updateBotStatus();
-}
-
-// =====================
 // Estadísticas de Base de Datos (DASHBOARD y tarjeta)
 // =====================
-function updateDatabaseStats() {
-    fetch(apiUrl('/api/db/stats'))
-        .then(res => res.json())
-        .then(data => {
-            const dbUsuarios = document.querySelector('.database-info .db-item:nth-child(1) .db-count');
-            const dbExperiencia = document.querySelector('.database-info .db-item:nth-child(2) .db-count');
-            const dbPenalizaciones = document.querySelector('.database-info .db-item:nth-child(3) .db-count');
-            const dbStatus = document.querySelector('.database-info .db-item:nth-child(4) .db-count');
-            if (dbUsuarios) {
-                dbUsuarios.textContent = data.userCount;
-            }
-            if (dbExperiencia) {
-                dbExperiencia.textContent = data.experienceCount;
-            }
-            if (dbPenalizaciones) {
-                dbPenalizaciones.textContent = data.penaltyCount;
-            }
-            if (dbStatus) {
-                dbStatus.textContent = data.available ? 'DISPONIBLE' : 'NO DISPONIBLE';
-                dbStatus.classList.remove('online', 'error');
-                dbStatus.classList.add(data.available ? 'online' : 'error');
-            }
-        })
-        .catch(() => {
-            const dbUsuarios = document.querySelector('.database-info .db-item:nth-child(1) .db-count');
-            const dbExperiencia = document.querySelector('.database-info .db-item:nth-child(2) .db-count');
-            const dbPenalizaciones = document.querySelector('.database-info .db-item:nth-child(3) .db-count');
-            const dbStatus = document.querySelector('.database-info .db-item:nth-child(4) .db-count');
-            if (dbUsuarios) {
-                dbUsuarios.textContent = '-';
-            }
-            if (dbExperiencia) {
-                dbExperiencia.textContent = '-';
-            }
-            if (dbPenalizaciones) {
-                dbPenalizaciones.textContent = '-';
-            }
-            if (dbStatus) {
-                dbStatus.textContent = 'No disponible';
-                dbStatus.classList.remove('disponible');
-                dbStatus.classList.add('no-disponible');
-            }
-        });
-}
-setInterval(updateDatabaseStats, 2000);
-updateDatabaseStats();
+// Esta función se mueve a dashboard.js
+
+// =====================
+// Integraciones (JDA, AI API, Base de datos)
+// Esta función se mueve a dashboard.js
 
 // =====================
 // Logs recientes (DASHBOARD)
-// =====================
-const logList = document.getElementById('recent-logs-list');
-async function updateRecentLogs() {
-    try {
-        const res = await fetch(apiUrl('/api/logs?limit=10'));
-        if (!res.ok) {
-          throw new Error('No se pudieron obtener los logs');
-        }
-        const logs = await res.json();
-        logList.innerHTML = '';
-        let count = 0;
-        logs.forEach(log => {
-            // Nuevo regex para formato: fecha hora NIVEL logger - mensaje
-            const match = log.match(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})\s+(INFO|WARN|ERROR)\s+[^-]+-\s+(.*)$/i);
-            let time = '', level = '', message = '';
-            if (match) {
-                time = match[2];
-                level = match[3].toLowerCase();
-                message = match[4].trim();
-            } else {
-                // Si no matchea, mostrar todo como info
-                level = 'info';
-                time = '';
-                message = log;
-            }
-            if (level === 'debug') {
-                return;
-            } // Excluir DEBUG
-            if (count >= 5) {
-                return;
-            }
-            count++;
-            const div = document.createElement('div');
-            let colorClass = '';
-            if (level === 'info') {
-                colorClass = 'log-info';
-            } else if (level === 'warn' || level === 'warning') {
-                colorClass = 'log-warn';
-            } else if (level === 'error') {
-                colorClass = 'log-error';
-            } else {
-                colorClass = 'log-other';
-            }
-            div.className = `log-item ${colorClass}`;
-            div.innerHTML = `
-                <div class="log-time">${time}</div>
-                <span class="log-level-label log-level-${level}">${level.toUpperCase()}</span>
-                <div class="log-message">${message}</div>
-            `;
-            logList.appendChild(div);
-        });
-        if (count === 0) {
-            logList.innerHTML = '<div class="log-item log-info">No hay logs recientes</div>';
-        }
-    } catch (e) {
-        logList.innerHTML = '<div class="log-item log-error">No se pudieron cargar los logs recientes</div>';
-    }
-}
-setInterval(updateRecentLogs, 2000);
-updateRecentLogs();
+// Esta función se mueve a dashboard.js
 
-// Añadir estilos para los logs por nivel
-(function addLogLevelStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .log-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #3332;
-            padding: 2px 0 2px 0;
-        }
-        .log-time {
-            min-width: 60px;
-            color: #aaa;
-            font-size: 0.95em;
-        }
-        .log-level-label {
-            display: inline-block;
-            min-width: 48px;
-            text-align: center;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 8px;
-            font-size: 0.95em;
-            margin-right: 6px;
-        }
-        .log-level-info {
-            background: #e3f1fd;
-            color: #2196f3;
-        }
-        .log-level-warn, .log-level-warning {
-            background: #fff4e5;
-            color: #ff9800;
-        }
-        .log-level-error {
-            background: #fdeaea;
-            color: #f44336;
-        }
-        .log-level-other {
-            background: #ede7f6;
-            color: #8e44ad;
-        }
-        .log-message {
-            flex: 1;
-            word-break: break-word;
-        }
-    `;
-    document.head.appendChild(style);
-})();
+// =====================
+// Estado del Bot (DASHBOARD)
+// Esta función se mueve a dashboard.js
 
 // Función para mostrar notificaciones
 function showNotification(message, type = 'info') {
@@ -610,6 +355,79 @@ function formatDateTime(date) {
         
         .notification.error i {
             color: var(--color-error);
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
+// Añadir estilos globales para mejorar la consistencia visual de la dashboard y la sección de integraciones
+(function addDashboardGlobalStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        body, .main-interface {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 15px;
+            color: var(--color-text, #e0e0e0);
+        }
+        .panel, .dashboard-card, .database-info, .integrations-panel {
+            background: var(--color-surface, #23272f);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0002;
+            padding: 18px 22px 18px 22px;
+            margin-bottom: 18px;
+        }
+        .panel-title, .dashboard-title, .integrations-panel .panel-title {
+            font-size: 1.13em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 0.01em;
+        }
+        .status-item, .db-item, .integration-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 0;
+            border-bottom: 1px solid #3335;
+        }
+        .status-item:last-child, .db-item:last-child, .integration-item:last-child {
+            border-bottom: none;
+        }
+        .status-label, .db-label, .integration-label {
+            font-weight: 500;
+            color: #b0b0b0;
+            font-size: 0.98em;
+        }
+        .status-value, .db-count, .integration-value {
+            font-weight: 600;
+            font-size: 1.04em;
+        }
+        .status-value.online, .db-count.online {
+            color: #4caf50;
+        }
+        .status-value.error, .db-count.error {
+            color: #f44336;
+        }
+        .integrations-panel {
+            min-height: 180px;
+        }
+        .integration-value {
+            color: #e0e0e0;
+        }
+        .integration-value.empty {
+            color: #888;
+            font-style: italic;
+        }
+        .bot-controls {
+            margin-top: 18px;
+        }
+        .dashboard-card {
+            border: none;
+        }
+        .logs-panel {
+            background: var(--color-surface, #23272f);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0002;
+            padding: 18px 22px;
         }
     `;
     document.head.appendChild(style);

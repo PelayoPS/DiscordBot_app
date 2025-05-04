@@ -146,4 +146,14 @@ public class BotRestController {
         return ResponseEntity.ok(botFacade.getDatabaseStats());
     }
 
+    /**
+     * Endpoint para comprobar si el backend está activo (ping).
+     * 
+     * @return ResponseEntity con status 200 y un mensaje simple
+     */
+    @GetMapping("/botfacade/ping")
+    public ResponseEntity<String> pingBackend() {
+        return ResponseEntity.ok("pong");
+    }
+
 }

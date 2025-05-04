@@ -7,16 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .db-status-value.online {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        .db-status-value.error {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
     <div class="app-container">
@@ -97,30 +87,15 @@
                                     <h3>Estado del Bot</h3>
                                 </div>
                                 <div class="card-content">
-                                    <div class="status-item">
-                                        <div class="status-label">Estado:</div>
-                                        <div class="status-value online">Online</div>
-                                    </div>
-                                    <div class="status-item">
-                                        <div class="status-label">Tiempo activo:</div>
-                                        <div class="status-value">3 días, 7 horas</div>
-                                    </div>
-                                    <div class="status-item">
-                                        <div class="status-label">Versión:</div>
-                                        <div class="status-value">1.2.5</div>
-                                    </div>
-                                    <div class="status-item">
-                                        <div class="status-label">RAM:</div>
-                                        <div class="status-value">128 MB</div>
-                                    </div>
-                                    <div class="status-item">
-                                        <div class="status-label">CPU:</div>
-                                        <div class="status-value">2%</div>
-                                    </div>
-
+                                    <div class="integracion-item"><span class="integracion-label">Estado:</span> <span class="status-value online">Online</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Tiempo activo:</span> <span class="status-value">3 días, 7 horas</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Versión:</span> <span class="status-value">1.2.5</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">RAM:</span> <span class="status-value">128 MB</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">CPU:</span> <span class="status-value">2%</span></div>
                                     <div class="bot-controls">
-                                        <button class="primary-button">Reiniciar</button>
-                                        <button class="danger-button">Detener</button>
+                                        <button class="primary-button start-button">Iniciar</button>
+                                        <button class="primary-button restart-button">Reiniciar</button>
+                                        <button class="danger-button stop-button">Detener</button>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +109,7 @@
                                 <div class="card-content" id="integraciones-content-html">
                                     <div class="integracion-item"><span class="integracion-label">JDA:</span> <span id="jda-status">-</span> <span id="jda-ping"></span></div>
                                     <div class="integracion-item"><span class="integracion-label">AI API:</span> <span id="ai-status">-</span> <span id="ai-msg"></span></div>
-                                    <div class="integracion-item"><span class="integracion-label">Base de datos:</span> <span id="db-status">-</span> <span id="db-ping"></span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Backend:</span> <span id="db-status">-</span> <span id="db-ping"></span></div>
                                 </div>
                             </div>
 
@@ -145,25 +120,10 @@
                                     <h3>Base de Datos</h3>
                                 </div>
                                 <div class="card-content">
-                                    <div class="database-info">
-                                        <div class="db-item">
-                                            <div class="db-name">Usuarios</div>
-                                            <div class="db-count">235</div>
-                                        </div>
-                                        <div class="db-item">
-                                            <div class="db-name">Experiencia</div>
-                                            <div class="db-count">189</div>
-                                        </div>
-                                        <div class="db-item">
-                                            <div class="db-name">Penalizaciones</div>
-                                            <div class="db-count">87</div>
-                                        </div>
-                                        <div class="db-item">
-                                            <div class="db-name">Estado bd</div>
-                                            <div class="db-count db-status-value disponible">Disponible</div>
-                                        </div>
-                                    </div>
-
+                                    <div class="integracion-item"><span class="integracion-label">Usuarios:</span> <span class="db-count">235</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Experiencia:</span> <span class="db-count">189</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Penalizaciones:</span> <span class="db-count">87</span></div>
+                                    <div class="integracion-item"><span class="integracion-label">Estado bd:</span> <span class="db-count db-status-value disponible">Disponible</span></div>
                                     <a href="#" class="view-all-link" data-screen="database">Ver base de datos</a>
                                 </div>
                             </div>
@@ -1069,5 +1029,6 @@
     </div>
 
     <script src="scripts.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
