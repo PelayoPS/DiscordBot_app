@@ -1,3 +1,5 @@
+/* styles.css: Estilos principales de la aplicación Discord Bot Manager */
+
 /* Estilos generales */
 :root {
     /* Colores principales */
@@ -853,23 +855,136 @@ body.light-theme .log-level-label {
 }
 
 .log-level-info {
-    background: #e3f1fd;
-    color: #2196f3;
+    background: #e3f2fd !important;
+    color: #1565c0 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
 }
 
 .log-level-warning {
-    background: #fffbe5;
-    color: #e67e22;
+    background: #fff8e1 !important;
+    color: #ff9800 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
 }
 
 .log-level-error {
-    background: #fdecea;
-    color: #e74c3c;
+    background: #ffebee !important;
+    color: #c62828 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
 }
 
 .log-level-debug {
-    background: #e8eaf6;
-    color: #6c63ff;
+    background: #e0f2f1 !important;
+    color: #00695c !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+
+body.light-theme .logs-table, body.light-theme .logs-table th, body.light-theme .logs-table td {
+    background: #fff !important;
+    color: #222 !important;
+    border: 1px solid #e0e0e0;
+}
+body.light-theme .logs-table th {
+    background: #f5f5f5 !important;
+    color: #222 !important;
+    font-weight: bold;
+}
+body.light-theme .logs-table tr:nth-child(even) {
+    background: #fafbfc !important;
+}
+body.light-theme .logs-table tr:hover {
+    background: #e3e8f0 !important;
+}
+
+body.light-theme .log-level-info {
+    background: #e3f2fd !important;
+    color: #1565c0 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+body.light-theme .log-level-warn {
+    background: #fff8e1 !important;
+    color: #ff9800 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+body.light-theme .log-level-error {
+    background: #ffebee !important;
+    color: #c62828 !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+body.light-theme .log-level-debug {
+    background: #e0f2f1 !important;
+    color: #00695c !important;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+
+body.light-theme .logs-filter, body.light-theme .logs-pagination {
+    background: #f5f5f5 !important;
+    color: #222 !important;
+    border-radius: 6px;
+}
+
+.logs-filter, .logs-pagination {
+    background: #f5f5f5 !important;
+    color: #222 !important;
+    border-radius: 6px;
+}
+
+body.light-theme .logs-filters {
+    background: #fff !important;
+    color: #23272f !important;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px #0001;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+}
+body.light-theme .filter-label.info {
+    background: #e3f2fd !important;
+    color: #1565c0 !important;
+    border: 1px solid #bbdefb;
+}
+body.light-theme .filter-label.warning {
+    background: #fff8e1 !important;
+    color: #ff9800 !important;
+    border: 1px solid #ffe0b2;
+}
+body.light-theme .filter-label.error {
+    background: #ffebee !important;
+    color: #c62828 !important;
+    border: 1px solid #ffcdd2;
+}
+body.light-theme .filter-label.debug {
+    background: #eceff1 !important;
+    color: #607d8b !important;
+    border: 1px solid #b0bec5;
+}
+body.light-theme .filter-checkbox input:checked + .filter-label {
+    filter: brightness(1.05) contrast(1.1);
+    box-shadow: 0 1px 4px #0001;
+}
+
+.logs-filters {
+    background: var(--color-surface) !important;
+    color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    padding: 12px 18px;
+    margin-bottom: 18px;
 }
 
 .view-all-link {
@@ -1248,6 +1363,15 @@ body.light-theme .filter-label {
     height: calc(100% - 65px);
     display: flex;
     flex-direction: column;
+}
+
+.logs-filters {
+    background: var(--color-surface) !important;
+    color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    padding: 12px 18px;
+    margin-bottom: 18px;
 }
 
 .logs-filters {

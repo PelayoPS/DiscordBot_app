@@ -1,0 +1,67 @@
+<!-- Dashboard -->
+<link rel="stylesheet" href="/styles/styles.css">
+<div id="dashboard-screen" class="screen active">
+    <div class="screen-header">
+        <h2>Dashboard</h2>
+    </div>
+    <div class="dashboard-grid">
+        <!-- Estado del Bot -->
+        <div class="dashboard-card estado-bot">
+            <div class="card-header">
+                <i class="fas fa-robot"></i>
+                <h3>Estado del Bot</h3>
+            </div>
+            <div class="card-content">
+                <div class="integracion-item"><span class="integracion-label">Estado:</span> <span class="status-value online">Online</span></div>
+                <div class="integracion-item"><span class="integracion-label">Tiempo activo:</span> <span class="status-value">3 días, 7 horas</span></div>
+                <div class="integracion-item"><span class="integracion-label">Versión:</span> <span class="status-value">1.2.5</span></div>
+                <div class="integracion-item"><span class="integracion-label">RAM:</span> <span class="status-value">128 MB</span></div>
+                <div class="integracion-item"><span class="integracion-label">CPU:</span> <span class="status-value">2%</span></div>
+                <div class="bot-controls">
+                    <button class="primary-button start-button">Iniciar</button>
+                    <button class="primary-button restart-button">Reiniciar</button>
+                    <button class="danger-button stop-button">Detener</button>
+                </div>
+            </div>
+        </div>
+        <!-- Integraciones -->
+        <div class="dashboard-card" id="integraciones-card-html">
+            <div class="card-header">
+                <i class="fas fa-plug"></i>
+                <h3>Integraciones</h3>
+            </div>
+            <div class="card-content" id="integraciones-content-html">
+                <div class="integracion-item"><span class="integracion-label">JDA:</span> <span id="jda-status">-</span> <span id="jda-ping"></span></div>
+                <div class="integracion-item"><span class="integracion-label">AI API:</span> <span id="ai-status">-</span> <span id="ai-msg"></span></div>
+                <div class="integracion-item"><span class="integracion-label">Backend:</span> <span id="db-status">-</span> <span id="db-ping"></span></div>
+            </div>
+        </div>
+        <!-- Base de Datos -->
+        <div class="dashboard-card base-datos">
+            <div class="card-header">
+                <i class="fas fa-database"></i>
+                <h3>Base de Datos</h3>
+            </div>
+            <div class="card-content">
+                <div class="integracion-item"><span class="integracion-label">Usuarios:</span> <span class="db-count">235</span></div>
+                <div class="integracion-item"><span class="integracion-label">Experiencia:</span> <span class="db-count">189</span></div>
+                <div class="integracion-item"><span class="integracion-label">Penalizaciones:</span> <span class="db-count">87</span></div>
+                <div class="integracion-item"><span class="integracion-label">Estado bd:</span> <span class="db-count db-status-value disponible">Disponible</span></div>
+                <a href="#" class="view-all-link" data-screen="database">Ver base de datos</a>
+            </div>
+        </div>
+        <!-- Logs recientes -->
+        <div class="dashboard-card logs">
+            <div class="card-header">
+                <i class="fas fa-list-alt"></i>
+                <h3>Logs recientes</h3>
+            </div>
+            <div class="card-content">
+                <div class="log-list" id="recent-logs-list">
+                    <!-- Los logs recientes se cargarán dinámicamente aquí -->
+                </div>
+                <a href="#" class="view-all-link" data-screen="logs">Ver todos los logs</a>
+            </div>
+        </div>
+    </div>
+</div>

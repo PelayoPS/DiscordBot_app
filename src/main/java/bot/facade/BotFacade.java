@@ -149,6 +149,17 @@ public interface BotFacade {
      */
     List<String> getLogs(String level, int limit);
 
+    /**
+     * Recupera los logs de la aplicación filtrados por fecha y tipo.
+     * 
+     * @param from  Fecha inicial (yyyy-MM-dd, opcional)
+     * @param to    Fecha final (yyyy-MM-dd, opcional)
+     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional)
+     * @param limit Máximo número de entradas
+     * @return Lista de logs como String
+     */
+    List<String> getLogsFiltered(String from, String to, List<String> types, int limit);
+
     // --- Database Stats ---
 
     /**

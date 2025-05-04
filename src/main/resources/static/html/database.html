@@ -1,0 +1,207 @@
+<!-- Base de Datos -->
+<link rel="stylesheet" href="/styles/styles.css">
+<div id="database-screen" class="screen">
+    <div class="screen-header">
+        <h2>Base de Datos</h2>
+    </div>
+    <div class="database-container">
+        <div class="database-tabs">
+            <div class="tab active" data-tab="usuarios-table">Usuarios</div>
+            <div class="tab" data-tab="experiencia-table">Experiencia</div>
+            <div class="tab" data-tab="penalizaciones-table">Penalizaciones</div>
+            <div class="tab" data-tab="configuraciones-table">Configuraciones</div>
+        </div>
+        <div class="database-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar en la tabla...">
+            </div>
+            <button class="primary-button">
+                <i class="fas fa-plus"></i>
+                Nuevo registro
+            </button>
+        </div>
+        <!-- Tabla de Usuarios -->
+        <div id="usuarios-table" class="database-table-container active">
+            <table class="database-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario Discord</th>
+                        <th>Nombre</th>
+                        <th>Registrado</th>
+                        <th>Último acceso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>User#1234</td>
+                        <td>Usuario Normal</td>
+                        <td>15/01/2025</td>
+                        <td>23/03/2025</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Mod#5678</td>
+                        <td>Moderador</td>
+                        <td>10/01/2025</td>
+                        <td>23/03/2025</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Usuario#1234</td>
+                        <td>Usuario</td>
+                        <td>01/01/2025</td>
+                        <td>22/03/2025</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Tabla de Experiencia -->
+        <div id="experiencia-table" class="database-table-container">
+            <table class="database-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Servidor</th>
+                        <th>Nivel</th>
+                        <th>XP</th>
+                        <th>Último mensaje</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>User#1234</td>
+                        <td>Servidor 1</td>
+                        <td>5</td>
+                        <td>1250</td>
+                        <td>23/03/2025 11:45</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Mod#5678</td>
+                        <td>Servidor 1</td>
+                        <td>12</td>
+                        <td>5430</td>
+                        <td>23/03/2025 10:30</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Tabla de Penalizaciones -->
+        <div id="penalizaciones-table" class="database-table-container">
+            <table class="database-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Servidor</th>
+                        <th>Tipo</th>
+                        <th>Razón</th>
+                        <th>Moderador</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>User#1234</td>
+                        <td>Servidor 1</td>
+                        <td>Warning</td>
+                        <td>Spam en chat</td>
+                        <td>Mod#5678</td>
+                        <td>23/03/2025 10:23</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Tabla de Configuraciones -->
+        <div id="configuraciones-table" class="database-table-container">
+            <table class="database-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Servidor</th>
+                        <th>Prefijo</th>
+                        <th>Logs Activados</th>
+                        <th>Canal de Logs</th>
+                        <th>Módulos Activos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Servidor 1</td>
+                        <td>!</td>
+                        <td>Sí</td>
+                        <td>#logs</td>
+                        <td>Moderación, Usuario</td>
+                        <td class="actions-cell">
+                            <button class="icon-button">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

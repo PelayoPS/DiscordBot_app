@@ -1,0 +1,180 @@
+<!-- Módulos -->
+<div id="modules-screen" class="screen">
+    <div class="screen-header">
+        <h2>Módulos</h2>
+    </div>
+    <div class="modules-container">
+        <div class="modules-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar módulos...">
+            </div>
+            <div class="modules-filters">
+                <div class="filter-label">Mostrar:</div>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="radio" name="modules-filter" value="all" checked>
+                        Todos
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="modules-filter" value="enabled">
+                        Activos
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="modules-filter" value="disabled">
+                        Inactivos
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modules-list">
+            <!-- Módulo de Moderación -->
+            <div class="module-card enabled">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <div class="module-title">
+                        <h3>Moderación</h3>
+                        <div class="module-subtitle">Herramientas de moderación de servidores</div>
+                    </div>
+                    <div class="module-toggle">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-commands">
+                    <div class="command-item">
+                        <span class="command-name">!ban</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item">
+                        <span class="command-name">!kick</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item">
+                        <span class="command-name">!mute</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item">
+                        <span class="command-name">!warn</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item">
+                        <span class="command-name">!history</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="module-config-button">
+                        <i class="fas fa-cog"></i>
+                        Configurar módulo
+                    </button>
+                </div>
+            </div>
+            <!-- Módulo de Usuario -->
+            <div class="module-card enabled">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="module-title">
+                        <h3>Comandos de Usuario</h3>
+                        <div class="module-subtitle">Funciones generales para todos los usuarios</div>
+                    </div>
+                    <div class="module-toggle">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-commands">
+                    <div class="command-item">
+                        <span class="command-name">!avatar</span>
+                        <label class="switch small">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="module-config-button">
+                        <i class="fas fa-cog"></i>
+                        Configurar módulo
+                    </button>
+                </div>
+            </div>
+            <!-- Módulo de Economía (Desactivado) -->
+            <div class="module-card disabled">
+                <div class="module-header">
+                    <div class="module-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="module-title">
+                        <h3>Economía</h3>
+                        <div class="module-subtitle">Sistema de monedas y tienda virtual</div>
+                    </div>
+                    <div class="module-toggle">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-commands">
+                    <div class="command-item disabled">
+                        <span class="command-name">!coins</span>
+                        <label class="switch small">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item disabled">
+                        <span class="command-name">!shop</span>
+                        <label class="switch small">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="command-item disabled">
+                        <span class="command-name">!daily</span>
+                        <label class="switch small">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="module-config-button" disabled>
+                        <i class="fas fa-cog"></i>
+                        Configurar módulo
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modules-actions bottom">
+            <button class="primary-button">
+                <i class="fas fa-plus"></i>
+                Añadir módulo
+            </button>
+        </div>
+    </div>
+</div>

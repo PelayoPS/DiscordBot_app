@@ -54,16 +54,21 @@ public class BotRestController {
     }
 
     /**
-     * Obtiene los logs de la aplicación.
+     * Obtiene los logs de la aplicación con filtrado por tipo y fecha.
      * 
-     * @param level Nivel de log (opcional)
+     * @param from  Fecha inicial (yyyy-MM-dd, opcional)
+     * @param to    Fecha final (yyyy-MM-dd, opcional)
+     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional)
      * @param limit Límite de resultados (opcional)
      * @return ResponseEntity con la lista de logs
      */
     @GetMapping("/logs")
-    public ResponseEntity<List<String>> getLogs(@RequestParam(defaultValue = "") String level,
+    public ResponseEntity<List<String>> getLogs(
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to,
+            @RequestParam(required = false) List<String> types,
             @RequestParam(defaultValue = "1000") int limit) {
-        return ResponseEntity.ok(botFacade.getLogs(level, limit));
+        return ResponseEntity.ok(botFacade.getLogsFiltered(from, to, types, limit));
     }
 
     /**

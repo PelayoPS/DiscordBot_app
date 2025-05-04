@@ -27,6 +27,12 @@ public class DatabaseManager {
      */
     public DatabaseManager(ConfigService configService) {
         this.configService = configService;
+        try {
+            createDatabaseIfNotExists();
+        } catch (SQLException e) {
+            logger.logError("Error al crear o verificar la base de datos", e);
+            throw new RuntimeException("No se pudo crear o verificar la base de datos", e);
+        }
     }
 
     /**
@@ -38,7 +44,6 @@ public class DatabaseManager {
      */
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            createDatabaseIfNotExists();
             String url = configService.get("db.url");
             String username = configService.get("db.username");
             String password = configService.get("db.password");

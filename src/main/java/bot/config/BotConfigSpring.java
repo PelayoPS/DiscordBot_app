@@ -66,12 +66,13 @@ public class BotConfigSpring {
      * @param moderationService Servicio de moderación
      * @param commandManager    Gestor de comandos
      * @param loggingManager    Gestor de logs
+     * @param databaseManager   Gestor de base de datos
      * @return BotFacade instancia de la fachada del bot
      */
     @Bean
     public BotFacade botFacade(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, LoggingManager loggingManager) {
-        return new BotFacadeImpl(usuarioService, moderationService, commandManager, loggingManager);
+            CommandManager commandManager, LoggingManager loggingManager, DatabaseManager databaseManager) {
+        return new BotFacadeImpl(usuarioService, moderationService, commandManager, loggingManager, databaseManager);
     }
 
     /**

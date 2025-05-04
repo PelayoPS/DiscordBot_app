@@ -71,7 +71,7 @@ public class ServiceFactory {
         this.userCommands = new UserCommands(userController);
 
         this.loggingManager = new LoggingManager();
-        this.botFacade = new BotFacadeImpl(usuarioService, moderationService, null, loggingManager);
+        this.botFacade = new BotFacadeImpl(usuarioService, moderationService, null, loggingManager, databaseManager);
     }
 
     /**

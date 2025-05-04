@@ -10,14 +10,28 @@ import bot.config.ConfigManager;
 import bot.config.ConfigService;
 import bot.config.FileConfigService;
 import bot.core.Bot;
+import bot.core.ServiceFactory;
 import bot.db.DatabaseManager;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.io.FileInputStream;
 import java.util.Properties;
 
@@ -36,6 +50,7 @@ public class BotFacadeImpl implements BotFacade {
     private final ModerationService moderationService;
     private final CommandManager commandManager;
     private final LoggingManager loggingManager;
+    private final DatabaseManager databaseManager;
     private Bot botInstance;
     private Instant botStartTime;
     @Value("${bot.version:1.0.0}")
@@ -53,13 +68,15 @@ public class BotFacadeImpl implements BotFacade {
      * @param moderationService Servicio de moderación
      * @param commandManager    Gestor de comandos
      * @param loggingManager    Gestor de logs
+     * @param databaseManager   Gestor de base de datos
      */
     public BotFacadeImpl(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, LoggingManager loggingManager) {
+            CommandManager commandManager, LoggingManager loggingManager, DatabaseManager databaseManager) {
         this.usuarioService = usuarioService;
         this.moderationService = moderationService;
         this.commandManager = commandManager;
         this.loggingManager = loggingManager;
+        this.databaseManager = databaseManager;
     }
 
     /**
@@ -71,9 +88,8 @@ public class BotFacadeImpl implements BotFacade {
             // Cargar configuración
             ConfigService configService = new FileConfigService("src/main/resources/config.properties");
             String token = configService.get("token");
-            bot.db.DatabaseManager dbManager = new bot.db.DatabaseManager(configService);
-            bot.core.ServiceFactory serviceFactory = new bot.core.ServiceFactory(configService, dbManager);
-            botInstance = new Bot(token, serviceFactory, dbManager);
+            ServiceFactory serviceFactory = new ServiceFactory(configService, databaseManager);
+            botInstance = new Bot(token, serviceFactory, databaseManager);
             botStartTime = Instant.now();
             logger.logInfo("Bot iniciado desde BotFacadeImpl (con dependencias reales)");
         }
@@ -237,7 +253,7 @@ public class BotFacadeImpl implements BotFacade {
      * @param duration      Duración del silencio.
      */
     @Override
-    public void muteUser(String guildId, String discordUserId, String reason, java.time.Duration duration) {
+    public void muteUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.silenciarUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
 
@@ -250,7 +266,7 @@ public class BotFacadeImpl implements BotFacade {
      * @param duration      Duración del timeout.
      */
     @Override
-    public void timeoutUser(String guildId, String discordUserId, String reason, java.time.Duration duration) {
+    public void timeoutUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.timeoutUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
 
@@ -272,15 +288,15 @@ public class BotFacadeImpl implements BotFacade {
      * @return Lista de penalizaciones del usuario.
      */
     @Override
-    public java.util.List<Penalizacion> getUserHistory(String discordUserId) {
+    public List<Penalizacion> getUserHistory(String discordUserId) {
         logger.logInfo("FACADE: Getting user history for " + discordUserId);
         try {
             if (discordUserId == null || discordUserId.isBlank())
-                return java.util.Collections.emptyList();
+                return Collections.emptyList();
             return moderationService.obtenerHistorialUsuario(Long.parseLong(discordUserId));
         } catch (Exception e) {
             logger.logError("Error al obtener historial de usuario", e);
-            return java.util.Collections.emptyList();
+            return Collections.emptyList();
         }
     }
 
@@ -324,14 +340,78 @@ public class BotFacadeImpl implements BotFacade {
      * @return Lista de logs como String.
      */
     @Override
-    public java.util.List<String> getLogs(String level, int limit) {
+    public List<String> getLogs(String level, int limit) {
         logger.logInfo("FACADE: Retrieving logs with level " + level + " and limit " + limit);
         try {
             return loggingManager.getLogs(level, limit);
         } catch (Exception e) {
             logger.logError("Error al obtener logs", e);
-            return java.util.Collections.emptyList();
+            return Collections.emptyList();
         }
+    }
+
+    /**
+     * Recupera los logs filtrados de la aplicación.
+     * 
+     * @param from  Fecha inicial en formato yyyy-MM-dd.
+     * @param to    Fecha final en formato yyyy-MM-dd.
+     * @param types Lista de tipos de log (INFO, WARN, ERROR).
+     * @param limit Máximo número de entradas.
+     * @return Lista de logs como String.
+     */
+    @Override
+    public List<String> getLogsFiltered(String from, String to, List<String> types, int limit) {
+        List<String> result = new ArrayList<>();
+        Path logPath = Paths.get("logs/app.log");
+        final LocalDate[] dateRange = new LocalDate[2];
+        try {
+            if (from != null && !from.isBlank()) {
+                dateRange[0] = LocalDate.parse(from);
+            }
+            if (to != null && !to.isBlank()) {
+                dateRange[1] = LocalDate.parse(to);
+            }
+        } catch (Exception e) {
+            dateRange[0] = null;
+            dateRange[1] = null;
+        }
+        Set<String> typeSet = types != null ? new HashSet<>() : null;
+        if (types != null) {
+            for (String t : types) {
+                if (t != null)
+                    typeSet.add(t.toUpperCase());
+            }
+        }
+        int pageSize = limit > 0 ? limit : 20;
+        try (Stream<String> lines = Files.lines(logPath)) {
+            result = lines.filter(line -> {
+                Pattern pattern = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2}) \\d{2}:\\d{2}:\\d{2} (\\w+)");
+                Matcher matcher = pattern.matcher(line);
+                if (!matcher.find())
+                    return false;
+                String dateStr = matcher.group(1);
+                String typeStr = matcher.group(2).toUpperCase();
+                if (typeSet != null && !typeSet.contains(typeStr))
+                    return false;
+                if (dateRange[0] != null || dateRange[1] != null) {
+                    try {
+                        LocalDate logDate = LocalDate.parse(dateStr);
+                        if (dateRange[0] != null && logDate.isBefore(dateRange[0]))
+                            return false;
+                        if (dateRange[1] != null && logDate.isAfter(dateRange[1]))
+                            return false;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+                return true;
+            })
+                    .limit(pageSize)
+                    .toList();
+        } catch (Exception e) {
+            logger.logError("Error al filtrar logs", e);
+        }
+        return result;
     }
 
     /**
@@ -341,20 +421,12 @@ public class BotFacadeImpl implements BotFacade {
      */
     @Override
     public DatabaseStatsDTO getDatabaseStats() {
-        DatabaseManager dbManager = null;
+        DatabaseManager dbManager = this.databaseManager;
         boolean available = true;
-        if (botInstance != null) {
-            try {
-                dbManager = botInstance.getClass().getDeclaredField("databaseManager").trySetAccessible()
-                        ? (DatabaseManager) botInstance.getClass().getDeclaredField("databaseManager").get(botInstance)
-                        : null;
-            } catch (Exception e) {
-                dbManager = null;
-            }
-        }
         if (dbManager == null) {
-            ConfigService configService = new FileConfigService("src/main/resources/config.properties");
-            dbManager = new DatabaseManager(configService);
+            available = false;
+            logger.logError("No se pudo obtener la instancia existente de DatabaseManager para estadísticas.", null);
+            return new DatabaseStatsDTO(0, 0, 0, false);
         }
         long userCount = 0;
         long experienceCount = 0;
