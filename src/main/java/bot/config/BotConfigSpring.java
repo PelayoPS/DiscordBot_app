@@ -45,6 +45,7 @@ public class BotConfigSpring {
      * @return DatabaseManager instancia de gestor de base de datos
      */
     @Bean
+    @Primary
     public DatabaseManager databaseManager(ConfigService configService) {
         return new DatabaseManager(configService);
     }
@@ -55,6 +56,7 @@ public class BotConfigSpring {
      * @return LoggingManager instancia de gestor de logs
      */
     @Bean
+    @Primary
     public LoggingManager loggingManager() {
         return new LoggingManager();
     }
@@ -82,7 +84,6 @@ public class BotConfigSpring {
      * @return ModCommands instancia de comandos de moderación
      */
     @Bean
-    @Primary
     public ModCommands modCommands(ServiceFactory serviceFactory) {
         return new ModCommands(null, serviceFactory);
     }
@@ -94,6 +95,7 @@ public class BotConfigSpring {
      * @return CommandManager instancia del gestor de comandos
      */
     @Bean
+    @Primary
     public CommandManager commandManager(ModCommands modCommands) {
         return modCommands;
     }
@@ -117,6 +119,7 @@ public class BotConfigSpring {
      * @return UsuarioService instancia del servicio de usuario
      */
     @Bean
+    @Primary
     public UsuarioService usuarioService(ServiceFactory serviceFactory) {
         return serviceFactory.getUsuarioService();
     }
@@ -128,6 +131,7 @@ public class BotConfigSpring {
      * @return ModerationService instancia del servicio de moderación
      */
     @Bean
+    @Primary
     public ModerationService moderationService(ServiceFactory serviceFactory) {
         return new ModerationServiceImpl(serviceFactory.getPenalizacionService());
     }

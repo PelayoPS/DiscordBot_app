@@ -333,83 +333,38 @@ public class BotFacadeImpl implements BotFacade {
     }
 
     /**
-     * Recupera los logs de la aplicación.
+     * Recupera los logs de la aplicación filtrados por fecha y tipo.
      * 
-     * @param level Nivel de log (INFO, WARN, ERROR).
-     * @param limit Máximo número de entradas.
+     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional). Si
+     *              es null o vacía, se devuelven todos los tipos.
+     * @param limit Máximo número de entradas. Si es 0 o negativo, devuelve todas
+     *              las coincidentes.
+     * @param from  Fecha inicial en formato yyyy-MM-dd (opcional).
+     * @param to    Fecha final en formato yyyy-MM-dd (opcional).
      * @return Lista de logs como String.
      */
     @Override
-    public List<String> getLogs(String level, int limit) {
-        logger.logInfo("FACADE: Retrieving logs with level " + level + " and limit " + limit);
-        try {
-            return loggingManager.getLogs(level, limit);
-        } catch (Exception e) {
-            logger.logError("Error al obtener logs", e);
-            return Collections.emptyList();
-        }
-    }
-
-    /**
-     * Recupera los logs filtrados de la aplicación.
-     * 
-     * @param from  Fecha inicial en formato yyyy-MM-dd.
-     * @param to    Fecha final en formato yyyy-MM-dd.
-     * @param types Lista de tipos de log (INFO, WARN, ERROR).
-     * @param limit Máximo número de entradas.
-     * @return Lista de logs como String.
-     */
-    @Override
-    public List<String> getLogsFiltered(String from, String to, List<String> types, int limit) {
+    public List<String> getLogs(List<String> types, int limit, String from, String to) {
+        logger.logDebug("FACADE: Retrieving all logs (no filtering)");
         List<String> result = new ArrayList<>();
-        Path logPath = Paths.get("logs/app.log");
-        final LocalDate[] dateRange = new LocalDate[2];
+        Path logPath = Paths.get("logs\\app.log");
+        if (!Files.exists(logPath)) {
+            logger.logWarn("El archivo de log no se encuentra en: " + logPath.toString());
+            return result;
+        }
         try {
-            if (from != null && !from.isBlank()) {
-                dateRange[0] = LocalDate.parse(from);
-            }
-            if (to != null && !to.isBlank()) {
-                dateRange[1] = LocalDate.parse(to);
+            // Leer todas las líneas
+            List<String> allLines = Files.readAllLines(logPath);
+            // Invertir para que los más recientes estén primero
+            Collections.reverse(allLines);
+            // Aplicar el límite sobre la lista invertida
+            if (limit > 0 && allLines.size() > limit) {
+                result = allLines.subList(0, limit);
+            } else {
+                result = allLines;
             }
         } catch (Exception e) {
-            dateRange[0] = null;
-            dateRange[1] = null;
-        }
-        Set<String> typeSet = types != null ? new HashSet<>() : null;
-        if (types != null) {
-            for (String t : types) {
-                if (t != null)
-                    typeSet.add(t.toUpperCase());
-            }
-        }
-        int pageSize = limit > 0 ? limit : 20;
-        try (Stream<String> lines = Files.lines(logPath)) {
-            result = lines.filter(line -> {
-                Pattern pattern = Pattern.compile("^(\\d{4}-\\d{2}-\\d{2}) \\d{2}:\\d{2}:\\d{2} (\\w+)");
-                Matcher matcher = pattern.matcher(line);
-                if (!matcher.find())
-                    return false;
-                String dateStr = matcher.group(1);
-                String typeStr = matcher.group(2).toUpperCase();
-                if (typeSet != null && !typeSet.contains(typeStr))
-                    return false;
-                if (dateRange[0] != null || dateRange[1] != null) {
-                    try {
-                        LocalDate logDate = LocalDate.parse(dateStr);
-                        if (dateRange[0] != null && logDate.isBefore(dateRange[0]))
-                            return false;
-                        if (dateRange[1] != null && logDate.isAfter(dateRange[1]))
-                            return false;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                }
-                return true;
-            })
-                    .limit(pageSize)
-                    .toList();
-        } catch (Exception e) {
-            logger.logError("Error al filtrar logs", e);
+            logger.logError("Error al leer logs desde BotFacadeImpl", e);
         }
         return result;
     }

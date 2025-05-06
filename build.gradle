@@ -54,18 +54,7 @@ java {
 }
 
 application {
-    mainClass = 'bot.gui.LoginApp'
-    mainClassName = 'bot.BotApplication'
-    run {
-        if (project.hasProperty('spring')) {
-            main = 'bot.BotApplication'
-        }
-        else if (project.hasProperty('webTest')) {
-            main = 'bot.gui.WebPreviewApp'
-        } else {
-            main = 'bot.gui.LoginApp'
-        }
-    }
+    mainClass = 'bot.BotApplication'
 }
 
 tasks.withType(JavaCompile) {

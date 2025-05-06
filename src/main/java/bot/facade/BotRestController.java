@@ -54,21 +54,29 @@ public class BotRestController {
     }
 
     /**
-     * Obtiene los logs de la aplicación con filtrado por tipo y fecha.
-     * 
-     * @param from  Fecha inicial (yyyy-MM-dd, opcional)
-     * @param to    Fecha final (yyyy-MM-dd, opcional)
-     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional)
-     * @param limit Límite de resultados (opcional)
-     * @return ResponseEntity con la lista de logs
+     * Endpoint para obtener logs filtrados por tipo y fecha.
+     * Ejemplo de uso:
+     * /api/logs?types=INFO&types=ERROR&from=2025-05-01&to=2025-05-06&limit=0
      */
     @GetMapping("/logs")
     public ResponseEntity<List<String>> getLogs(
+            @RequestParam(required = false) List<String> types,
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to,
-            @RequestParam(required = false) List<String> types,
-            @RequestParam(defaultValue = "1000") int limit) {
-        return ResponseEntity.ok(botFacade.getLogsFiltered(from, to, types, limit));
+            @RequestParam(required = false, defaultValue = "0") int limit) {
+        // Si no se especifican filtros, pasar null para que el facade devuelva todos los logs
+        if (from == null || from.isBlank()) {
+            from = null;
+        }
+        if (to == null || to.isBlank()) {
+            to = null;
+        }
+        if (types == null || types.isEmpty()) {
+            types = null;
+        }
+        List<String> logs = botFacade.getLogs(types, limit, from, to);
+
+        return ResponseEntity.ok(logs);
     }
 
     /**

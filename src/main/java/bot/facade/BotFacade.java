@@ -1,6 +1,5 @@
 package bot.facade;
 
-// Import necessary models or DTOs if needed later
 import bot.models.Usuario;
 import bot.models.Penalizacion;
 import java.util.List;
@@ -141,24 +140,17 @@ public interface BotFacade {
     String executeCommand(String commandName, String... args);
 
     /**
-     * Recupera los logs de la aplicación.
-     * 
-     * @param level Nivel de log (INFO, WARN, ERROR).
-     * @param limit Máximo número de entradas.
-     * @return Lista de logs como String.
-     */
-    List<String> getLogs(String level, int limit);
-
-    /**
      * Recupera los logs de la aplicación filtrados por fecha y tipo.
      * 
-     * @param from  Fecha inicial (yyyy-MM-dd, opcional)
-     * @param to    Fecha final (yyyy-MM-dd, opcional)
-     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional)
-     * @param limit Máximo número de entradas
-     * @return Lista de logs como String
+     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional). Si
+     *              es null o vacía, se devuelven todos los tipos.
+     * @param limit Máximo número de entradas. Si es 0 o negativo, devuelve todas
+     *              las coincidentes.
+     * @param from  Fecha inicial en formato yyyy-MM-dd (opcional).
+     * @param to    Fecha final en formato yyyy-MM-dd (opcional).
+     * @return Lista de logs como String.
      */
-    List<String> getLogsFiltered(String from, String to, List<String> types, int limit);
+    List<String> getLogs(List<String> types, int limit, String from, String to);
 
     // --- Database Stats ---
 

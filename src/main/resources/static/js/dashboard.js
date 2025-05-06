@@ -1,5 +1,4 @@
 // dashboard.js: Lógica JS específica para el dashboard
-
 let dashboardPingInterval = null;
 
 // Encapsula toda la lógica en una función global para carga dinámica
@@ -126,66 +125,93 @@ window.initDashboardBotControls = function() {
 
     // Logs recientes
     const logList = document.getElementById('recent-logs-list');
-    async function updateRecentLogs() {
+    let logPollInterval = null;
+    let logItems = [];
+    const MAX_LOGS = 5;
+    function renderLogs(logs) {
+        logList.innerHTML = '';
+        let count = 0;
+        logs.forEach(log => {
+            // Regex: fecha, nivel, origen, mensaje
+            const match = log.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(INFO|WARN|ERROR|DEBUG)\s+([^\s]+)\s*-\s*([\s\S]*)$/i);
+            let fecha = '', nivel = '', origen = '', mensaje = '';
+            if (match) {
+                fecha = match[1];
+                nivel = match[2].toUpperCase();
+                origen = match[3];
+                mensaje = match[4].trim();
+            } else {
+                mensaje = log;
+                nivel = 'INFO';
+            }
+            if (count >= MAX_LOGS) {
+              return;
+            }
+            count++;
+            const logEntryDiv = document.createElement('div');
+            logEntryDiv.className = 'log-entry';
+            logEntryDiv.style.padding = '4px 0';
+            let levelColor = '#5865f2';
+            switch (nivel.toLowerCase()) {
+                case 'debug': levelColor = '#43b581'; break;
+                case 'warn': case 'warning': levelColor = '#faa61a'; break;
+                case 'error': levelColor = '#ed4245'; break;
+            }
+            logEntryDiv.innerHTML = `
+                <div class="log-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                    <span class="log-timestamp" style="color: #8e9297; font-size: 12px;">${fecha}</span>
+                    <span class="log-level-tag" style="color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; background-color: ${levelColor};">${nivel}</span>
+                    <span class="log-logger" style="color: #aaa; font-size: 12px;">${origen}</span>
+                </div>
+                <div class="log-message-content" style="color: #b9bbbe; font-size: 13px; word-wrap: break-word; line-height: 1.4;">
+                    ${mensaje}
+                </div>
+            `;
+            logList.appendChild(logEntryDiv);
+        });
+        if (count === 0) {
+            logList.innerHTML = '<div class="log-item log-info" style="color: #b9bbbe; font-size: 13px; padding: 4px 0;">No hay logs recientes</div>';
+        }
+    }
+    async function fetchLogs() {
         try {
-            const res = await fetch('/api/logs?limit=10');
+            // Obtener la fecha de hoy en formato yyyy-MM-dd
+            const today = new Date().toISOString().slice(0, 10);
+            // Pedir los logs del día actual
+            const res = await fetch(`/api/logs?limit=10&from=${today}&to=${today}`);
             if (!res.ok) {
-                throw new Error('No se pudieron obtener los logs');
+                throw new Error('Error al obtener logs');
             }
             const logs = await res.json();
-            logList.innerHTML = '';
-            let count = 0;
-            logs.forEach(log => {
-                const match = log.match(/^\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\s+(INFO|WARN|ERROR)\s+[^-]+-\s+(.*)$/i);
-                let time = '', level = '', message = '';
-                if (match) {
-                    time = match[1];
-                    level = match[2].toLowerCase();
-                    message = match[3].trim();
-                } else {
-                    level = 'info';
-                    time = '';
-                    message = log;
-                }
-                if (level === 'debug') {
-                    return;
-                }
-                if (count >= 5) {
-                    return;
-                }
-                count++;
-                const div = document.createElement('div');
-                let colorClass = '';
-                if (level === 'info') {
-                    colorClass = 'log-info';
-                } else if (level === 'warn' || level === 'warning') {
-                    colorClass = 'log-warn';
-                } else if (level === 'error') {
-                    colorClass = 'log-error';
-                } else {
-                    colorClass = 'log-other';
-                }
-                div.className = `log-item ${colorClass}`;
-                div.innerHTML = `
-                    <div class="log-time">${time}</div>
-                    <span class="log-level-label log-level-${level}">${level.toUpperCase()}</span>
-                    <div class="log-message">${message}</div>
-                `;
-                logList.appendChild(div);
-            });
-            if (count === 0) {
-                logList.innerHTML = '<div class="log-item log-info">No hay logs recientes</div>';
-            }
+            logItems = logs;
+            renderLogs(logItems);
         } catch (e) {
-            logList.innerHTML = '<div class="log-item log-error">No se pudieron cargar los logs recientes</div>';
+            logList.innerHTML = '<div class="log-item log-error">Error al cargar logs</div>';
+        }
+    }
+    function startLogPolling() {
+        if (!logList) {
+            return;
+        }
+        if (logPollInterval) {
+            clearInterval(logPollInterval);
+        }
+        fetchLogs();
+        logPollInterval = setInterval(fetchLogs, 2000);
+    }
+    function stopLogPolling() {
+        if (logPollInterval) {
+            clearInterval(logPollInterval);
+            logPollInterval = null;
         }
     }
     if (logList) {
-        if (logList._interval) {
-            clearInterval(logList._interval);
+        stopLogPolling();
+        startLogPolling();
+        if (!window._dashboardLogCleanup) {
+            window._dashboardLogCleanup = true;
+            window.addEventListener('beforeunload', stopLogPolling);
         }
-        logList._interval = setInterval(updateRecentLogs, 2000);
-        updateRecentLogs();
     }
 
     // Integraciones (JDA, AI API, Base de datos)
@@ -318,7 +344,7 @@ window.initDashboardBotControls = function() {
 
     // Ejemplo: iniciar ping periódico
     if (dashboardPingInterval) {
-      clearInterval(dashboardPingInterval);
+        clearInterval(dashboardPingInterval);
     }
     dashboardPingInterval = setInterval(() => {
         // Aquí iría la lógica de ping a integraciones
