@@ -25,17 +25,17 @@
     --color-debug: #747f8d;
     --color-error: #ed4245;
     --color-input: #40444b;
-    
+
     /* Radios de borde */
     --border-radius-sm: 3px;
     --border-radius-md: 4px;
     --border-radius-lg: 8px;
-    
+
     /* Sombras */
     --shadow-small: 0 1px 2px rgba(0, 0, 0, 0.1);
     --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-large: 0 10px 20px rgba(0, 0, 0, 0.1);
-    
+
     /* Transiciones */
     --transition-fast: 0.1s;
     --transition-normal: 0.2s;
@@ -49,7 +49,8 @@
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--color-background);
     color: var(--color-text-primary);
@@ -88,30 +89,38 @@ body.light-theme .sidebar {
     background-color: #f4f6fa !important;
     border-right: 1px solid #e0e4ea !important;
 }
+
 body.light-theme .menu-item {
     color: #4f5660 !important;
 }
+
 body.light-theme .menu-item.active {
     background-color: #5865f2 !important;
     color: #fff !important;
 }
+
 body.light-theme .menu-item i {
     color: #8a8fa3 !important;
     transition: color 0.2s;
 }
+
 body.light-theme .menu-item.active i {
     color: #fff !important;
 }
+
 body.light-theme .theme-toggle {
     background-color: #f4f6fa !important;
     color: #4f5660 !important;
     border-top: 1px solid #e0e4ea !important;
 }
-body.light-theme .window-titlebar, body.light-theme .screen-header {
+
+body.light-theme .window-titlebar,
+body.light-theme .screen-header {
     background-color: #fff !important;
     color: #23272f !important;
     border-bottom: 1px solid #e0e4ea !important;
 }
+
 body.light-theme .screen-header h2 {
     color: #23272f !important;
     font-weight: 700;
@@ -149,6 +158,21 @@ button {
     padding: 8px 12px;
     -webkit-app-region: drag;
     height: 32px;
+}
+
+/* Área de contenido principal */
+.content-area {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    min-height: 0;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    background: none !important;
 }
 
 .window-title {
@@ -292,14 +316,22 @@ button {
     display: none;
 }
 
-/* Sidebar */
+/* Sidebar visible por defecto en escritorio */
 .sidebar {
-    width: 240px;
-    background-color: var(--color-sidebar);
-    border-right: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
-    padding: 16px 0;
+    width: 240px;
+    position: relative;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--color-sidebar);
+    border-right: 1px solid var(--color-border);
+    box-shadow: none;
+    transition: none;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
 }
 
 .user-profile {
@@ -366,6 +398,7 @@ button {
 .sidebar-menu {
     flex: 1;
     padding: 0 8px;
+    padding-top: 24px;
 }
 
 .menu-item {
@@ -410,6 +443,11 @@ button {
     font-size: 14px;
 }
 
+/* Botón hamburguesa oculto en escritorio */
+.menu-toggle-btn {
+    display: none;
+}
+
 /* Switch (Toggle) */
 .switch {
     position: relative;
@@ -446,15 +484,15 @@ button {
     transition: var(--transition-normal);
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: var(--color-primary);
 }
 
-input:focus + .slider {
+input:focus+.slider {
     box-shadow: 0 0 1px var(--color-primary);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(18px);
 }
 
@@ -479,15 +517,8 @@ input:checked + .slider:before {
     bottom: 3px;
 }
 
-.switch.small input:checked + .slider:before {
+.switch.small input:checked+.slider:before {
     transform: translateX(14px);
-}
-
-/* Área de contenido principal */
-.content-area {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
 }
 
 /* Encabezado de pantalla */
@@ -502,6 +533,10 @@ input:checked + .slider:before {
     font-weight: 600;
 }
 
+.screen-header .menu-toggle-btn {
+    margin-left: 4px;
+}
+
 /* Panel de Control (Dashboard) */
 .dashboard-grid {
     display: grid;
@@ -510,6 +545,11 @@ input:checked + .slider:before {
     padding: 16px;
     overflow-y: auto;
     height: calc(100% - 65px);
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    align-items: flex-start;
+    min-height: 0;
 }
 
 .dashboard-card {
@@ -518,6 +558,12 @@ input:checked + .slider:before {
     border-radius: 12px;
     box-shadow: 0 2px 8px #0002;
     overflow: hidden;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 body.light-theme .dashboard-card {
@@ -531,7 +577,7 @@ body.light-theme .dashboard-card {
     align-items: center;
     padding: 12px 16px;
     border-bottom: 1px solid var(--color-border, #2c2f36);
-    background-color: rgba(0,0,0,0.08);
+    background-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-theme .dashboard-card .card-header {
@@ -629,6 +675,7 @@ body.light-theme .dashboard-card.logs .card-header {
     padding: 0;
     margin-bottom: 12px;
 }
+
 .dashboard-card .info-row {
     display: flex;
     align-items: center;
@@ -636,28 +683,37 @@ body.light-theme .dashboard-card.logs .card-header {
     border-bottom: 1px solid #23263a;
     font-size: 1.08rem;
 }
+
 .dashboard-card .info-row:last-child {
     border-bottom: none;
 }
+
 .dashboard-card .info-label {
     flex: 1;
     color: #b0b0b0;
     font-weight: 600;
     font-size: 1.05rem;
 }
+
 .dashboard-card .info-value {
     font-weight: 600;
     font-size: 1.08rem;
 }
-.dashboard-card .info-value.online, .dashboard-card .info-value.disponible {
+
+.dashboard-card .info-value.online,
+.dashboard-card .info-value.disponible {
     color: #43b581;
 }
-.dashboard-card .info-value.error, .dashboard-card .info-value.no-disponible {
+
+.dashboard-card .info-value.error,
+.dashboard-card .info-value.no-disponible {
     color: #ed4245;
 }
+
 .dashboard-card .info-value.warning {
     color: #faa61a;
 }
+
 .dashboard-card .info-value.span {
     margin-left: 6px;
     font-size: 1.1em;
@@ -760,11 +816,13 @@ body.light-theme .db-count {
     color: var(--color-text-primary) !important;
 }
 
-.db-status-value.disponible, .db-count.online {
+.db-status-value.disponible,
+.db-count.online {
     color: #4caf50;
 }
 
-.db-status-value.no-disponible, .db-count.error {
+.db-status-value.no-disponible,
+.db-count.error {
     color: #e74c3c;
 }
 
@@ -967,6 +1025,7 @@ body.light-theme .logs-table td {
     font-weight: bold;
     border: none;
 }
+
 .filter-label.warning {
     background: #ff9800;
     color: #fff;
@@ -976,6 +1035,7 @@ body.light-theme .logs-table td {
     font-weight: bold;
     border: none;
 }
+
 .filter-label.error {
     background: #e53935;
     color: #fff;
@@ -985,6 +1045,7 @@ body.light-theme .logs-table td {
     font-weight: bold;
     border: none;
 }
+
 .filter-label.debug {
     background: #607d8b;
     color: #fff;
@@ -1101,7 +1162,8 @@ body.light-theme .config-section {
     color: var(--color-text-secondary);
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 8px 12px;
     background-color: var(--color-input);
@@ -1111,7 +1173,8 @@ body.light-theme .config-section {
     font-size: 14px;
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--color-primary);
 }
@@ -1885,36 +1948,209 @@ body.light-theme {
     color: #27ae60 !important;
     font-weight: bold;
 }
+
 .db-status-value.error {
     color: #e74c3c !important;
     font-weight: bold;
 }
+
 .start-button {
     background-color: #27ae60 !important;
     color: #fff !important;
     border: none;
 }
-.start-button:hover, .start-button:focus {
+
+.start-button:hover,
+.start-button:focus {
     background-color: #219150 !important;
 }
+
 .restart-button {
     background-color: #8e44ad !important;
     color: #fff !important;
     border: none;
 }
-.restart-button:hover, .restart-button:focus {
+
+.restart-button:hover,
+.restart-button:focus {
     background-color: #6c3483 !important;
 }
+
 /* Colores de estado SIEMPRE visibles en ambos modos */
-.db-status-value.online, .status-value.online {
+.db-status-value.online,
+.status-value.online {
     color: #27ae60 !important;
     font-weight: bold;
 }
-.db-status-value.error, .status-value.error {
+
+.db-status-value.error,
+.status-value.error {
     color: #e74c3c !important;
     font-weight: bold;
 }
+
 .status-value.offline {
     color: #ed4245 !important;
     font-weight: bold;
+}
+
+/* --- RESPONSIVE: Menú lateral y navegación móvil --- */
+@media (max-width: 900px) {
+    .main-interface {
+        flex-direction: column !important;
+    }
+
+    .sidebar {
+        display: block;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 220px;
+        z-index: 2000;
+        background: var(--color-sidebar);
+        border-right: 1px solid var(--color-border);
+        box-shadow: 2px 0 8px #0003;
+        transition: transform 0.3s, opacity 0.3s;
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sidebar.open {
+        display: block;
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .app-content {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* Botón menú hamburguesa */
+    .menu-toggle-btn {
+        display: flex !important;
+        align-items: center;
+        background: none;
+        border: none;
+        color: var(--color-text-primary);
+        font-size: 22px;
+        margin-right: 12px;
+        margin-left: 4px;
+        cursor: pointer;
+    }
+
+    /* Ocultar sidebar por defecto */
+    .sidebar {
+        display: block;
+    }
+
+    /* Ocultar menú lateral si no está abierto */
+    .sidebar:not(.open) {
+        pointer-events: none;
+    }
+
+    /* Overlay para el menú */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1999;
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+    .sidebar-overlay.hidden {
+        display: none;
+        opacity: 0;
+    }
+
+    /* Títulos de pantalla como botones de navegación */
+    .screen-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 12px 10px;
+    }
+
+    .screen-header h2 {
+        font-size: 17px;
+        margin: 0 8px 0 0;
+        flex: none;
+    }
+
+    .screen-header .nav-btn {
+        display: inline-block;
+        background: var(--color-primary);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 6px 12px;
+        font-size: 14px;
+        margin-right: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .screen-header .nav-btn.active {
+        background: var(--color-primary-dark);
+    }
+
+    /* Dashboard grid a 1 columna */
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 10px;
+        max-height: calc(100vh - 110px);
+        height: auto;
+        overflow-y: auto;
+        padding-bottom: 20px;
+        min-height: 0;
+    }
+
+    .dashboard-card {
+        min-height: unset;
+        max-height: none;
+        height: auto;
+    }
+
+    /* Servidores resumen a 2 columnas */
+    .servers-summary {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 170px;
+    }
+
+    .dashboard-card .card-content {
+        padding: 0 10px 10px 10px;
+    }
+
+    .screen-header {
+        padding: 10px 4px;
+    }
+
+    .servers-summary {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Ocultar botón menú hamburguesa en escritorio */
+.menu-toggle-btn {
+    display: none;
 }

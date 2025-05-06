@@ -1,6 +1,7 @@
 <!-- index.html: Página principal de la aplicación web Discord Bot Manager -->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Contenedor principal de la aplicación -->
@@ -16,7 +18,8 @@
             <!-- Pantalla de login -->
             <div id="login-screen" class="screen active">
                 <div class="login-container">
-                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="discord-logo">
+                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"
+                        alt="Discord Logo" class="discord-logo">
                     <h2>Discord Bot Manager</h2>
                     <p class="login-subtitle">Inicia sesión con Discord para administrar tus bots y servidores</p>
                     <button id="login-button" class="discord-button">
@@ -31,7 +34,9 @@
             </div>
             <!-- Interfaz principal después del login -->
             <div class="main-interface hidden">
-                <!-- Barra lateral -->
+                <!-- Overlay para el sidebar (solo móvil) -->
+                <div class="sidebar-overlay hidden"></div>
+                <!-- Barra lateral (por defecto oculta, sin clase open) -->
                 <div class="sidebar">
                     <div class="sidebar-menu">
                         <div class="menu-item active" data-screen="dashboard">
@@ -197,62 +202,90 @@
     <script src="/js/config.js"></script>
     <script src="/js/servers.js"></script>
     <script>
-    // index.html: Inicialización de carga dinámica de pantallas HTML
-    document.addEventListener('DOMContentLoaded', () => {
-        const contentArea = document.querySelector('.content-area');
-        const menuItems = document.querySelectorAll('.menu-item');
-        const screenMap = {
-            dashboard: '/html/dashboard.html',
-            config: '/html/config.html',
-            modules: '/html/modules.html',
-            logs: '/html/logs.html',
-            database: '/html/database.html',
-            servers: '/html/servers.html'
-        };
-        let lastScreen = null;
-        async function loadScreen(screen) {
-            if (!screenMap[screen]) {
-                return;
-            }
-            // Llama a la función destroy de la pantalla anterior si existe
-            if (lastScreen) {
-                const destroyFn = 'destroy' + lastScreen.charAt(0).toUpperCase() + lastScreen.slice(1) + 'Screen';
-                if (typeof window[destroyFn] === 'function') {
-                    window[destroyFn]();
+        // index.html: Inicialización de carga dinámica de pantallas HTML
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentArea = document.querySelector('.content-area');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const screenMap = {
+                dashboard: '/html/dashboard.html',
+                config: '/html/config.html',
+                modules: '/html/modules.html',
+                logs: '/html/logs.html',
+                database: '/html/database.html',
+                servers: '/html/servers.html'
+            };
+            let lastScreen = null;
+            async function loadScreen(screen) {
+                if (!screenMap[screen]) {
+                    return;
                 }
+                // Llama a la función destroy de la pantalla anterior si existe
+                if (lastScreen) {
+                    const destroyFn = 'destroy' + lastScreen.charAt(0).toUpperCase() + lastScreen.slice(1) + 'Screen';
+                    if (typeof window[destroyFn] === 'function') {
+                        window[destroyFn]();
+                    }
+                }
+                const res = await fetch(screenMap[screen]);
+                const html = await res.text();
+                contentArea.innerHTML = html;
+                // Asegura que la pantalla cargada tenga la clase 'active'
+                const firstScreen = contentArea.querySelector('.screen');
+                if (firstScreen) {
+                    firstScreen.classList.add('active');
+                }
+                // Inicialización específica por pantalla
+                if (screen === 'dashboard' && window.initDashboardBotControls) {
+                    window.initDashboardBotControls();
+                }
+                if (screen === 'database' && window.initDatabaseTabs) {
+                    window.initDatabaseTabs();
+                }
+                // Inicialización genérica: busca window.init{Screen}Screen
+                const fnName = 'init' + screen.charAt(0).toUpperCase() + screen.slice(1) + 'Screen';
+                if (typeof window[fnName] === 'function') {
+                    window[fnName]();
+                }
+                lastScreen = screen;
             }
-            const res = await fetch(screenMap[screen]);
-            const html = await res.text();
-            contentArea.innerHTML = html;
-            // Asegura que la pantalla cargada tenga la clase 'active'
-            const firstScreen = contentArea.querySelector('.screen');
-            if (firstScreen) {
-                firstScreen.classList.add('active');
+            window.loadScreen = loadScreen;
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    const screen = item.getAttribute('data-screen');
+                    loadScreen(screen);
+                });
+            });
+
+            // --- Responsive menú lateral ---
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarOverlay = document.querySelector('.sidebar-overlay');
+            // Por defecto, el menú lateral NO tiene la clase 'open' (modo hamburguesa)
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.add('hidden');
+            // Elimina el listener global del botón hamburguesa
+            // En su lugar, delega el evento a los botones dentro de .screen-header
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.remove('hidden');
             }
-            // Inicialización específica por pantalla
-            if (screen === 'dashboard' && window.initDashboardBotControls) {
-                window.initDashboardBotControls();
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.add('hidden');
             }
-            if (screen === 'database' && window.initDatabaseTabs) {
-                window.initDatabaseTabs();
-            }
-            // Inicialización genérica: busca window.init{Screen}Screen
-            const fnName = 'init' + screen.charAt(0).toUpperCase() + screen.slice(1) + 'Screen';
-            if (typeof window[fnName] === 'function') {
-                window[fnName]();
-            }
-            lastScreen = screen;
-        }
-        window.loadScreen = loadScreen;
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                menuItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                const screen = item.getAttribute('data-screen');
-                loadScreen(screen);
+            sidebarOverlay.addEventListener('click', closeSidebar);
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', closeSidebar);
+            });
+            // Delegación para botones hamburguesa en cada pantalla
+            document.body.addEventListener('click', function (e) {
+                if (e.target.closest('.menu-toggle-btn')) {
+                    openSidebar();
+                }
             });
         });
-    });
     </script>
 </body>
+
 </html>
