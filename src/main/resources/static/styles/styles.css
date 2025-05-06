@@ -165,14 +165,12 @@ button {
     flex: 1;
     overflow: hidden;
     position: relative;
+    width: 100%;
+    min-width: 0;
     height: 100%;
     min-height: 0;
-    width: 100% !important;
-    min-width: 0 !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    overflow-y: auto !important;
-    background: none !important;
+    overflow-y: auto;
+    background: none;
 }
 
 .window-title {
@@ -221,13 +219,11 @@ button {
 
 /* Pantallas */
 .screen {
-    display: none;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
+    min-height: 0;
+    position: relative;
 }
 
 .screen.active {
@@ -539,17 +535,15 @@ input:checked+.slider:before {
 
 /* Panel de Control (Dashboard) */
 .dashboard-grid {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     padding: 16px;
     overflow-y: auto;
-    height: calc(100% - 65px);
-    height: auto;
-    max-height: 100%;
-    overflow-y: auto;
     align-items: flex-start;
-    min-height: 0;
 }
 
 .dashboard-card {
@@ -2000,25 +1994,32 @@ body.light-theme {
         flex-direction: column !important;
     }
 
-    .sidebar {
+    .sidebar, .sidebar.open {
         display: block;
         position: fixed;
         left: 0;
         top: 0;
         height: 100vh;
-        width: 220px;
-        z-index: 2000;
         background: var(--color-sidebar);
         border-right: 1px solid var(--color-border);
         box-shadow: 2px 0 8px #0003;
-        transition: transform 0.3s, opacity 0.3s;
+        transition: transform 0.3s, opacity 0.3s, width 0.3s;
+        z-index: 2000;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 220px;
+        max-width: 220px;
         transform: translateX(-100%);
         opacity: 0;
         pointer-events: none;
     }
 
     .sidebar.open {
-        display: block;
+        width: 220px;
+        max-width: 220px;
         transform: translateX(0);
         opacity: 1;
         pointer-events: auto;
@@ -2133,8 +2134,10 @@ body.light-theme {
 }
 
 @media (max-width: 600px) {
-    .sidebar {
+    .sidebar, .sidebar.open {
         width: 170px;
+        min-width: 170px;
+        max-width: 170px;
     }
 
     .dashboard-card .card-content {
@@ -2154,3 +2157,11 @@ body.light-theme {
 .menu-toggle-btn {
     display: none;
 }
+
+/* ===================== UTILIDADES ===================== */
+.text-center { text-align: center; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1 1 auto; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
