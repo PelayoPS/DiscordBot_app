@@ -60,21 +60,8 @@ public class BotRestController {
      */
     @GetMapping("/logs")
     public ResponseEntity<List<String>> getLogs(
-            @RequestParam(required = false) List<String> types,
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to,
             @RequestParam(required = false, defaultValue = "0") int limit) {
-        // Si no se especifican filtros, pasar null para que el facade devuelva todos los logs
-        if (from == null || from.isBlank()) {
-            from = null;
-        }
-        if (to == null || to.isBlank()) {
-            to = null;
-        }
-        if (types == null || types.isEmpty()) {
-            types = null;
-        }
-        List<String> logs = botFacade.getLogs(types, limit, from, to);
+        List<String> logs = botFacade.getLogs(limit);
 
         return ResponseEntity.ok(logs);
     }

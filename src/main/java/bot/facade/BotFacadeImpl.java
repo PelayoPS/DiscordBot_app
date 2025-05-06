@@ -344,7 +344,7 @@ public class BotFacadeImpl implements BotFacade {
      * @return Lista de logs como String.
      */
     @Override
-    public List<String> getLogs(List<String> types, int limit, String from, String to) {
+    public List<String> getLogs(int limit) {
         logger.logDebug("FACADE: Retrieving all logs (no filtering)");
         List<String> result = new ArrayList<>();
         Path logPath = Paths.get("logs\\app.log");

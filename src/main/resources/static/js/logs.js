@@ -53,9 +53,33 @@ window.initLogsScreen = function () {
         reloadBtn.addEventListener('click', fetchAndRenderLogs);
     }
 
-    function renderLogs(logEntries) { // Renombrado 'logs' a 'logEntries' para claridad
+    // Función para parsear una línea de log en formato texto plano
+    function parseLogEntry(entry) {
+        // Ejemplo: 2025-05-06 17:47:45 INFO bot.log.LoggingManager - Base de datos ...
+        const regex = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) (\w+) ([^\-]+)- (.*)$/;
+        const match = entry.match(regex);
+        if (!match) {
+            // Si no coincide, devolver todo como mensaje
+            return {
+                fecha: '',
+                hora: '',
+                tipo: 'info',
+                origen: '',
+                mensaje: entry,
+            };
+        }
+        return {
+            fecha: match[1],
+            hora: match[2],
+            tipo: match[3],
+            origen: match[4].trim(),
+            mensaje: match[5],
+        };
+    }
+
+    function renderLogs(logEntries) {
         if (!logEntries || logEntries.length === 0) {
-            logsTableBody.innerHTML = '<tr><td class="log-cell-main">No hay logs para los filtros seleccionados</td></tr>';
+            logsTableBody.innerHTML = '<tr><td class="log-cell-main" colspan="5">No hay logs para los filtros seleccionados</td></tr>';
             // Limpiar paginación si no hay logs
             const paginationContainer = document.querySelector('.pagination');
             const paginationInfo = document.querySelector('.pagination-info');
@@ -67,12 +91,25 @@ window.initLogsScreen = function () {
             }
             return;
         }
-        
-        // 'logEntries' ya es la lista de entradas de log completas y filtradas por el backend.
+
+        // Obtener tipos seleccionados en los checkboxes
+        const selectedTypes = Array.from(logFilterCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.nextElementSibling.classList[1].toUpperCase());
+        // Filtrar logs por tipo si hay alguno seleccionado
+        let filteredEntries = logEntries;
+        if (selectedTypes.length > 0) {
+            filteredEntries = logEntries.filter(entry => {
+                const { tipo } = parseLogEntry(entry);
+                return selectedTypes.includes(tipo.toUpperCase());
+            });
+        }
+
+        // 'filteredEntries' ya es la lista de entradas de log completas y filtradas por el backend.
         // La paginación se hace localmente sobre estos resultados.
         let currentPage = 1;
         const pageSize = 20; // O el tamaño de página que prefieras
-        let totalPages = Math.ceil(logEntries.length / pageSize);
+        let totalPages = Math.ceil(filteredEntries.length / pageSize);
         
         let paginationContainer = document.querySelector('.pagination');
         let paginationInfo = document.querySelector('.pagination-info');
@@ -83,35 +120,32 @@ window.initLogsScreen = function () {
             currentPage = page;
             const start = (page - 1) * pageSize;
             const end = start + pageSize;
-            const pageEntries = logEntries.slice(start, end); // Usar 'logEntries' directamente
-            
+            const pageEntries = filteredEntries.slice(start, end);
             logsTableBody.innerHTML = pageEntries.map(entry => {
-                // La lógica de parseo y formateo de cada 'entry' se mantiene aquí,
-                // ya que el backend devuelve strings de log, no HTML.
-
+                const { fecha, hora, tipo, origen, mensaje } = parseLogEntry(entry);
+                let levelColor = '#5865f2';
+                let levelText = tipo.toUpperCase();
                 switch (tipo.toLowerCase()) {
                     case 'debug':
-                        levelColor = '#43b581'; // Verde
+                        levelColor = '#43b581';
                         break;
                     case 'warn':
-                        levelColor = '#faa61a'; // Naranja/Amarillo
+                        levelColor = '#faa61a';
                         break;
                     case 'error':
-                        levelColor = '#ed4245'; // Rojo
+                        levelColor = '#ed4245';
+                        break;
+                    case 'info':
+                        levelColor = '#5865f2';
                         break;
                 }
-
                 return `
                     <tr class="log-row-detailed ${tipo.toLowerCase()}">
-                        <td class="log-cell-main">
-                            <div class="log-entry-header">
-                                <span class="log-timestamp">${fecha} ${hora}</span>
-                                <span class="log-level-tag" style="background-color: ${levelColor};">${levelText}</span>
-                            </div>
-                            <div class="log-entry-body">
-                                <span class="log-logger">${origen}</span> - <span class="log-message">${mensajeHtml}</span>
-                            </div>
-                        </td>
+                        <td class="log-cell-fecha">${fecha}</td>
+                        <td class="log-cell-hora">${hora}</td>
+                        <td class="log-cell-nivel"><span class="log-level-tag" style="background-color: ${levelColor};">${levelText}</span></td>
+                        <td class="log-cell-origen">${origen}</td>
+                        <td class="log-cell-mensaje">${mensaje}</td>
                     </tr>
                 `;
             }).join('');

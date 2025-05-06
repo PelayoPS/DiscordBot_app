@@ -1,71 +1,10 @@
-2025-05-06 17:40:56 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:40:56 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
-2025-05-06 17:40:56 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
-2025-05-06 17:40:56 INFO net.dv8tion.jda.api.JDA - Login Successful!
-2025-05-06 17:40:56 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
-2025-05-06 17:40:56 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
-2025-05-06 17:40:57 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
-2025-05-06 17:40:57 INFO bot.log.LoggingManager - Comandos registrados correctamente
-2025-05-06 17:40:57 INFO net.dv8tion.jda.api.JDA - Finished Loading!
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Bot detenido desde BotFacadeImpl
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Configuración cargada desde: src\main\resources\config.properties
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
-2025-05-06 17:41:02 INFO net.dv8tion.jda.api.JDA - Login Successful!
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
-2025-05-06 17:41:02 INFO bot.log.LoggingManager - Bot reiniciado y configuración recargada desde BotFacadeImpl
-2025-05-06 17:41:03 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
-2025-05-06 17:41:03 INFO bot.log.LoggingManager - Comandos registrados correctamente
-2025-05-06 17:41:03 INFO net.dv8tion.jda.api.JDA - Finished Loading!
-2025-05-06 17:41:03 INFO bot.log.LoggingManager - Bot detenido desde BotFacadeImpl
-2025-05-06 17:41:30 INFO bot.log.LoggingManager - Bot detenido desde BotFacadeImpl
-2025-05-06 17:41:32 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:41:32 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
-2025-05-06 17:41:32 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
-2025-05-06 17:41:33 INFO net.dv8tion.jda.api.JDA - Login Successful!
-2025-05-06 17:41:33 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
-2025-05-06 17:41:33 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
-2025-05-06 17:41:33 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
-2025-05-06 17:41:33 INFO bot.log.LoggingManager - Comandos registrados correctamente
-2025-05-06 17:41:33 INFO net.dv8tion.jda.api.JDA - Finished Loading!
-2025-05-06 17:46:26 INFO bot.BotApplication - Starting BotApplication using Java 21.0.4 with PID 22484 (C:\Users\pelay\Desktop\repos\DiscordBot_app\build\classes\java\main started by pelayo in C:\Users\pelay\Desktop\repos\DiscordBot_app)
-2025-05-06 17:46:26 INFO bot.BotApplication - No active profile set, falling back to 1 default profile: "default"
-2025-05-06 17:46:27 INFO o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2025-05-06 17:46:27 INFO o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2025-05-06 17:46:27 INFO o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-06 17:46:27 INFO o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-06 17:46:27 INFO o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-06 17:46:27 INFO o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1017 ms
-2025-05-06 17:46:27 INFO bot.log.LoggingManager - Base de datos 'discordbot' creada o verificada con éxito
-2025-05-06 17:46:27 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:46:27 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:46:27 INFO o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
-2025-05-06 17:46:27 INFO o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2025-05-06 17:46:27 INFO o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2025-05-06 17:46:27 INFO bot.BotApplication - Started BotApplication in 2.098 seconds (process running for 2.636)
-2025-05-06 17:46:28 INFO o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-05-06 17:46:28 INFO o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-05-06 17:46:28 INFO o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2025-05-06 17:46:33 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:46:33 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
-2025-05-06 17:46:33 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
-2025-05-06 17:46:34 INFO net.dv8tion.jda.api.JDA - Login Successful!
-2025-05-06 17:46:34 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
-2025-05-06 17:46:34 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
-2025-05-06 17:46:34 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
-2025-05-06 17:46:34 INFO bot.log.LoggingManager - Comandos registrados correctamente
-2025-05-06 17:46:34 INFO net.dv8tion.jda.api.JDA - Finished Loading!
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Bot detenido desde BotFacadeImpl
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Configuración cargada desde: src\main\resources\config.properties
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
-2025-05-06 17:46:38 INFO net.dv8tion.jda.api.JDA - Login Successful!
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Bot reiniciado y configuración recargada desde BotFacadeImpl
-2025-05-06 17:46:38 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
-2025-05-06 17:46:38 INFO bot.log.LoggingManager - Comandos registrados correctamente
-2025-05-06 17:46:38 INFO net.dv8tion.jda.api.JDA - Finished Loading!
+2025-05-06 18:04:51 INFO bot.log.LoggingManager - API key de Gemini configurada correctamente.
+2025-05-06 18:04:51 INFO bot.log.LoggingManager - Conexión a base de datos establecida correctamente
+2025-05-06 18:04:51 INFO bot.log.LoggingManager - Esquema de base de datos inicializado correctamente
+2025-05-06 18:04:51 INFO net.dv8tion.jda.api.JDA - Login Successful!
+2025-05-06 18:04:51 INFO bot.log.LoggingManager - Registrado listener para hilos de chat de IA
+2025-05-06 18:04:51 INFO bot.log.LoggingManager - Bot iniciado desde BotFacadeImpl (con dependencias reales)
+2025-05-06 18:04:52 INFO n.d.j.i.requests.WebSocketClient - Connected to WebSocket
+2025-05-06 18:04:52 INFO bot.log.LoggingManager - Comandos registrados correctamente
+2025-05-06 18:04:52 INFO net.dv8tion.jda.api.JDA - Finished Loading!
+2025-05-06 18:05:21 INFO bot.log.LoggingManager - Bot detenido desde BotFacadeImpl

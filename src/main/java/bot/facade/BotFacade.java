@@ -150,7 +150,7 @@ public interface BotFacade {
      * @param to    Fecha final en formato yyyy-MM-dd (opcional).
      * @return Lista de logs como String.
      */
-    List<String> getLogs(List<String> types, int limit, String from, String to);
+    List<String> getLogs(int limit);
 
     // --- Database Stats ---
 
