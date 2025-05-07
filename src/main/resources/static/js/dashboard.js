@@ -132,7 +132,6 @@ window.initDashboardBotControls = function() {
         logList.innerHTML = '';
         let count = 0;
         logs.forEach(log => {
-            // Regex: fecha, nivel, origen, mensaje
             const match = log.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(INFO|WARN|ERROR|DEBUG)\s+([^\s]+)\s*-\s*([\s\S]*)$/i);
             let fecha = '', nivel = '', origen = '', mensaje = '';
             if (match) {
@@ -142,35 +141,35 @@ window.initDashboardBotControls = function() {
                 mensaje = match[4].trim();
             } else {
                 mensaje = log;
-                nivel = 'INFO';
+                nivel = 'INFO'; // Predeterminado si no hay match
             }
             if (count >= MAX_LOGS) {
-              return;
+                return;
             }
             count++;
             const logEntryDiv = document.createElement('div');
-            logEntryDiv.className = 'log-entry';
-            logEntryDiv.style.padding = '4px 0';
-            let levelColor = '#5865f2';
-            switch (nivel.toLowerCase()) {
-                case 'debug': levelColor = '#43b581'; break;
-                case 'warn': case 'warning': levelColor = '#faa61a'; break;
-                case 'error': levelColor = '#ed4245'; break;
+            logEntryDiv.className = 'log-entry'; // Clase para el padding y otros estilos base
+
+            let levelClass = nivel.toLowerCase();
+            if (levelClass === 'warning') {
+                levelClass = 'warn'; // Normalizar 'warning' a 'warn' para la clase CSS
             }
+
             logEntryDiv.innerHTML = `
-                <div class="log-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
-                    <span class="log-timestamp" style="color: #8e9297; font-size: 12px;">${fecha}</span>
-                    <span class="log-level-tag" style="color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; background-color: ${levelColor};">${nivel}</span>
-                    <span class="log-logger" style="color: #aaa; font-size: 12px;">${origen}</span>
+                <div class="log-header">
+                    <span class="log-timestamp">${fecha}</span>
+                    <span class="log-level-tag log-level-${levelClass}">${nivel}</span>
+                    <span class="log-logger">${origen}</span>
                 </div>
-                <div class="log-message-content" style="color: #b9bbbe; font-size: 13px; word-wrap: break-word; line-height: 1.4;">
+                <div class="log-message-content">
                     ${mensaje}
                 </div>
             `;
             logList.appendChild(logEntryDiv);
         });
         if (count === 0) {
-            logList.innerHTML = '<div class="log-item log-info" style="color: #b9bbbe; font-size: 13px; padding: 4px 0;">No hay logs recientes</div>';
+            // Usar una clase para el mensaje de "No hay logs"
+            logList.innerHTML = '<div class="log-info-placeholder">No hay logs recientes</div>';
         }
     }
     async function fetchLogs() {

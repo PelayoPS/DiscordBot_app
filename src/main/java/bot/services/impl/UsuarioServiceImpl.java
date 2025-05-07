@@ -96,4 +96,26 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
                 duracion);
         penalizacionRepository.save(penalizacion);
     }
+
+    /**
+     * Guarda o actualiza una entidad Experiencia.
+     *
+     * @param experiencia La entidad Experiencia a guardar.
+     * @return La entidad Experiencia guardada.
+     */
+    @Override
+    public Experiencia saveExperiencia(Experiencia experiencia) {
+        return experienciaRepository.save(experiencia);
+    }
+
+    /**
+     * Guarda o actualiza una entidad Penalizacion.
+     *
+     * @param penalizacion La entidad Penalizacion a guardar.
+     * @return La entidad Penalizacion guardada.
+     */
+    @Override
+    public Penalizacion savePenalizacion(Penalizacion penalizacion) {
+        return penalizacionRepository.save(penalizacion);
+    }
 }

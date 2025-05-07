@@ -30,8 +30,8 @@ public class DatabaseManager {
         try {
             createDatabaseIfNotExists();
         } catch (SQLException e) {
-            logger.logError("Error al crear o verificar la base de datos", e);
-            throw new RuntimeException("No se pudo crear o verificar la base de datos", e);
+            logger.logError("Error al crear o verificar la base de datos durante la inicialización. El bot continuará sin conexión a BD activa.", e);
+            // No relanzar la excepción para permitir que la aplicación continúe
         }
     }
 

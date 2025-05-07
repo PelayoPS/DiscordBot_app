@@ -6,6 +6,7 @@ import bot.modules.CommandManager;
 import bot.log.LoggingManager;
 import bot.models.Usuario;
 import bot.models.Penalizacion;
+import bot.models.Experiencia;
 import bot.config.ConfigManager;
 import bot.config.ConfigService;
 import bot.config.FileConfigService;
@@ -42,7 +43,6 @@ public class BotFacadeImpl implements BotFacade {
     private final UsuarioService usuarioService;
     private final ModerationService moderationService;
     private final CommandManager commandManager;
-    private final LoggingManager loggingManager;
     private final DatabaseManager databaseManager;
     private Bot botInstance;
     private Instant botStartTime;
@@ -60,15 +60,13 @@ public class BotFacadeImpl implements BotFacade {
      * @param usuarioService    Servicio de usuarios
      * @param moderationService Servicio de moderación
      * @param commandManager    Gestor de comandos
-     * @param loggingManager    Gestor de logs
      * @param databaseManager   Gestor de base de datos
      */
     public BotFacadeImpl(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, LoggingManager loggingManager, DatabaseManager databaseManager) {
+            CommandManager commandManager, DatabaseManager databaseManager) {
         this.usuarioService = usuarioService;
         this.moderationService = moderationService;
         this.commandManager = commandManager;
-        this.loggingManager = loggingManager;
         this.databaseManager = databaseManager;
     }
 
@@ -475,5 +473,132 @@ public class BotFacadeImpl implements BotFacade {
         } catch (Exception e) {
             return new String[] { "false", "Error" };
         }
+    }
+
+    // --- Entity Management ---
+
+    @Override
+    public Usuario addUsuario(Usuario usuario) {
+        if (usuario == null) {
+            logger.logWarn("Intento de añadir un usuario nulo.");
+            return null; // O lanzar IllegalArgumentException
+        }
+        try {
+            return usuarioService.save(usuario);
+        } catch (Exception e) {
+            logger.logError("Error al añadir usuario: " + usuario.getIdUsuario(), e);
+            // Considerar lanzar una excepción personalizada
+            return null;
+        }
+    }
+
+    @Override
+    public Experiencia addExperiencia(Experiencia experiencia) {
+        if (experiencia == null) {
+            logger.logWarn("Intento de añadir una experiencia nula.");
+            return null; // O lanzar IllegalArgumentException
+        }
+        try {
+            return usuarioService.saveExperiencia(experiencia);
+        } catch (Exception e) {
+            logger.logError("Error al añadir experiencia para el usuario: " + experiencia.getIdUsuario(), e);
+            // Considerar lanzar una excepción personalizada
+            return null;
+        }
+    }
+
+    @Override
+    public Penalizacion addPenalizacion(Penalizacion penalizacion) {
+        if (penalizacion == null) {
+            logger.logWarn("Intento de añadir una penalización nula.");
+            return null; // O lanzar IllegalArgumentException
+        }
+        try {
+            // Asegurarse de que la fecha se establece si es nula, ya que el constructor de Penalizacion la toma.
+            // Si la API puede enviar una Penalizacion sin fecha, se podría establecer aquí.
+            if (penalizacion.getFecha() == null) {
+                 // penalizacion.setFecha(java.time.LocalDateTime.now()); 
+                 logger.logWarn("Penalización recibida sin fecha. Se guardará tal cual o fallará si la BD lo requiere.");
+            }
+            return usuarioService.savePenalizacion(penalizacion);
+        } catch (Exception e) {
+            logger.logError("Error al añadir penalización para el usuario: " + penalizacion.getIdUsuario(), e);
+            // Considerar lanzar una excepción personalizada
+            return null;
+        }
+    }
+
+    @Override
+    public List<String> getTableNames() {
+        List<String> tableNames = new ArrayList<>();
+        if (databaseManager == null) {
+            logger.logError("DatabaseManager no está disponible.", null);
+            return tableNames;
+        }
+        try (java.sql.Connection conn = databaseManager.getConnection()) {
+            java.sql.DatabaseMetaData metaData = conn.getMetaData();
+            try (java.sql.ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
+                while (rs.next()) {
+                    tableNames.add(rs.getString("TABLE_NAME"));
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            logger.logError("Error al obtener los nombres de las tablas", e);
+        }
+        return tableNames;
+    }
+
+    @Override
+    public List<String> getTableColumns(String tableName) {
+        List<String> columns = new ArrayList<>();
+        if (databaseManager == null) {
+            logger.logError("DatabaseManager no está disponible.", null);
+            return columns;
+        }
+        if (tableName == null || tableName.isBlank() || !tableName.matches("[a-zA-Z0-9_]+")) {
+            logger.logError("Nombre de tabla inválido: " + tableName, null);
+            return columns;
+        }
+        try (java.sql.Connection conn = databaseManager.getConnection()) {
+            java.sql.DatabaseMetaData metaData = conn.getMetaData();
+            try (java.sql.ResultSet rs = metaData.getColumns(null, null, tableName, null)) {
+                while (rs.next()) {
+                    columns.add(rs.getString("COLUMN_NAME"));
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            logger.logError("Error al obtener las columnas de la tabla " + tableName, e);
+        }
+        return columns;
+    }
+
+    @Override
+    public List<java.util.Map<String, Object>> getTableData(String tableName) {
+        List<java.util.Map<String, Object>> results = new ArrayList<>();
+        if (databaseManager == null) {
+            logger.logError("DatabaseManager no está disponible.", null);
+            return results;
+        }
+        if (tableName == null || tableName.isBlank() || !tableName.matches("[a-zA-Z0-9_]+")) {
+            logger.logError("Nombre de tabla inválido: " + tableName, null);
+            return results;
+        }
+        String sql = "SELECT * FROM " + tableName;
+        try (java.sql.Connection conn = databaseManager.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = pstmt.executeQuery()) {
+            java.sql.ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            while (rs.next()) {
+                java.util.Map<String, Object> row = new java.util.LinkedHashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    row.put(metaData.getColumnLabel(i), rs.getObject(i));
+                }
+                results.add(row);
+            }
+        } catch (java.sql.SQLException e) {
+            logger.logError("Error al obtener datos de la tabla " + tableName, e);
+        }
+        return results;
     }
 }

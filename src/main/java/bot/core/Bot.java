@@ -16,6 +16,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Clase principal del bot que delega responsabilidades a CommandRegistry y
@@ -25,13 +28,15 @@ import java.util.List;
  * @author PelayoPS
  */
 public class Bot {
-    private final JDA jda;
+    private JDA jda; // Modificado para permitir inicialización tardía en caso de error de JDA
     private final ModuleManager moduleManager;
     private final CommandRegistry commandRegistry;
     private final EventRegistry eventRegistry;
     private final LoggingManager logger = new LoggingManager();
     private final ServiceFactory serviceFactory;
     private final DatabaseManager databaseManager;
+    private ScheduledExecutorService dbRetryScheduler;
+    private volatile boolean dbInitializationFailed = false;
 
     /**
      * Constructor de la clase Bot.
@@ -59,7 +64,20 @@ public class Bot {
             // Registrar comandos en Discord
             updateCommands();
         } catch (Exception e) {
-            throw new RuntimeException("Error initializing bot", e);
+            logger.logError("Error crítico al inicializar JDA. El bot no podrá conectarse a Discord.", e);
+        }
+        
+        // Si la inicialización de la BD falló, programar reintentos
+        if (dbInitializationFailed) {
+            this.dbRetryScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = Executors.defaultThreadFactory().newThread(r);
+                t.setDaemon(true); // Marcar como daemon para no impedir el cierre de la JVM
+                t.setName("DB-Retry-Scheduler");
+                return t;
+            });
+            // Iniciar con un retraso inicial y luego periódicamente
+            this.dbRetryScheduler.scheduleAtFixedRate(this::attemptDbReinitialization, 5, 120, TimeUnit.SECONDS);
+            logger.logInfo("Programador de reintentos de inicialización de BD iniciado. Primer intento en 5 segundos, luego cada 2 minutos.");
         }
     }
 
@@ -68,16 +86,17 @@ public class Bot {
      */
     private void initializeDatabase() {
         try {
-            // Usar la instancia inyectada de DatabaseManager
             try (Connection conn = databaseManager.getConnection()) {
-                logger.logInfo("Conexión a base de datos establecida correctamente");
-
-                // Ejecutar el script de esquema para crear las tablas si no existen
+                logger.logInfo("Conexión a base de datos establecida correctamente durante la inicialización.");
                 executeSchemaScript(conn);
+                this.dbInitializationFailed = false; 
             }
         } catch (SQLException e) {
-            logger.logError("Error al conectar con la base de datos", e);
-            throw new RuntimeException("Error crítico: No se pudo inicializar la base de datos", e);
+            logger.logError("Error al inicializar la base de datos durante el arranque. El bot continuará sin conexión a BD activa. Se intentará reconectar periódicamente.", e);
+            this.dbInitializationFailed = true; 
+        } catch (Exception e) { 
+            logger.logError("Error inesperado durante la inicialización de la base de datos. Se marcará para reintento.", e);
+            this.dbInitializationFailed = true;
         }
     }
 
@@ -140,6 +159,10 @@ public class Bot {
      * Inicializa y registra los módulos y listeners en JDA.
      */
     private void initializeModules() {
+        if (this.jda == null) {
+            logger.logWarn("JDA no está disponible, no se pueden inicializar módulos.");
+            return;
+        }
         // Registrar módulos básicos usando la factoría
         moduleManager.registerModule("management",
                 (net.dv8tion.jda.api.hooks.EventListener) serviceFactory.getAdminCommands());
@@ -164,6 +187,10 @@ public class Bot {
      * Actualiza y registra los comandos slash en Discord.
      */
     private void updateCommands() {
+        if (this.jda == null) {
+            logger.logWarn("JDA no está disponible, no se pueden actualizar los comandos.");
+            return;
+        }
         List<SlashCommandData> allCommands = new ArrayList<>();
 
         // Recolectar todos los comandos slash de todos los módulos
@@ -213,12 +240,60 @@ public class Bot {
     public EventRegistry getEventRegistry() {
         return eventRegistry;
     }
+    
+    private synchronized void attemptDbReinitialization() {
+        if (!this.dbInitializationFailed) { 
+            if (this.dbRetryScheduler != null && !this.dbRetryScheduler.isShutdown()) {
+                this.dbRetryScheduler.shutdown();
+                this.dbRetryScheduler = null;
+            }
+            return;
+        }
+
+        logger.logInfo("Intentando reinicializar la conexión a la base de datos...");
+        try (Connection conn = databaseManager.getConnection()) {
+            logger.logInfo("Conexión a base de datos reestablecida correctamente.");
+            executeSchemaScript(conn); 
+            logger.logInfo("Esquema de base de datos reinicializado tras reconexión.");
+            
+            this.dbInitializationFailed = false; 
+            
+            if (this.dbRetryScheduler != null && !this.dbRetryScheduler.isShutdown()) {
+                this.dbRetryScheduler.shutdown(); 
+                this.dbRetryScheduler = null;
+                logger.logInfo("Reintentos de conexión a base de datos detenidos tras éxito.");
+            }
+        } catch (SQLException e) {
+            logger.logError("Fallo al reintentar la inicialización de la base de datos. Se reintentará.", e);
+        } catch (Exception e) {
+            logger.logError("Error inesperado durante el reintento de inicialización de la base de datos. Se reintentará.", e);
+        }
+    }
 
     /**
      * Apaga el bot y desconecta JDA.
      */
     public void shutdown() {
-        // Desconectar JDA
-        jda.shutdown();
+        logger.logInfo("Iniciando apagado del bot...");
+        if (this.dbRetryScheduler != null && !this.dbRetryScheduler.isShutdown()) {
+            this.dbRetryScheduler.shutdownNow(); 
+            try {
+                if (!this.dbRetryScheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                    logger.logWarn("El programador de reintentos de BD no terminó en 5 segundos.");
+                }
+            } catch (InterruptedException e) {
+                logger.logWarn("Interrupción mientras se esperaba el cierre del programador de reintentos de BD.");
+                Thread.currentThread().interrupt();
+            }
+            logger.logInfo("Programador de reintentos de BD detenido.");
+        }
+        
+        if (jda != null) { 
+           jda.shutdown();
+           logger.logInfo("JDA desconectado.");
+        } else {
+           logger.logInfo("JDA no fue inicializado o ya fue desconectado, no se requiere desconexión de JDA.");
+        }
+        logger.logInfo("Bot apagado.");
     }
 }

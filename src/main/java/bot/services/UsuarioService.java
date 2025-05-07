@@ -1,6 +1,8 @@
 package bot.services;
 
 import bot.models.Usuario;
+import bot.models.Experiencia;
+import bot.models.Penalizacion;
 import java.util.Optional;
 
 /**
@@ -36,4 +38,20 @@ public interface UsuarioService extends Service<Usuario, Long> {
      * @param duracion   Duración de la penalización
      */
     void agregarPenalizacion(Long idUsuario, Long idAdminMod, String tipo, String razon, java.time.Duration duracion);
+
+    /**
+     * Guarda o actualiza una entidad Experiencia.
+     *
+     * @param experiencia La entidad Experiencia a guardar.
+     * @return La entidad Experiencia guardada.
+     */
+    Experiencia saveExperiencia(Experiencia experiencia);
+
+    /**
+     * Guarda o actualiza una entidad Penalizacion.
+     *
+     * @param penalizacion La entidad Penalizacion a guardar.
+     * @return La entidad Penalizacion guardada.
+     */
+    Penalizacion savePenalizacion(Penalizacion penalizacion);
 }

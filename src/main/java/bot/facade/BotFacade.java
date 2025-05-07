@@ -2,6 +2,7 @@ package bot.facade;
 
 import bot.models.Usuario;
 import bot.models.Penalizacion;
+import bot.models.Experiencia;
 import java.util.List;
 
 /**
@@ -167,4 +168,52 @@ public interface BotFacade {
      * @return DTO con el estado de las integraciones.
      */
     BotIntegracionesDTO getIntegracionesStatus();
+
+    // --- Entity Management ---
+
+    /**
+     * Añade un nuevo usuario al sistema.
+     *
+     * @param usuario El objeto Usuario a añadir.
+     * @return El Usuario guardado, o null si ocurre un error.
+     */
+    Usuario addUsuario(Usuario usuario);
+
+    /**
+     * Añade o actualiza la experiencia de un usuario.
+     *
+     * @param experiencia El objeto Experiencia a guardar.
+     * @return La Experiencia guardada, o null si ocurre un error.
+     */
+    Experiencia addExperiencia(Experiencia experiencia);
+
+    /**
+     * Añade una nueva penalización al sistema.
+     *
+     * @param penalizacion El objeto Penalizacion a añadir.
+     * @return La Penalizacion guardada, o null si ocurre un error.
+     */
+    Penalizacion addPenalizacion(Penalizacion penalizacion);
+
+    // --- Database Management ---
+
+    /**
+     * Devuelve los nombres de todas las tablas de la base de datos.
+     * @return Lista de nombres de tablas.
+     */
+    List<String> getTableNames();
+
+    /**
+     * Devuelve los nombres de las columnas de una tabla.
+     * @param tableName Nombre de la tabla.
+     * @return Lista de nombres de columnas.
+     */
+    List<String> getTableColumns(String tableName);
+
+    /**
+     * Devuelve el contenido de una tabla (todas las filas).
+     * @param tableName Nombre de la tabla.
+     * @return Lista de mapas (columna -> valor) por cada fila.
+     */
+    List<java.util.Map<String, Object>> getTableData(String tableName);
 }

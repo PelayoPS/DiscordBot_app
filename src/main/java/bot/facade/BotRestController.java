@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import bot.models.Usuario;
 import bot.models.Penalizacion;
+import bot.models.Experiencia;
 
 /**
  * Controlador REST para exponer las operaciones del bot a través de endpoints
@@ -137,16 +138,6 @@ public class BotRestController {
     }
 
     /**
-     * Obtiene estadísticas de la base de datos.
-     * 
-     * @return ResponseEntity con el DTO de estadísticas
-     */
-    @GetMapping("/db/stats")
-    public ResponseEntity<DatabaseStatsDTO> getDatabaseStats() {
-        return ResponseEntity.ok(botFacade.getDatabaseStats());
-    }
-
-    /**
      * Endpoint para comprobar si el backend está activo (ping).
      * 
      * @return ResponseEntity con status 200 y un mensaje simple
@@ -156,4 +147,89 @@ public class BotRestController {
         return ResponseEntity.ok("pong");
     }
 
+    // --- Entity Management Endpoints ---
+
+    /**
+     * Endpoint para añadir un nuevo usuario.
+     * 
+     * @param usuario El objeto Usuario a añadir (en el cuerpo de la petición).
+     * @return ResponseEntity con el Usuario creado o error si falla.
+     */
+    @PostMapping("/usuarios")
+    public ResponseEntity<Usuario> addUsuario(@RequestBody Usuario usuario) {
+        try {
+            Usuario nuevoUsuario = botFacade.addUsuario(usuario);
+            if (nuevoUsuario != null) {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(nuevoUsuario);
+            } else {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Endpoint para añadir o actualizar la experiencia de un usuario.
+     * 
+     * @param experiencia El objeto Experiencia a añadir/actualizar (en el cuerpo de la petición).
+     * @return ResponseEntity con la Experiencia guardada o error si falla.
+     */
+    @PostMapping("/experiencias")
+    public ResponseEntity<Experiencia> addExperiencia(@RequestBody Experiencia experiencia) {
+        try {
+            Experiencia nuevaExperiencia = botFacade.addExperiencia(experiencia);
+            if (nuevaExperiencia != null) {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(nuevaExperiencia);
+            } else {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Endpoint para añadir una nueva penalización.
+     * 
+     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la petición).
+     * @return ResponseEntity con la Penalizacion creada o error si falla.
+     */
+    @PostMapping("/penalizaciones")
+    public ResponseEntity<Penalizacion> addPenalizacion(@RequestBody Penalizacion penalizacion) {
+        try {
+            Penalizacion nuevaPenalizacion = botFacade.addPenalizacion(penalizacion);
+            if (nuevaPenalizacion != null) {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(nuevaPenalizacion);
+            } else {
+                return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Endpoint para obtener los nombres de todas las tablas de la base de datos.
+     */
+    @GetMapping("/db/tables")
+    public ResponseEntity<List<String>> getTableNames() {
+        return ResponseEntity.ok(botFacade.getTableNames());
+    }
+
+    /**
+     * Endpoint para obtener los nombres de las columnas de una tabla.
+     */
+    @GetMapping("/db/tables/{tableName}/columns")
+    public ResponseEntity<List<String>> getTableColumns(@PathVariable String tableName) {
+        return ResponseEntity.ok(botFacade.getTableColumns(tableName));
+    }
+
+    /**
+     * Endpoint para obtener el contenido de una tabla.
+     */
+    @GetMapping("/db/tables/{tableName}/data")
+    public ResponseEntity<List<java.util.Map<String, Object>>> getTableData(@PathVariable String tableName) {
+        return ResponseEntity.ok(botFacade.getTableData(tableName));
+    }
 }
