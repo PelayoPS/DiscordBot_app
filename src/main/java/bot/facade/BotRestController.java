@@ -232,4 +232,13 @@ public class BotRestController {
     public ResponseEntity<List<java.util.Map<String, Object>>> getTableData(@PathVariable String tableName) {
         return ResponseEntity.ok(botFacade.getTableData(tableName));
     }
+
+    /**
+     * Endpoint para obtener estadísticas resumidas de la base de datos.
+     * @return ResponseEntity con el DTO de estadísticas
+     */
+    @GetMapping("/db/stats")
+    public ResponseEntity<DatabaseStatsDTO> getDatabaseStats() {
+        return ResponseEntity.ok(botFacade.getDatabaseStats());
+    }
 }

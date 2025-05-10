@@ -1,69 +1,34 @@
-<!-- Configuración -->
-<div id="config-screen" class="screen">
-    <div class="screen-header">
-        <button class="menu-toggle-btn" aria-label="Abrir menú" tabindex="0">
-            <i class="fas fa-bars"></i>
-        </button>
-        <h2>Configuración</h2>
-    </div>
-    <div class="config-container">
-        <!-- Configuración del Bot -->
-        <div class="config-section">
-            <h3>Configuración General</h3>
-            <div class="form-group">
-                <label for="bot-token">Token del Bot</label>
-                <div class="input-with-button">
-                    <input type="password" id="bot-token" value="NDk5NDI4MDk4NzQzMDYwNDgw.XA9nWg.qwertyuiop987654321">
-                    <button class="icon-button">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="bot-prefix">Prefijo de Comandos</label>
-                <input type="text" id="bot-prefix" value="!">
-            </div>
-            <div class="form-group">
-                <label for="bot-status">Estado del Bot</label>
-                <input type="text" id="bot-status" value="!help para comandos">
-            </div>
-            <div class="form-group">
-                <label for="bot-activity">Actividad</label>
-                <div class="input-with-select">
-                    <select id="activity-type">
-                        <option value="playing">Jugando a</option>
-                        <option value="watching">Viendo</option>
-                        <option value="listening">Escuchando</option>
-                        <option value="streaming">Transmitiendo</option>
-                    </select>
-                    <input type="text" id="bot-activity" value="Moderar servidores">
-                </div>
-            </div>
-        </div>
-        <!-- Configuración de Logs -->
-        <div class="config-section">
-            <h3>Configuración de Logs</h3>
-            <div class="form-group">
-                <label for="log-level">Nivel de Logs</label>
-                <select id="log-level">
-                    <option value="debug">Debug</option>
-                    <option value="info" selected>Info</option>
-                    <option value="warning">Warning</option>
-                    <option value="error">Error</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="log-path">Ruta de Logs</label>
-                <div class="input-with-button">
-                    <input type="text" id="log-path" value="./logs/app.log">
-                    <button class="secondary-button">Examinar</button>
-                </div>
-            </div>
-        </div>
-        <!-- Botones de acción -->
-        <div class="config-actions">
-            <button class="secondary-button">Cancelar</button>
-            <button class="primary-button">Guardar Cambios</button>
+<div class="container" id="config-screen-content"> 
+    <div class="form-group">
+        <label for="bot-token">Token del Bot:</label>
+        <div class="password-container">
+            <input type="password" id="bot-token" name="bot-token" placeholder="Introduce el token de tu bot">
+            <button type="button" id="toggle-token-visibility">Mostrar</button>
         </div>
     </div>
+
+    <div class="form-group">
+        <label for="bot-status-text">Texto del Estado del Bot:</label>
+        <input type="text" id="bot-status-text" name="bot-status-text" placeholder="Ej: ¡Ayudando a la comunidad!">
+    </div>
+    <div class="form-group">
+        <label for="activity-type">Tipo de Actividad del Bot:</label>
+        <select id="activity-type" name="activity-type">
+            <option value="PLAYING">Jugando a</option>
+            <option value="WATCHING">Viendo</option>
+            <option value="LISTENING">Escuchando</option>
+            <option value="STREAMING">Transmitiendo</option>
+            <option value="COMPETING">Compitiendo en</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="bot-activity-name">Nombre de la Actividad del Bot:</label>
+        <input type="text" id="bot-activity-name" name="bot-activity-name" placeholder="Ej: Minecraft">
+    </div>
+    <div class="form-group" id="stream-url-group" style="display: none;">
+        <label for="bot-stream-url">URL del Stream (solo para Transmitiendo):</label>
+        <input type="text" id="bot-stream-url" name="bot-stream-url" placeholder="Ej: https://twitch.tv/usuario">
+    </div>
+
+    <button type="button" id="save-button" class="save-button">Guardar Cambios</button>
 </div>

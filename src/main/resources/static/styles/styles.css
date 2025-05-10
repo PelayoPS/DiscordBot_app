@@ -160,6 +160,10 @@ button {
     display: flex;
     overflow: hidden;
     position: relative;
+    height: 100vh !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    flex: 1 1 auto !important;
 }
 
 .content-area {
@@ -168,10 +172,10 @@ button {
     position: relative;
     width: 100%;
     min-width: 0;
-    height: 100%;
-    min-height: 0;
-    overflow-y: auto;
-    background: none;
+    height: 100vh !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    flex: 1 1 auto !important;
 }
 
 .screen {
@@ -723,25 +727,27 @@ body.light-theme .theme-toggle {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     padding: 16px;
-    overflow-y: auto;
-    height: calc(100% - 65px);
-    max-height: 100%;
-    align-items: flex-start;
-    min-height: 0;
+    overflow-y: auto !important;
+    max-height: calc(100vh - 40px) !important; /* Ajusta según tu header */
+    height: auto !important;
+    min-height: 0 !important;
+    align-items: stretch;
+    grid-auto-rows: auto;
 }
 
 .dashboard-card {
-    background-color: var(--color-surface, #23272f);
-    border: 1px solid var(--color-border, #2c2f36);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px #0002;
-    overflow: hidden;
-    height: auto;
-    min-height: 0;
-    max-height: none;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-medium);
+    padding: 16px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-wrap: break-word; 
+    min-width: 0; 
 }
 
 body.light-theme .dashboard-card {
@@ -1262,6 +1268,7 @@ body.light-theme .log-message {
     /* Color base del tema oscuro */
     font-size: 13px;
     word-wrap: break-word;
+    word-break: break-all; 
     line-height: 1.4;
 }
 
@@ -2132,13 +2139,8 @@ body.light-theme .servers-list-container {
 
     .dashboard-grid {
         grid-template-columns: 1fr !important;
-        gap: 12px;
-        padding: 10px;
-        max-height: calc(100vh - 110px);
-        height: auto;
-        overflow-y: auto;
-        padding-bottom: 20px;
-        min-height: 0;
+        max-height: calc(100vh - 40px) !important;
+        overflow-y: auto !important;
     }
 
     .dashboard-card {
@@ -2181,8 +2183,9 @@ body.light-theme .servers-list-container {
     }
 
     .dashboard-card {
-        height: 100%;
-        min-height: 0;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
     }
 }
 
