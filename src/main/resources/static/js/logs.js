@@ -61,24 +61,28 @@ window.initLogsScreen = function () {
         if (!match) {
             // Si no coincide, devolver todo como mensaje
             return {
+                raw: entry, // Guardar la entrada original
                 fecha: '',
                 hora: '',
-                tipo: 'info',
+                tipo: 'INFO', // Default type, normalizado
                 origen: '',
                 mensaje: entry,
+                isParsed: false
             };
         }
         return {
+            raw: entry, // Guardar la entrada original
             fecha: match[1],
             hora: match[2],
-            tipo: match[3],
+            tipo: match[3].toUpperCase(), // Normalizar a mayúsculas para la comparación
             origen: match[4].trim(),
             mensaje: match[5],
+            isParsed: true
         };
     }
 
-    function renderLogs(logEntries) {
-        if (!logEntries || logEntries.length === 0) {
+    function renderLogs(logEntriesFromServer) { // Renombrado para claridad
+        if (!logEntriesFromServer || logEntriesFromServer.length === 0) {
             logsTableBody.innerHTML = '<tr><td class="log-cell-main" colspan="5">No hay logs para los filtros seleccionados</td></tr>';
             // Limpiar paginación si no hay logs
             const paginationContainer = document.querySelector('.pagination');
@@ -92,50 +96,92 @@ window.initLogsScreen = function () {
             return;
         }
 
+        // Parsear todas las entradas de log una vez
+        const parsedLogEntries = logEntriesFromServer.map(entryText => parseLogEntry(entryText));
+
+        // Obtener valores de los filtros de fecha
+        const fromDateFilter = dateInputs[0].value; // YYYY-MM-DD
+        const toDateFilter = dateInputs[1].value;   // YYYY-MM-DD
+
+        // Filtrar por fecha
+        let dateFilteredEntries = parsedLogEntries;
+        if (fromDateFilter) {
+            dateFilteredEntries = dateFilteredEntries.filter(log => {
+                if (!log.isParsed || !log.fecha) { return false; }
+                return log.fecha >= fromDateFilter;
+            });
+        }
+        if (toDateFilter) {
+            dateFilteredEntries = dateFilteredEntries.filter(log => {
+                if (!log.isParsed || !log.fecha) { return false; }
+                return log.fecha <= toDateFilter;
+            });
+        }
+        
         // Obtener tipos seleccionados en los checkboxes
         const selectedTypes = Array.from(logFilterCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.nextElementSibling.classList[1].toUpperCase());
-        // Filtrar logs por tipo si hay alguno seleccionado
-        let filteredEntries = logEntries;
+
+        // Filtrar por tipo (sobre los ya filtrados por fecha)
+        let finalFilteredEntries = dateFilteredEntries;
         if (selectedTypes.length > 0) {
-            filteredEntries = logEntries.filter(entry => {
-                const { tipo } = parseLogEntry(entry);
-                return selectedTypes.includes(tipo.toUpperCase());
+            finalFilteredEntries = dateFilteredEntries.filter(log => {
+                // El tipo en log ya está en mayúsculas por parseLogEntry
+                return selectedTypes.includes(log.tipo);
             });
         }
 
-        // 'filteredEntries' ya es la lista de entradas de log completas y filtradas por el backend.
-        // La paginación se hace localmente sobre estos resultados.
+        if (finalFilteredEntries.length === 0) {
+            logsTableBody.innerHTML = '<tr><td class="log-cell-main" colspan="5">No hay logs para los filtros seleccionados</td></tr>';
+            const paginationContainer = document.querySelector('.pagination');
+            const paginationInfo = document.querySelector('.pagination-info');
+            if (paginationContainer) { paginationContainer.style.display = 'none'; }
+            if (paginationInfo) { paginationInfo.textContent = ''; }
+            return;
+        }
+
+        // La paginación se hace localmente sobre estos resultados (finalFilteredEntries).
         let currentPage = 1;
         const pageSize = 20; // O el tamaño de página que prefieras
-        let totalPages = Math.ceil(filteredEntries.length / pageSize);
+        let totalPages = Math.ceil(finalFilteredEntries.length / pageSize);
         
         let paginationContainer = document.querySelector('.pagination');
         let paginationInfo = document.querySelector('.pagination-info');
-        let prevBtn = paginationContainer.querySelectorAll('.pagination-button')[0];
-        let nextBtn = paginationContainer.querySelectorAll('.pagination-button')[1];
+        let prevBtn = paginationContainer ? paginationContainer.querySelectorAll('.pagination-button')[0] : null;
+        let nextBtn = paginationContainer ? paginationContainer.querySelectorAll('.pagination-button')[1] : null;
         
         function renderPage(page) {
             currentPage = page;
             const start = (page - 1) * pageSize;
             const end = start + pageSize;
-            const pageEntries = filteredEntries.slice(start, end);
-            logsTableBody.innerHTML = pageEntries.map(entry => {
-                const { fecha, hora, tipo, origen, mensaje } = parseLogEntry(entry);
+            const pageEntries = finalFilteredEntries.slice(start, end);
+            
+            logsTableBody.innerHTML = pageEntries.map(logObject => {
+                const { fecha, hora, tipo, origen, mensaje, isParsed, raw } = logObject;
+                
+                if (!isParsed) { 
+                    return `
+                        <tr class="log-row-detailed unparsed">
+                            <td class="log-cell-fecha"></td>
+                            <td class="log-cell-hora"></td>
+                            <td class="log-cell-nivel"><span class="log-level-tag" style="background-color: #808080;">RAW</span></td>
+                            <td class="log-cell-origen"></td>
+                            <td class="log-cell-mensaje">${raw}</td>
+                        </tr>
+                    `;
+                }
+
                 let levelColor = '#5865f2';
-                let levelText = tipo.toUpperCase();
-                switch (tipo.toLowerCase()) {
-                    case 'debug':
-                        levelColor = '#43b581';
-                        break;
-                    case 'warn':
+                let levelText = tipo; // tipo ya está en mayúsculas
+                switch (tipo) {
+                    case 'WARN':
                         levelColor = '#faa61a';
                         break;
-                    case 'error':
+                    case 'ERROR':
                         levelColor = '#ed4245';
                         break;
-                    case 'info':
+                    case 'INFO':
                         levelColor = '#5865f2';
                         break;
                 }
@@ -153,19 +199,22 @@ window.initLogsScreen = function () {
         }
         
         function renderPagination() {
-            const paginationContainer = document.querySelector('.pagination');
-            const paginationInfo = document.querySelector('.pagination-info');
+            if (!paginationContainer || !paginationInfo || !prevBtn || !nextBtn) {
+                if (paginationContainer) { paginationContainer.style.display = 'none'; }
+                if (paginationInfo) { paginationInfo.textContent = ''; }
+                return;
+            }
 
             if (totalPages > 0) {
                 if (paginationContainer) {
-                    paginationContainer.style.display = 'flex'; // Mostrar paginador
+                    paginationContainer.style.display = 'flex'; 
                 }
                 if (paginationInfo) {
                     paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
                 }
             } else {
                  if (paginationContainer) {
-                    paginationContainer.style.display = 'none'; // Ocultar si no hay páginas
+                    paginationContainer.style.display = 'none'; 
                  }
                  if (paginationInfo) {
                     paginationInfo.textContent = '';
@@ -173,14 +222,12 @@ window.initLogsScreen = function () {
                  return;
             }
             
-            // Botón anterior
             prevBtn.disabled = currentPage === 1;
             prevBtn.onclick = () => {
                 if (currentPage > 1) {
                     renderPage(currentPage - 1);
                 }
             };
-            // Botón siguiente
             nextBtn.disabled = currentPage === totalPages;
             nextBtn.onclick = () => {
                 if (currentPage < totalPages) {
