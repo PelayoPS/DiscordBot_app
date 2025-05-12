@@ -54,6 +54,8 @@ public class BotFacadeImpl implements BotFacade {
     private long aiApiLastCheck = 0L;
     private static final long AI_API_CACHE_MS = 30 * 60 * 1000; // 30 minutos
 
+    private final ConfigService configService;
+
     /**
      * Constructor para inyección de dependencias (sin Bot).
      * 
@@ -68,6 +70,7 @@ public class BotFacadeImpl implements BotFacade {
         this.moderationService = moderationService;
         this.commandManager = commandManager;
         this.databaseManager = databaseManager;
+        this.configService = new FileConfigService("src/main/resources/config.properties");
     }
 
     /**
@@ -77,7 +80,6 @@ public class BotFacadeImpl implements BotFacade {
     public synchronized void startBot() {
         if (botInstance == null) {
             // Cargar configuración
-            ConfigService configService = new FileConfigService("src/main/resources/config.properties");
             String token = configService.get("token");
             ServiceFactory serviceFactory = new ServiceFactory(configService, databaseManager);
             botInstance = new Bot(token, serviceFactory, databaseManager);
@@ -462,7 +464,6 @@ public class BotFacadeImpl implements BotFacade {
      */
     private String[] comprobarAiApiStruct() {
         try {
-            ConfigService configService = new FileConfigService("src/main/resources/config.properties");
             String apiKey = configService.get("gemini.api.key");
             if (apiKey != null && !apiKey.isBlank()) {
                 // Simulación de petición real: si tienes método, hazlo aquí
@@ -473,6 +474,42 @@ public class BotFacadeImpl implements BotFacade {
         } catch (Exception e) {
             return new String[] { "false", "Error" };
         }
+    }
+
+    // --- Configuración del Bot ---
+    @Override
+    public BotConfigDTO getBotConfig() {
+        BotConfigDTO dto = new BotConfigDTO();
+        // Por seguridad, solo indicamos si el token está configurado
+        String token = configService.get("token");
+        dto.setTokenSet(token != null && !token.isEmpty());
+        dto.setStatusText(configService.get("bot.status", ""));
+        dto.setActivityType(configService.get("bot.activityType", "PLAYING"));
+        dto.setActivityName(configService.get("bot.activityName", ""));
+        dto.setStreamUrl(configService.get("bot.streamUrl", ""));
+        return dto;
+    }
+
+    @Override
+    public void saveBotToken(String token) {
+        // Guardar el token en la config
+        // (asume que configService tiene método set, si no, usar ConfigManager.setProperty)
+        if (configService instanceof bot.config.ConfigManager) {
+            ((bot.config.ConfigManager) configService).setProperty("token", token);
+        }
+        // Si usas otro servicio, implementa el guardado correspondiente
+    }
+
+    @Override
+    public void saveBotPresence(String statusText, String activityType, String activityName, String streamUrl) {
+        if (configService instanceof bot.config.ConfigManager) {
+            bot.config.ConfigManager cm = (bot.config.ConfigManager) configService;
+            cm.setProperty("bot.status", statusText);
+            cm.setProperty("bot.activityType", activityType);
+            cm.setProperty("bot.activityName", activityName);
+            cm.setProperty("bot.streamUrl", streamUrl);
+        }
+        // Si usas otro servicio, implementa el guardado correspondiente
     }
 
     // --- Entity Management ---

@@ -5,7 +5,7 @@ window.initConfigScreen = function() {
         const toggleTokenVisibilityButton = document.getElementById('toggle-token-visibility');
         const activityTypeSelect = document.getElementById('activity-type');
         const streamUrlGroup = document.getElementById('stream-url-group');
-        const saveButton = document.getElementById('save-button');
+        const saveButtons = document.querySelectorAll('.save-config-btn');
 
         const botStatusTextInput = document.getElementById('bot-status-text');
         const botActivityNameInput = document.getElementById('bot-activity-name');
@@ -82,78 +82,72 @@ window.initConfigScreen = function() {
             handleActivityTypeChange();
         }
 
-        // 4. Guardar cambios
-        if (saveButton) {
-            saveButton.addEventListener('click', async () => {
-                const token = botTokenInput.value;
-                const statusText = botStatusTextInput.value;
-                const activityType = activityTypeSelect.value;
-                const activityName = botActivityNameInput.value;
-                const streamUrl = botStreamUrlInput.value;
-
+        // 4. Guardar cada campo de forma independiente
+        saveButtons.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const field = btn.getAttribute('data-field');
+                let value;
+                let body;
+                let endpoint;
+                let method = 'POST';
+                let headers = { 'Content-Type': 'application/json' };
+                let showAlert = true;
                 let errors = [];
 
-                if (activityType === 'STREAMING' && (!streamUrl || !isValidHttpUrl(streamUrl))) {
-                    errors.push('Para "Transmitiendo", por favor introduce una URL válida de Twitch o YouTube.');
-                }
-                if (!activityName) {
-                    errors.push('El nombre de la actividad no puede estar vacío.');
-                }
-
-                if (errors.length > 0) {
-                    alert("Por favor, corrige los siguientes errores:\n" + errors.join("\n"));
+                if (field === 'bot-token') {
+                    value = botTokenInput.value;
+                    if (!value || value.trim() === '') {
+                        alert('Introduce un token válido.');
+                        return;
+                    }
+                    endpoint = '/api/config/bot-token';
+                    body = JSON.stringify({ token: value });
+                } else if (field === 'bot-status-text') {
+                    value = botStatusTextInput.value;
+                    endpoint = '/api/config/presence';
+                    body = JSON.stringify({ statusText: value });
+                } else if (field === 'activity-type') {
+                    value = activityTypeSelect.value;
+                    endpoint = '/api/config/presence';
+                    body = JSON.stringify({ activityType: value });
+                } else if (field === 'bot-activity-name') {
+                    value = botActivityNameInput.value;
+                    if (!value || value.trim() === '') {
+                        alert('El nombre de la actividad no puede estar vacío.');
+                        return;
+                    }
+                    endpoint = '/api/config/presence';
+                    body = JSON.stringify({ activityName: value });
+                } else if (field === 'bot-stream-url') {
+                    value = botStreamUrlInput.value;
+                    if (activityTypeSelect.value === 'STREAMING' && (!value || !isValidHttpUrl(value))) {
+                        alert('Para "Transmitiendo", introduce una URL válida de Twitch o YouTube.');
+                        return;
+                    }
+                    endpoint = '/api/config/presence';
+                    body = JSON.stringify({ streamUrl: value });
+                } else {
+                    alert('Campo no soportado.');
                     return;
                 }
-                
+
                 try {
-                    // Guardar Token (si se ha introducido uno nuevo y no es solo espacios en blanco)
-                    if (token && token.trim() !== '') {
-                        console.log('Enviando nuevo Token...');
-                        const tokenResponse = await fetch('/api/config/bot-token', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ token: token })
-                        });
-                        if (!tokenResponse.ok) {
-                            const errorData = await tokenResponse.text();
-                            throw new Error('Error al guardar el token: ' + errorData);
-                        }
-                        const tokenData = await tokenResponse.json(); 
-                        console.log('Respuesta del token:', tokenData);
-                        alert(tokenData.message || 'Token guardado. Puede que necesites reiniciar el bot.');
-                        botTokenInput.value = ''; 
+                    const response = await fetch(endpoint, { method, headers, body });
+                    if (!response.ok) {
+                        const errorData = await response.text();
+                        throw new Error(errorData);
+                    }
+                    const data = await response.json();
+                    if (field === 'bot-token') {
+                        botTokenInput.value = '';
                         botTokenInput.placeholder = "Token configurado (oculto)";
-                    } else {
-                        console.log('No se ha introducido un nuevo token o solo contenía espacios en blanco.');
                     }
-
-                    // Guardar Presencia
-                    const presenceConfig = {
-                        statusText: statusText,
-                        activityType: activityType,
-                        activityName: activityName,
-                        streamUrl: activityType === 'STREAMING' ? streamUrl : null
-                    };
-                    console.log('Enviando configuración de Presencia:', presenceConfig);
-                    const presenceResponse = await fetch('/api/config/presence', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(presenceConfig)
-                    });
-                    if (!presenceResponse.ok) {
-                        const errorData = await presenceResponse.text();
-                        throw new Error('Error al guardar la presencia: ' + errorData);
-                    }
-                    const presenceData = await presenceResponse.json();
-                    console.log('Respuesta de la presencia:', presenceData);
-                    alert(presenceData.message || 'Configuración de presencia guardada.');
-
+                    alert((data && data.message) || 'Guardado correctamente.');
                 } catch (error) {
-                    console.error('Error al guardar la configuración:', error);
-                    alert('Error al guardar la configuración: ' + error.message);
+                    alert('Error al guardar: ' + error.message);
                 }
             });
-        }
+        });
 
         function isValidHttpUrl(string) {
             let url;

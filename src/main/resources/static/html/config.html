@@ -1,34 +1,57 @@
-<div class="container" id="config-screen-content"> 
-    <div class="form-group">
-        <label for="bot-token">Token del Bot:</label>
-        <div class="password-container">
-            <input type="password" id="bot-token" name="bot-token" placeholder="Introduce el token de tu bot">
-            <button type="button" id="toggle-token-visibility">Mostrar</button>
-        </div>
+<!-- Pantalla de Configuración con botones de guardar alineados horizontalmente en móvil y escritorio -->
+<div class="screen active" id="config-screen">
+    <div class="screen-header">
+        <button class="menu-toggle-btn" aria-label="Abrir menú" tabindex="0">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h2>Configuración</h2>
     </div>
-
-    <div class="form-group">
-        <label for="bot-status-text">Texto del Estado del Bot:</label>
-        <input type="text" id="bot-status-text" name="bot-status-text" placeholder="Ej: ¡Ayudando a la comunidad!">
+    <div class="config-container">
+        <form id="config-screen-content">
+            <div class="config-section">
+                <div class="form-group">
+                    <label for="bot-token">Token del Bot:</label>
+                    <div class="input-save-row password-container">
+                        <input type="password" id="bot-token" name="bot-token" placeholder="Introduce el token de tu bot">
+                        <button type="button" id="toggle-token-visibility" class="secondary-button" title="Mostrar/Ocultar"><i class="fas fa-eye"></i></button>
+                        <button type="button" class="icon-button save-config-btn" data-field="bot-token" title="Guardar token"><i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bot-status-text">Texto del Estado del Bot:</label>
+                    <div class="input-save-row">
+                        <input type="text" id="bot-status-text" name="bot-status-text" placeholder="Ej: ¡Ayudando a la comunidad!">
+                        <button type="button" class="icon-button save-config-btn" data-field="bot-status-text" title="Guardar estado"><i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="activity-type">Tipo de Actividad del Bot:</label>
+                    <div class="input-save-row">
+                        <select id="activity-type" name="activity-type">
+                            <option value="PLAYING">Jugando a</option>
+                            <option value="WATCHING">Viendo</option>
+                            <option value="LISTENING">Escuchando</option>
+                            <option value="STREAMING">Transmitiendo</option>
+                            <option value="COMPETING">Compitiendo en</option>
+                        </select>
+                        <button type="button" class="icon-button save-config-btn" data-field="activity-type" title="Guardar tipo de actividad"><i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bot-activity-name">Nombre de la Actividad del Bot:</label>
+                    <div class="input-save-row">
+                        <input type="text" id="bot-activity-name" name="bot-activity-name" placeholder="Ej: Minecraft">
+                        <button type="button" class="icon-button save-config-btn" data-field="bot-activity-name" title="Guardar nombre de actividad"><i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+                <div class="form-group" id="stream-url-group" style="display: none;">
+                    <label for="bot-stream-url">URL del Stream (solo para Transmitiendo):</label>
+                    <div class="input-save-row">
+                        <input type="text" id="bot-stream-url" name="bot-stream-url" placeholder="Ej: https://twitch.tv/usuario">
+                        <button type="button" class="icon-button save-config-btn" data-field="bot-stream-url" title="Guardar URL de stream"><i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="activity-type">Tipo de Actividad del Bot:</label>
-        <select id="activity-type" name="activity-type">
-            <option value="PLAYING">Jugando a</option>
-            <option value="WATCHING">Viendo</option>
-            <option value="LISTENING">Escuchando</option>
-            <option value="STREAMING">Transmitiendo</option>
-            <option value="COMPETING">Compitiendo en</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="bot-activity-name">Nombre de la Actividad del Bot:</label>
-        <input type="text" id="bot-activity-name" name="bot-activity-name" placeholder="Ej: Minecraft">
-    </div>
-    <div class="form-group" id="stream-url-group" style="display: none;">
-        <label for="bot-stream-url">URL del Stream (solo para Transmitiendo):</label>
-        <input type="text" id="bot-stream-url" name="bot-stream-url" placeholder="Ej: https://twitch.tv/usuario">
-    </div>
-
-    <button type="button" id="save-button" class="save-button">Guardar Cambios</button>
 </div>

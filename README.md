@@ -4,7 +4,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7%2B-brightgreen?logo=springboot)
 ![Electron](https://img.shields.io/badge/Electron-22%2B-blue?logo=electron)
 ![License](https://img.shields.io/github/license/PelayoPS/DiscordBot_app)
-
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/PelayoPS/DiscordBot_app)
 ---
 
 ## Tabla de Contenidos

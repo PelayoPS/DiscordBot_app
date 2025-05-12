@@ -216,4 +216,26 @@ public interface BotFacade {
      * @return Lista de mapas (columna -> valor) por cada fila.
      */
     List<java.util.Map<String, Object>> getTableData(String tableName);
+
+    // --- Configuración del Bot ---
+
+    /**
+     * Obtiene la configuración general del bot (sin exponer el token).
+     */
+    BotConfigDTO getBotConfig();
+
+    /**
+     * Guarda el token del bot.
+     * @param token Token de Discord
+     */
+    void saveBotToken(String token);
+
+    /**
+     * Guarda la presencia/actividad del bot (status, tipo, nombre, url).
+     * @param statusText Texto de estado
+     * @param activityType Tipo de actividad
+     * @param activityName Nombre de la actividad
+     * @param streamUrl URL del stream (opcional)
+     */
+    void saveBotPresence(String statusText, String activityType, String activityName, String streamUrl);
 }

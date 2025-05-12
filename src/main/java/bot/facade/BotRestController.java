@@ -241,4 +241,32 @@ public class BotRestController {
     public ResponseEntity<DatabaseStatsDTO> getDatabaseStats() {
         return ResponseEntity.ok(botFacade.getDatabaseStats());
     }
+
+    // --- Configuración del Bot ---
+
+    /**
+     * Devuelve la configuración actual del bot (sin exponer el token).
+     */
+    @GetMapping("/config")
+    public ResponseEntity<BotConfigDTO> getBotConfig() {
+        return ResponseEntity.ok(botFacade.getBotConfig());
+    }
+
+    /**
+     * Guarda el token del bot.
+     */
+    @PostMapping("/config/token")
+    public ResponseEntity<Void> saveBotToken(@RequestBody String token) {
+        botFacade.saveBotToken(token);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Guarda la presencia/actividad del bot (status, tipo, nombre, url).
+     */
+    @PostMapping("/config/presence")
+    public ResponseEntity<Void> saveBotPresence(@RequestBody BotConfigDTO dto) {
+        botFacade.saveBotPresence(dto.getStatusText(), dto.getActivityType(), dto.getActivityName(), dto.getStreamUrl());
+        return ResponseEntity.ok().build();
+    }
 }

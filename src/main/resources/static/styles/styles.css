@@ -1402,6 +1402,53 @@ body.light-theme .config-section {
     margin-top: 24px;
 }
 
+.input-save-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.input-save-row input,
+.input-save-row select {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+.input-save-row .icon-button.save-config-btn,
+.input-save-row .secondary-button {
+    flex: none;
+    min-width: 40px;
+    padding: 6px 10px;
+}
+@media (max-width: 700px) {
+    #config-screen .form-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 4px !important;
+    }
+    #config-screen .form-group label {
+        flex: none !important;
+        margin-bottom: 2px;
+        text-align: left;
+    }
+    .input-save-row {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+    .input-save-row input,
+    .input-save-row select {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+    }
+    .input-save-row .icon-button.save-config-btn,
+    .input-save-row .secondary-button {
+        width: 40px;
+        min-width: 40px;
+        padding: 6px 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
 /* ===================== MÓDULOS ===================== */
 .modules-container {
     padding: 16px;
