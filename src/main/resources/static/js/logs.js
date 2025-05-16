@@ -18,7 +18,9 @@ window.initLogsScreen = function () {
             .filter(cb => cb.checked)
             .map(cb => {
                 let t = cb.nextElementSibling.classList[1];
-                if (t.toUpperCase() === "WARNING") return "WARN";
+                if (t.toUpperCase() === "WARNING") {
+                  return "WARN";
+                }
                 return t.toUpperCase();
             });
         // Fechas
@@ -127,7 +129,9 @@ window.initLogsScreen = function () {
             .filter(cb => cb.checked)
             .map(cb => {
                 let t = cb.nextElementSibling.classList[1];
-                if (t.toUpperCase() === "WARNING") return "WARN";
+                if (t.toUpperCase() === "WARNING") {
+                  return "WARN";
+                }
                 return t.toUpperCase();
             });
 

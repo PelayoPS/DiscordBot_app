@@ -38,7 +38,9 @@ window.initConfigScreen = function() {
         try {
             // Presencia
             const presenceResp = await fetch('/api/config/presence');
-            if (!presenceResp.ok) throw new Error('Error al obtener la configuración de presencia');
+            if (!presenceResp.ok) {
+              throw new Error('Error al obtener la configuración de presencia');
+            }
             const presence = await presenceResp.json();
             botStatusTextInput.value = presence.statusText || '';
             activityTypeSelect.value = presence.activityType || 'PLAYING';
@@ -53,7 +55,9 @@ window.initConfigScreen = function() {
         try {
             // Token
             const tokenResp = await fetch('/api/config/bot-token-info');
-            if (!tokenResp.ok) throw new Error('Error al obtener la información del token');
+            if (!tokenResp.ok) {
+              throw new Error('Error al obtener la información del token');
+            }
             const tokenInfo = await tokenResp.json();
             if (tokenInfo && tokenInfo.isTokenSet) {
                 botTokenInput.placeholder = "Token configurado (oculto)";
@@ -109,7 +113,7 @@ window.initConfigScreen = function() {
         btn.addEventListener('click', async (e) => {
             const field = btn.getAttribute('data-field');
             if (field === 'bot-token') {
-                const value = botTokenInput.value;
+                const {value} = botTokenInput;
                 if (!value || value.trim() === '') {
                     showNotification('Introduce un token válido.', 'error');
                     return;
@@ -120,7 +124,9 @@ window.initConfigScreen = function() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ token: value })
                     });
-                    if (!resp.ok) throw new Error(await resp.text());
+                    if (!resp.ok) {
+                      throw new Error(await resp.text());
+                    }
                     botTokenInput.value = '';
                     await loadConfiguration();
                     showNotification('Token guardado correctamente.', 'success');
@@ -153,7 +159,9 @@ window.initConfigScreen = function() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(presenceObj)
                 });
-                if (!resp.ok) throw new Error(await resp.text());
+                if (!resp.ok) {
+                  throw new Error(await resp.text());
+                }
                 await loadConfiguration();
                 showNotification('Presencia guardada correctamente.', 'success');
             } catch (err) {

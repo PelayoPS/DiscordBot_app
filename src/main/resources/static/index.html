@@ -42,7 +42,7 @@
             <!-- Interfaz principal después del login -->
             <div class="main-interface hidden">
                 <!-- Overlay para el sidebar (solo móvil) -->
-                <div class="sidebar-overlay hidden"></div>
+                <div class="sidebar-overlay"></div>
                 <!-- Barra lateral (por defecto oculta, sin clase open) -->
                 <div class="sidebar">
                     <div class="sidebar-menu">
@@ -270,16 +270,16 @@
             const sidebarOverlay = document.querySelector('.sidebar-overlay');
             // Por defecto, el menú lateral NO tiene la clase 'open' (modo hamburguesa)
             sidebar.classList.remove('open');
-            sidebarOverlay.classList.add('hidden');
+            sidebarOverlay.classList.remove('active');
             // Elimina el listener global del botón hamburguesa
             // En su lugar, delega el evento a los botones dentro de .screen-header
             function openSidebar() {
                 sidebar.classList.add('open');
-                sidebarOverlay.classList.remove('hidden');
+                sidebarOverlay.classList.add('active');
             }
             function closeSidebar() {
                 sidebar.classList.remove('open');
-                sidebarOverlay.classList.add('hidden');
+                sidebarOverlay.classList.remove('active');
             }
             sidebarOverlay.addEventListener('click', closeSidebar);
             document.querySelectorAll('.menu-item').forEach(item => {

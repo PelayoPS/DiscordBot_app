@@ -29,7 +29,7 @@
 }
 
 body.light-theme .dashboard-card {
-    background-color: #ffffff !important;
+background-color: #e6f9f0 !important; /* Verde pastel para modo claro */
     border: 1px solid var(--color-border) !important;
     box-shadow: 0 2px 8px #0001;
 }
@@ -39,11 +39,7 @@ body.light-theme .dashboard-card.estado-bot {
 }
 
 body.light-theme .dashboard-card.estado-bot .card-header {
-    background-color: #ffffff !important;
-}
-
-body.light-theme .dashboard-card.estado-bot .status-value {
-    color: #000000 !important;
+background-color: #e6f9f0 !important;
 }
 
 body.light-theme #integraciones-card-html {
@@ -92,6 +88,39 @@ body.light-theme .info-value.online {
 
 body.light-theme .info-value.error {
     color: #ed4245 !important;
+}
+
+/* Regla general para modo claro: textos negros */
+body.light-theme .status-value {
+    color: #000 !important;
+}
+
+/* Reglas específicas para los estados, con mayor especificidad para sobrescribir la anterior */
+body.light-theme .status-value.online {
+    color: #27ae60 !important;
+    font-weight: bold;
+}
+body.light-theme .status-value.offline {
+    color: #ed4245 !important;
+    font-weight: bold;
+}
+body.light-theme .status-value.desconocido {
+    color: #faa61a !important;
+    font-weight: bold;
+}
+
+/* También mantenlas para modo oscuro por compatibilidad */
+.status-value.online {
+    color: #27ae60 !important;
+    font-weight: bold;
+}
+.status-value.offline {
+    color: #ed4245 !important;
+    font-weight: bold;
+}
+.status-value.desconocido {
+    color: #faa61a !important;
+    font-weight: bold;
 }
 
 .dashboard-card .card-header {
@@ -249,40 +278,8 @@ body.light-theme .status-item:last-child {
 }
 
 .db-status-value.no-disponible,
-body.light-theme .status-value.offline,
 body.light-theme .db-count.no-disponible {
     color: var(--color-danger) !important;
-}
-
-.status-value.online {
-    font-weight: bold;
-    color: #27ae60 !important;
-}
-
-body.light-theme .status-value.online {
-    color: #27ae60 !important;
-}
-
-.status-value.error,
-.db-status-value.error,
-.db-count.error {
-    color: #e74c3c !important;
-    font-weight: bold;
-}
-
-.status-value.offline {
-    color: #ed4245 !important;
-    font-weight: bold;
-}
-
-.status-value.warning {
-    color: var(--color-warning) !important;
-    font-weight: bold;
-}
-
-.status-value.desconocido {
-    color: var(--color-warning) !important;
-    font-weight: bold;
 }
 
 .bot-controls {
@@ -294,41 +291,6 @@ body.light-theme .status-value.online {
 .bot-controls button {
     flex: 1;
     padding: 8px 0;
-}
-
-.start-button,
-body.light-theme .start-button {
-    background-color: #27ae60 !important;
-    border: none;
-    color: #fff !important;
-}
-
-.start-button:hover,
-.start-button:focus,
-body.light-theme .start-button:hover,
-body.light-theme .start-button:focus {
-    background-color: #219150 !important;
-}
-
-.restart-button {
-    background-color: #8e44ad !important;
-    border: none;
-    color: #fff !important;
-}
-
-body.light-theme .restart-button {
-    background-color: #8e44ad !important;
-    color: #fff !important;
-}
-
-body.light-theme .restart-button:hover,
-body.light-theme .restart-button:focus {
-    background-color: #7d3c98 !important;
-}
-
-.restart-button:hover,
-.restart-button:focus {
-    background-color: #6c3483 !important;
 }
 
 .database-info {
