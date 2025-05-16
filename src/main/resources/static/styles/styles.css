@@ -1,6 +1,4 @@
-/* styles.css: Estilos principales de la aplicación Discord Bot Manager */
-
-/* ===================== VARIABLES Y RESET ===================== */
+/* === Variables globales y reset de estilos === */
 :root {
     --border-radius-lg: 8px;
     --border-radius-md: 4px;
@@ -44,7 +42,7 @@
     --toggle-button-background-color: var(--color-secondary);
 }
 
-/* Light theme variable overrides */
+/* === Overrides de variables para tema claro === */
 body.light-theme {
     --color-background: #f2f3f5;
     --color-border: #d4d7dc;
@@ -79,13 +77,14 @@ body.light-theme {
     --toggle-button-background-color: var(--color-input);
 }
 
-/* Restablecer estilos por defecto */
+/* === Reset general de elementos === */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* === Estilos base para body y html === */
 body,
 html {
     background-color: var(--color-background);
@@ -97,7 +96,7 @@ html {
     overflow: hidden;
 }
 
-/* ===================== GENERALES Y LAYOUT ===================== */
+/* === Enlaces === */
 a {
     color: var(--color-primary);
     text-decoration: none;
@@ -107,12 +106,14 @@ a:hover {
     text-decoration: underline;
 }
 
+/* === Botones generales === */
 button {
     border: none;
     cursor: pointer;
     outline: none;
 }
 
+/* === Contenedor principal de la app === */
 .app-container {
     background-color: var(--color-background);
     display: flex;
@@ -120,6 +121,7 @@ button {
     height: 100vh;
 }
 
+/* === Barra de título de la ventana === */
 .window-titlebar {
     -webkit-app-region: drag;
     align-items: center;
@@ -168,6 +170,7 @@ button {
     background-color: var(--color-danger);
 }
 
+/* === Contenido principal de la app === */
 .app-content {
     display: flex;
     flex: 1 1 auto !important;
@@ -215,7 +218,7 @@ button {
     font-weight: 600;
 }
 
-/* Light theme overrides for general layout elements */
+/* === Overrides de tema claro para layout general === */
 body.light-theme .window-titlebar,
 body.light-theme .screen-header {
     background-color: #fff !important;
@@ -228,7 +231,7 @@ body.light-theme .screen-header h2 {
     font-weight: 700;
 }
 
-/* Botones */
+/* === Botones principales === */
 .primary-button {
     background-color: var(--color-primary);
     border-radius: var(--border-radius-md);
@@ -299,28 +302,17 @@ body.light-theme .danger-button {
     color: var(--color-text-primary);
 }
 
-/* Botón de mostrar/ocultar token en configuración */
+/* === Botón de visibilidad del token === */
 #toggle-token-visibility {
-    /* Align with the input field */
-    /* Fixed height, same as input */
     display: inline-flex;
-    /* Fixed width */
     height: 38px;
-    /* For centering the icon */
     align-items: center;
-    /* Horizontal centering */
     cursor: pointer;
-    /* Icon color, uses theme-specific variable */
     border: 1px solid var(--toggle-button-border-color);
-    /* Remove padding for the icon to fill the button */
     width: 38px;
-    /* Small left margin */
     vertical-align: middle;
-    /* Uses theme-specific variable */
     border-radius: var(--border-radius);
-    /* Uses theme-specific variable */
     color: var(--toggle-button-icon-color);
-    /* Vertical centering */
     justify-content: center;
     background-color: var(--toggle-button-background-color);
     margin-left: 5px;
@@ -329,18 +321,14 @@ body.light-theme .danger-button {
 }
 
 #toggle-token-visibility:hover {
-    /* Uses theme-specific variable */
-    /* Icon color on hover will remain var(--toggle-button-icon-color) due to inheritance and no specific override */
     background-color: var(--toggle-button-hover-background-color);
 }
 
 #toggle-token-visibility i {
-    /* Icon size */
-    /* The color is inherited from #toggle-token-visibility and will transition with it */
     font-size: 16px;
 }
 
-/* Switch (Toggle) */
+/* === Switch (Toggle) === */
 .switch {
     display: inline-block;
     height: 22px;
@@ -397,7 +385,7 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
-/* Switch pequeño */
+/* === Switch pequeño === */
 .switch.small {
     height: 18px;
     width: 32px;
@@ -414,7 +402,7 @@ input:checked+.slider:before {
     transform: translateX(14px);
 }
 
-/* Form elements */
+/* === Elementos de formulario === */
 .form-group {
     margin-bottom: 16px;
 }
@@ -530,7 +518,6 @@ body.light-theme .summary-info h3 {
 }
 
 .main-interface.hidden,
-/* Mejorar el aspecto de los botones de filtro de logs según si están seleccionados o no */
 .logs-filters .filter-checkbox input {
     display: none;
 }
@@ -549,7 +536,6 @@ body.light-theme .summary-info h3 {
     transition: filter 0.15s, opacity 0.15s, box-shadow 0.15s;
 }
 
-/* Estado seleccionado (checkbox checked) */
 .logs-filters .filter-checkbox input:checked+.filter-label {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.10);
     color: #fff !important;
@@ -557,7 +543,6 @@ body.light-theme .summary-info h3 {
     opacity: 1;
 }
 
-/* Colores vivos para cada tipo */
 .logs-filters .filter-label.info,
 body.light-theme .logs-filters .filter-label.info {
     background: #1976d2;
@@ -579,7 +564,7 @@ body.light-theme .menu-item.active i {
     color: #fff !important;
 }
 
-/* ===================== LOGIN ===================== */
+/* === Login: contenedor principal === */
 .login-container {
     align-items: center;
     display: flex;
@@ -646,7 +631,7 @@ body.light-theme .menu-item.active i {
     color: var(--color-primary-dark);
 }
 
-/* ===================== SIDEBAR Y NAVEGACIÓN ===================== */
+/* === Sidebar y navegación === */
 .main-interface {
     display: flex;
     height: 100%;
@@ -711,7 +696,6 @@ body.light-theme .sidebar {
 
 .log-level.warning,
 .status-indicator.idle,
-/* Usando var(--color-debug) */
 .log-level-tag.log-level-warn {
     background-color: var(--color-warning);
 }
@@ -820,9 +804,8 @@ body.light-theme .theme-toggle {
     margin-left: 4px;
 }
 
-/* ===================== DASHBOARD ===================== */
+/* === Dashboard: grid y tarjetas === */
 .dashboard-grid {
-    /* Ajusta según tu header */
     height: auto !important;
     align-items: stretch;
     display: grid;
@@ -852,21 +835,20 @@ body.light-theme .theme-toggle {
 }
 
 body.light-theme .dashboard-card {
-    background-color: #fff !important;
+    background-color: #ffffff !important;
     border: 1px solid var(--color-border) !important;
     box-shadow: 0 2px 8px #0001;
 }
 
 body.light-theme .dashboard-card.estado-bot {
-    background-color: #f6fcf8 !important;
+    background-color: #ffffff !important;
 }
 
 body.light-theme .dashboard-card.estado-bot .card-header {
-    background-color: #eafaf1 !important;
+    background-color: #ffffff !important;
 }
 
 body.light-theme .dashboard-card.estado-bot .status-value {
-    /* Negro para asegurar legibilidad */
     color: #000000 !important;
 }
 
@@ -894,26 +876,19 @@ body.light-theme .dashboard-card.logs .card-header {
     background-color: #fdf7e6 !important;
 }
 
-/* Mejoras para la visualización de logs en el dashboard en modo claro */
 body.light-theme .dashboard-card.logs .log-time {
-    /* Gris oscuro para el timestamp */
     color: #000000 !important;
 }
 
 body.light-theme .dashboard-card.logs .log-message {
-    /* Negro puro para el mensaje */
     color: #000000 !important;
 }
 
-/* Ajuste para las etiquetas de nivel de log en el dashboard modo claro */
 body.light-theme .dashboard-card.logs .log-level-label {
-    /* Texto blanco para mejor contraste en badges con fondo de color */
     color: #FFFFFF !important;
 }
 
-/* Ajuste para el enlace "Ver todos los logs" en el dashboard modo claro */
 body.light-theme .dashboard-card.logs .card-content a {
-    /* Usar el color primario del tema para enlaces */
     color: var(--color-primary) !important;
 }
 
@@ -1016,7 +991,7 @@ body.light-theme .dashboard-card .card-header {
 }
 
 .dashboard-card .info-label {
-    color: #b0b0b0;
+    color: #000000;
     flex: 1;
     font-size: 1.05rem;
     font-weight: 600;
@@ -1080,22 +1055,17 @@ body.light-theme .status-item:last-child {
 }
 
 .db-status-value.no-disponible,
-/* Corrección para el estado OFFLINE en modo claro */
 body.light-theme .status-value.offline,
 body.light-theme .db-count.no-disponible {
     color: var(--color-danger) !important;
 }
 
-/* El estado ONLINE debe ser siempre verde */
 .status-value.online {
-    /* Verde fijo */
     font-weight: bold;
     color: #27ae60 !important;
 }
 
-/* Asegurar que en tema claro ONLINE siga siendo verde */
 body.light-theme .status-value.online {
-    /* Verde fijo */
     color: #27ae60 !important;
 }
 
@@ -1108,6 +1078,16 @@ body.light-theme .status-value.online {
 
 .status-value.offline {
     color: #ed4245 !important;
+    font-weight: bold;
+}
+
+.status-value.warning {
+    color: var(--color-warning) !important;
+    font-weight: bold;
+}
+
+.status-value.desconocido {
+    color: var(--color-warning) !important;
     font-weight: bold;
 }
 
@@ -1169,7 +1149,7 @@ body.light-theme .restart-button:focus {
 }
 
 .db-name {
-    color: var(--color-text-secondary, #b0b0b0);
+    color: var(--color-text-secondary, #ffffff);
 }
 
 body.light-theme #integraciones-content-html,
@@ -1180,7 +1160,6 @@ body.light-theme .summary-value {
 }
 
 .db-status-value.disponible,
-/* Corrección para estado Disponible/No Disponible de BD en modo claro */
 body.light-theme .db-count.disponible {
     color: var(--color-success) !important;
 }
@@ -1266,9 +1245,7 @@ body.light-theme .db-count.disponible {
     color: #00695c !important;
 }
 
-/* Estilos para los logs en el dashboard (aplicados desde JS) */
 .log-entry {
-    /* Similar a .log-item */
     border-bottom: 1px solid var(--color-border);
     padding: 4px 0;
 }
@@ -1281,13 +1258,11 @@ body.light-theme .db-count.disponible {
 }
 
 .log-timestamp {
-    /* Color base del tema oscuro */
     font-size: 12px;
     color: #8e9297;
 }
 
 .log-level-tag {
-    /* Texto siempre blanco para las etiquetas */
     padding: 2px 6px;
     border-radius: 4px;
     color: white;
@@ -1296,7 +1271,6 @@ body.light-theme .db-count.disponible {
 }
 
 .log-level.info,
-/* Colores de fondo para niveles de log (tema oscuro) */
 .log-level-tag.log-level-info {
     background-color: var(--color-info);
 }
@@ -1312,13 +1286,11 @@ body.light-theme .db-count.disponible {
 }
 
 .log-logger {
-    /* Color base del tema oscuro */
     font-size: 12px;
     color: #aaa;
 }
 
 .log-message-content {
-    /* Color base del tema oscuro */
     font-size: 13px;
     color: #b9bbbe;
     line-height: 1.4;
@@ -1327,42 +1299,32 @@ body.light-theme .db-count.disponible {
 }
 
 .log-info-placeholder {
-    /* Color base del tema oscuro */
     font-size: 13px;
     color: #b9bbbe;
     padding: 4px 0;
 }
 
 body.light-theme .log-info-placeholder {
-    /* Usar color secundario del tema claro */
     color: var(--color-text-secondary);
 }
 
-/* Tema claro: overrides para los logs del dashboard */
 body.light-theme .log-entry {
-    /* Usar variable de borde del tema claro */
     border-bottom-color: var(--color-border);
 }
 
 body.light-theme .log-timestamp {
-    /* Gris oscuro, como se definió antes */
     color: #555555;
 }
 
-/* En tema claro, los fondos de .log-level-tag ya están definidos por .log-level-info, .log-level-warning etc. */
-/* El color del texto de .log-level-tag ya es blanco y funciona bien. */
-
 body.light-theme .log-logger {
-    /* Un gris más oscuro para el tema claro */
     color: #666666;
 }
 
 body.light-theme .log-message-content {
-    /* Negro, como se definió antes */
     color: #000000;
 }
 
-/* ===================== CONFIGURACIÓN ===================== */
+/* === Configuración: contenedor principal === */
 .config-container {
     height: calc(100% - 65px);
     overflow-y: auto;
@@ -1454,7 +1416,7 @@ body.light-theme .summary-card {
     }
 }
 
-/* ===================== MÓDULOS ===================== */
+/* === Módulos: contenedor principal === */
 .modules-container {
     height: calc(100% - 65px);
     overflow-y: auto;
@@ -1591,9 +1553,9 @@ body.light-theme .summary-card {
     opacity: 0.6;
 }
 
-/* ===================== BASE DE DATOS (Pantalla) ===================== */
+/* === Base de datos: pantalla principal === */
 .database-container,
-/* ===================== LOGS (Pantalla de Logs) ===================== */
+/* === Logs: pantalla principal === */
 .logs-container {
     display: flex;
     flex-direction: column;
@@ -1890,7 +1852,7 @@ body.light-theme .logs-table td {
     width: 48px;
 }
 
-/* ===================== MODALES ===================== */
+/* === Modales === */
 .modal {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
@@ -1995,7 +1957,7 @@ body.light-theme .logs-table td {
     padding: 16px;
 }
 
-/* ===================== RESPONSIVE ===================== */
+/* === Responsive: media queries === */
 @media (max-width: 900px) {
     .main-interface {
         flex-direction: column !important;
@@ -2148,7 +2110,7 @@ body.light-theme .logs-table td {
 
 }
 
-/* ===================== UTILIDADES ===================== */
+/* === Utilidades === */
 .text-center {
     text-align: center;
 }
