@@ -24,5 +24,16 @@ public interface ConfigService {
      * @return Valor asociado a la clave, o defaultValue si no existe
      */
     String get(String key, String defaultValue);
-    // Métodos adicionales según necesidad
+
+    /**
+     * Establece el valor de una clave de configuración en memoria.
+     * @param key   Clave de la configuración
+     * @param value Valor a establecer
+     */
+    void set(String key, String value);
+
+    /**
+     * Persiste los cambios en el archivo de configuración.
+     */
+    void save();
 }

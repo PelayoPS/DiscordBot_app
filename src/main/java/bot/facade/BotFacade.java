@@ -16,6 +16,16 @@ import java.util.List;
 public interface BotFacade {
 
     /**
+     * Indica si el token del bot está configurado (sin exponer el valor).
+     */
+    boolean hasBotToken();
+
+    /**
+     * Devuelve la presencia/actividad actual del bot (status, tipo, nombre, url).
+     */
+    BotPresenceDTO getBotPresence();
+
+    /**
      * Inicia el bot de Discord.
      */
     void startBot();

@@ -39,6 +39,22 @@ import java.util.Properties;
 @Service
 public class BotFacadeImpl implements BotFacade {
 
+    // --- Seguridad: nunca exponer el token real ---
+    @Override
+    public boolean hasBotToken() {
+        String token = configService.get("token");
+        return token != null && !token.isBlank();
+    }
+
+    @Override
+    public BotPresenceDTO getBotPresence() {
+        String statusText = configService.get("status.text");
+        String activityType = configService.get("activity.type");
+        String activityName = configService.get("activity.name");
+        String streamUrl = configService.get("activity.url");
+        return new BotPresenceDTO(statusText, activityType, activityName, streamUrl);
+    }
+
     private static final LoggingManager logger = new LoggingManager();
     private final UsuarioService usuarioService;
     private final ModerationService moderationService;
@@ -492,24 +508,17 @@ public class BotFacadeImpl implements BotFacade {
 
     @Override
     public void saveBotToken(String token) {
-        // Guardar el token en la config
-        // (asume que configService tiene método set, si no, usar ConfigManager.setProperty)
-        if (configService instanceof bot.config.ConfigManager) {
-            ((bot.config.ConfigManager) configService).setProperty("token", token);
-        }
-        // Si usas otro servicio, implementa el guardado correspondiente
+        configService.set("token", token);
+        configService.save();
     }
 
     @Override
     public void saveBotPresence(String statusText, String activityType, String activityName, String streamUrl) {
-        if (configService instanceof bot.config.ConfigManager) {
-            bot.config.ConfigManager cm = (bot.config.ConfigManager) configService;
-            cm.setProperty("bot.status", statusText);
-            cm.setProperty("bot.activityType", activityType);
-            cm.setProperty("bot.activityName", activityName);
-            cm.setProperty("bot.streamUrl", streamUrl);
-        }
-        // Si usas otro servicio, implementa el guardado correspondiente
+        configService.set("bot.status", statusText);
+        configService.set("bot.activityType", activityType);
+        configService.set("bot.activityName", activityName);
+        configService.set("bot.streamUrl", streamUrl);
+        configService.save();
     }
 
     // --- Entity Management ---

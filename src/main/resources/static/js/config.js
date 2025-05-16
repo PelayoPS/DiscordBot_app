@@ -1,57 +1,71 @@
 // Inicialización de la pantalla de configuración
+
 window.initConfigScreen = function() {
-    // Quitar el addEventListener('DOMContentLoaded', ...) y ejecutar directamente el código
     const botTokenInput = document.getElementById('bot-token');
     const toggleTokenVisibilityButton = document.getElementById('toggle-token-visibility');
     const activityTypeSelect = document.getElementById('activity-type');
     const streamUrlGroup = document.getElementById('stream-url-group');
     const saveButtons = document.querySelectorAll('.save-config-btn');
-
     const botStatusTextInput = document.getElementById('bot-status-text');
     const botActivityNameInput = document.getElementById('bot-activity-name');
     const botStreamUrlInput = document.getElementById('bot-stream-url');
 
-    // 1. Cargar configuración actual
-    function loadConfiguration() {
-        console.log('Intentando cargar la configuración existente...');
-        
-        // Cargar estado y actividad
-        fetch('/api/config/presence')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al obtener la configuración de presencia: ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data) {
-                    botStatusTextInput.value = data.statusText || '';
-                    activityTypeSelect.value = data.activityType || 'PLAYING';
-                    botActivityNameInput.value = data.activityName || '';
-                    botStreamUrlInput.value = data.streamUrl || '';
-                    handleActivityTypeChange(); 
-                }
-            })
-            .catch(error => console.error('Error al cargar la configuración de presencia:', error));
+    // Elementos de estado visual
+    let tokenStatusDiv = document.getElementById('token-status');
+    let presenceStatusDiv = document.getElementById('presence-status');
+    if (!tokenStatusDiv) {
+        tokenStatusDiv = document.createElement('div');
+        tokenStatusDiv.id = 'token-status';
+        botTokenInput.parentElement.parentElement.appendChild(tokenStatusDiv);
+    }
+    if (!presenceStatusDiv) {
+        presenceStatusDiv = document.createElement('div');
+        presenceStatusDiv.id = 'presence-status';
+        activityTypeSelect.parentElement.parentElement.appendChild(presenceStatusDiv);
+    }
 
-        // Cargar información sobre el token (si está configurado o no)
-        fetch('/api/config/bot-token-info') 
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al obtener la información del token: ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data && data.isTokenSet) {
-                    botTokenInput.placeholder = "Token configurado (oculto)";
-                } else {
-                    botTokenInput.placeholder = "Introduce el token de tu bot";
-                }
-            })
-            .catch(error => console.error('Error al cargar la información del token:', error));
-        
-        handleActivityTypeChange(); 
+    // Notificación visual
+    function showNotification(msg, type = 'info') {
+        let notif = document.createElement('div');
+        notif.className = 'config-notification ' + type;
+        notif.innerText = msg;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 2500);
+    }
+
+    // 1. Cargar configuración actual y actualizar estado visual
+    async function loadConfiguration() {
+        try {
+            // Presencia
+            const presenceResp = await fetch('/api/config/presence');
+            if (!presenceResp.ok) throw new Error('Error al obtener la configuración de presencia');
+            const presence = await presenceResp.json();
+            botStatusTextInput.value = presence.statusText || '';
+            activityTypeSelect.value = presence.activityType || 'PLAYING';
+            botActivityNameInput.value = presence.activityName || '';
+            botStreamUrlInput.value = presence.streamUrl || '';
+            handleActivityTypeChange();
+            // Estado visual presencia
+            presenceStatusDiv.innerHTML = `<b>Presencia actual:</b> ${presence.activityType || '-'} | ${presence.activityName || '-'}${presence.streamUrl ? ' | ' + presence.streamUrl : ''}<br><span style='font-size:0.9em;color:#888;'>${presence.statusText || ''}</span>`;
+        } catch (e) {
+            presenceStatusDiv.innerText = 'No se pudo cargar la presencia.';
+        }
+        try {
+            // Token
+            const tokenResp = await fetch('/api/config/bot-token-info');
+            if (!tokenResp.ok) throw new Error('Error al obtener la información del token');
+            const tokenInfo = await tokenResp.json();
+            if (tokenInfo && tokenInfo.isTokenSet) {
+                botTokenInput.placeholder = "Token configurado (oculto)";
+                tokenStatusDiv.innerHTML = '<span style="color:green;font-weight:bold;">Token configurado</span>';
+            } else {
+                botTokenInput.placeholder = "Introduce el token de tu bot";
+                tokenStatusDiv.innerHTML = '<span style="color:red;font-weight:bold;">Token NO configurado</span>';
+            }
+        } catch (e) {
+            tokenStatusDiv.innerText = 'No se pudo cargar el estado del token.';
+        }
+        handleActivityTypeChange();
     }
 
     // 2. Manejar visibilidad del token
@@ -89,69 +103,61 @@ window.initConfigScreen = function() {
         handleActivityTypeChange();
     }
 
-    // 4. Guardar cada campo de forma independiente
+
+    // Guardar token y presencia de forma centralizada y segura
     saveButtons.forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const field = btn.getAttribute('data-field');
-            let value;
-            let body;
-            let endpoint;
-            let method = 'POST';
-            let headers = { 'Content-Type': 'application/json' };
-            let showAlert = true;
-            let errors = [];
-
             if (field === 'bot-token') {
-                value = botTokenInput.value;
+                const value = botTokenInput.value;
                 if (!value || value.trim() === '') {
-                    alert('Introduce un token válido.');
+                    showNotification('Introduce un token válido.', 'error');
                     return;
                 }
-                endpoint = '/api/config/bot-token';
-                body = JSON.stringify({ token: value });
-            } else if (field === 'bot-status-text') {
-                value = botStatusTextInput.value;
-                endpoint = '/api/config/presence';
-                body = JSON.stringify({ statusText: value });
-            } else if (field === 'activity-type') {
-                value = activityTypeSelect.value;
-                endpoint = '/api/config/presence';
-                body = JSON.stringify({ activityType: value });
-            } else if (field === 'bot-activity-name') {
-                value = botActivityNameInput.value;
-                if (!value || value.trim() === '') {
-                    alert('El nombre de la actividad no puede estar vacío.');
-                    return;
+                try {
+                    const resp = await fetch('/api/config/token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: value })
+                    });
+                    if (!resp.ok) throw new Error(await resp.text());
+                    botTokenInput.value = '';
+                    await loadConfiguration();
+                    showNotification('Token guardado correctamente.', 'success');
+                } catch (err) {
+                    showNotification('Error al guardar el token: ' + err.message, 'error');
                 }
-                endpoint = '/api/config/presence';
-                body = JSON.stringify({ activityName: value });
-            } else if (field === 'bot-stream-url') {
-                value = botStreamUrlInput.value;
-                if (activityTypeSelect.value === 'STREAMING' && (!value || !isValidHttpUrl(value))) {
-                    alert('Para "Transmitiendo", introduce una URL válida de Twitch o YouTube.');
-                    return;
-                }
-                endpoint = '/api/config/presence';
-                body = JSON.stringify({ streamUrl: value });
-            } else {
-                alert('Campo no soportado.');
                 return;
             }
 
+            // Guardar presencia: siempre enviar el objeto completo
+            // Validaciones
+            if (field === 'bot-activity-name' && (!botActivityNameInput.value || botActivityNameInput.value.trim() === '')) {
+                showNotification('El nombre de la actividad no puede estar vacío.', 'error');
+                return;
+            }
+            if (field === 'bot-stream-url' && activityTypeSelect.value === 'STREAMING' && (!botStreamUrlInput.value || !isValidHttpUrl(botStreamUrlInput.value))) {
+                showNotification('Para "Transmitiendo", introduce una URL válida de Twitch o YouTube.', 'error');
+                return;
+            }
+            // Construir objeto completo
+            const presenceObj = {
+                statusText: botStatusTextInput.value,
+                activityType: activityTypeSelect.value,
+                activityName: botActivityNameInput.value,
+                streamUrl: botStreamUrlInput.value
+            };
             try {
-                const response = await fetch(endpoint, { method, headers, body });
-                if (!response.ok) {
-                    const errorData = await response.text();
-                    throw new Error(errorData);
-                }
-                const data = await response.json();
-                if (field === 'bot-token') {
-                    botTokenInput.value = '';
-                    botTokenInput.placeholder = "Token configurado (oculto)";
-                }
-                alert((data && data.message) || 'Guardado correctamente.');
-            } catch (error) {
-                alert('Error al guardar: ' + error.message);
+                const resp = await fetch('/api/config/presence', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(presenceObj)
+                });
+                if (!resp.ok) throw new Error(await resp.text());
+                await loadConfiguration();
+                showNotification('Presencia guardada correctamente.', 'success');
+            } catch (err) {
+                showNotification('Error al guardar la presencia: ' + err.message, 'error');
             }
         });
     });
@@ -177,4 +183,6 @@ window.initConfigScreen = function() {
 
 // Limpieza de recursos de la pantalla de configuración
 window.destroyConfigScreen = function() {
+    // Eliminar notificaciones visuales si quedan
+    document.querySelectorAll('.config-notification').forEach(n => n.remove());
 };

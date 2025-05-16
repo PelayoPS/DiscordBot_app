@@ -18,6 +18,24 @@ import bot.models.Experiencia;
 @RestController
 @RequestMapping("/api")
 public class BotRestController {
+    // (Se deja solo la primera definición de cada endpoint, eliminando duplicados)
+    /**
+     * Devuelve información sobre si el token está configurado (pero nunca el valor real).
+     */
+    @GetMapping("/config/bot-token-info")
+    public ResponseEntity<TokenInfoDTO> getBotTokenInfo() {
+        boolean hasToken = botFacade.hasBotToken();
+        return ResponseEntity.ok(new TokenInfoDTO(hasToken));
+    }
+
+    /**
+     * Devuelve la presencia/actividad actual del bot (status, tipo, nombre, url).
+     */
+    @GetMapping("/config/presence")
+    public ResponseEntity<BotPresenceDTO> getBotPresence() {
+        BotPresenceDTO presence = botFacade.getBotPresence();
+        return ResponseEntity.ok(presence);
+    }
     private final BotFacade botFacade;
 
     /**
@@ -256,8 +274,9 @@ public class BotRestController {
      * Guarda el token del bot.
      */
     @PostMapping("/config/token")
-    public ResponseEntity<Void> saveBotToken(@RequestBody String token) {
-        botFacade.saveBotToken(token);
+    public ResponseEntity<Void> saveBotToken(@RequestBody BotTokenDTO dto) {
+        // Extrae el valor real del token del JSON recibido
+        botFacade.saveBotToken(dto.getToken());
         return ResponseEntity.ok().build();
     }
 
@@ -266,6 +285,7 @@ public class BotRestController {
      */
     @PostMapping("/config/presence")
     public ResponseEntity<Void> saveBotPresence(@RequestBody BotConfigDTO dto) {
+        // El método ya guarda la presencia, pero nunca la devuelve aquí
         botFacade.saveBotPresence(dto.getStatusText(), dto.getActivityType(), dto.getActivityName(), dto.getStreamUrl());
         return ResponseEntity.ok().build();
     }

@@ -12,6 +12,7 @@ import java.util.Properties;
  */
 public class FileConfigService implements ConfigService {
     private final Properties properties;
+    private final String filePath;
 
     /**
      * Crea una instancia de FileConfigService y carga las propiedades desde el
@@ -20,11 +21,25 @@ public class FileConfigService implements ConfigService {
      * @param filePath Ruta del archivo de configuración
      */
     public FileConfigService(String filePath) {
+        this.filePath = filePath;
         properties = new Properties();
         try (FileInputStream fis = new FileInputStream(filePath)) {
             properties.load(fis);
         } catch (IOException e) {
             throw new RuntimeException("No se pudo cargar el archivo de configuración: " + filePath, e);
+        }
+    }
+    @Override
+    public void set(String key, String value) {
+        properties.setProperty(key, value);
+    }
+
+    @Override
+    public void save() {
+        try (java.io.FileOutputStream out = new java.io.FileOutputStream(filePath)) {
+            properties.store(out, "Configuración del bot actualizada");
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo guardar el archivo de configuración: " + filePath, e);
         }
     }
 

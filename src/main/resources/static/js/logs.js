@@ -16,7 +16,11 @@ window.initLogsScreen = function () {
         // Tipos seleccionados
         const types = Array.from(logFilterCheckboxes)
             .filter(cb => cb.checked)
-            .map(cb => cb.nextElementSibling.classList[1]);
+            .map(cb => {
+                let t = cb.nextElementSibling.classList[1];
+                if (t.toUpperCase() === "WARNING") return "WARN";
+                return t.toUpperCase();
+            });
         // Fechas
         const fromDate = dateInputs[0].value;
         const toDate = dateInputs[1].value;
@@ -121,7 +125,11 @@ window.initLogsScreen = function () {
         // Obtener tipos seleccionados en los checkboxes
         const selectedTypes = Array.from(logFilterCheckboxes)
             .filter(cb => cb.checked)
-            .map(cb => cb.nextElementSibling.classList[1].toUpperCase());
+            .map(cb => {
+                let t = cb.nextElementSibling.classList[1];
+                if (t.toUpperCase() === "WARNING") return "WARN";
+                return t.toUpperCase();
+            });
 
         // Filtrar por tipo (sobre los ya filtrados por fecha)
         let finalFilteredEntries = dateFilteredEntries;

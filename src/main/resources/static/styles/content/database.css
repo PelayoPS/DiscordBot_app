@@ -1,0 +1,76 @@
+/* === Base de datos: pantalla principal === */
+.database-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 65px);
+    padding: 16px;
+}
+
+.database-tabs {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+.tab {
+    background-color: var(--color-secondary);
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-right: 2px;
+    padding: 8px 16px;
+    transition: background-color var(--transition-fast);
+}
+
+.tab:hover {
+    background-color: var(--color-secondary-dark);
+}
+
+.tab.active {
+    background-color: var(--color-primary);
+}
+
+.database-actions {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.database-table-container {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border);
+    display: none;
+    flex: 1;
+    overflow: hidden;
+}
+
+.database-table-container.active {
+    display: block;
+    overflow-y: auto;
+}
+
+.database-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.database-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px 16px;
+    position: sticky;
+    text-align: left;
+    top: 0;
+    z-index: 1;
+}
+
+.database-table td {
+    border-bottom: 1px solid var(--color-border);
+    padding: 8px 16px;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}

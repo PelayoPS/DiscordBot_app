@@ -1,0 +1,140 @@
+/* === Logs: pantalla principal === */
+.logs-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 65px);
+    padding: 16px;
+}
+
+.logs-filters {
+    align-items: center;
+    background: var(--color-surface) !important;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+    color: var(--color-text-primary) !important;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 12px 18px;
+}
+
+.logs-table-container {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+    flex: 1;
+    font-size: 14px;
+    overflow-y: auto;
+}
+
+.logs-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.logs-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    position: sticky;
+    text-align: left;
+    top: 0;
+    z-index: 1;
+}
+
+.logs-table td {
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+body.light-theme .logs-filters {
+    background: #fff !important;
+    border: 1px solid #e0e0e0;
+    color: #23272f !important;
+}
+
+body.light-theme .logs-table-container {
+    background-color: #fff !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+body.light-theme .logs-table th {
+    background: #f5f5f5 !important;
+    color: #222 !important;
+}
+
+body.light-theme .logs-table td {
+    background: #fff !important;
+    color: #222 !important;
+}
+
+.log-level {
+    border-radius: var(--border-radius-sm);
+    color: white;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 6px;
+}
+
+.logs-filters .filter-label.info {
+    background: #1976d2;
+    color: #fff;
+}
+
+.logs-filters .filter-label.warning {
+    background: #ff9800;
+    color: #fff;
+}
+
+.logs-filters .filter-label.error {
+    background: #e53935;
+    color: #fff;
+}
+
+.logs-filters .filter-label.debug {
+    background: #607d8b;
+    color: #fff;
+}
+
+.logs-filters .filter-label {
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    margin-right: 8px;
+    padding: 2px 10px;
+}
+
+.pagination {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.pagination-button {
+    align-items: center;
+    background-color: var(--color-secondary);
+    border-radius: 50%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    margin: 0 8px;
+    transition: background-color var(--transition-fast);
+    width: 32px;
+}
+
+.pagination-info {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}

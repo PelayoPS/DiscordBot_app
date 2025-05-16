@@ -81,5 +81,18 @@ public class ConfigManager {
      */
     public void setProperty(String key, String value) {
         properties.setProperty(key, value);
+        saveConfig();
+    }
+
+    /**
+     * Guarda la configuración actual en el archivo por defecto (config.properties).
+     */
+    public void saveConfig() {
+        try (java.io.FileOutputStream out = new java.io.FileOutputStream(DEFAULT_CONFIG_PATH)) {
+            properties.store(out, "Configuración del bot actualizada");
+            logger.logInfo("Configuración guardada en: " + DEFAULT_CONFIG_PATH);
+        } catch (IOException e) {
+            logger.logError("Error al guardar el archivo de configuración: " + DEFAULT_CONFIG_PATH, e);
+        }
     }
 }

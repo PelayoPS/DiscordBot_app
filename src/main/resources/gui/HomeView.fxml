@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.StackPane?>
-<StackPane xmlns:fx="http://javafx.com/fxml" fx:id="rootPane" fx:controller="bot.gui.controllers.HomeController" stylesheets="/gui/components/css/HomeContent.css">
-    <fx:include fx:id="baseWindow" source="BaseWindow.fxml" />
-</StackPane>
