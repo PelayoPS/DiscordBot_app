@@ -65,15 +65,6 @@ public class ConfigManager {
     }
 
     /**
-     * Obtiene el token del bot desde la configuración.
-     * 
-     * @return El token del bot o null si no está configurado
-     */
-    public static String getToken() {
-        return properties.getProperty("bot.token");
-    }
-
-    /**
      * Establece una propiedad.
      * 
      * @param key   Clave de la propiedad

@@ -13,6 +13,7 @@ import java.util.Properties;
 public class FileConfigService implements ConfigService {
     private final Properties properties;
     private final String filePath;
+    private static final bot.log.LoggingManager logger = new bot.log.LoggingManager();
 
     /**
      * Crea una instancia de FileConfigService y carga las propiedades desde el
@@ -51,7 +52,17 @@ public class FileConfigService implements ConfigService {
      */
     @Override
     public String get(String key) {
-        return properties.getProperty(key);
+        // Recarga el archivo cada vez que se consulta una clave
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            properties.load(fis);
+        } catch (IOException e) {
+            logger.logWarn("No se pudo recargar el archivo de configuración: " + filePath);
+        }
+        String value = properties.getProperty(key);
+        if ("token".equals(key)) {
+            logger.logInfo("[DEBUG] get('token') desde '" + filePath + "' => '" + value + "'");
+        }
+        return value;
     }
 
     /**

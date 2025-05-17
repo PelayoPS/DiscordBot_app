@@ -72,8 +72,8 @@ public class BotConfigSpring {
      */
     @Bean
     public BotFacade botFacade(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, DatabaseManager databaseManager) {
-        return new BotFacadeImpl(usuarioService, moderationService, commandManager, databaseManager);
+            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService) {
+        return new BotFacadeImpl(usuarioService, moderationService, commandManager, databaseManager, configService);
     }
 
     /**

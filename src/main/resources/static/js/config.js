@@ -59,7 +59,7 @@ window.initConfigScreen = function() {
               throw new Error('Error al obtener la información del token');
             }
             const tokenInfo = await tokenResp.json();
-            if (tokenInfo && tokenInfo.isTokenSet) {
+            if (tokenInfo && (tokenInfo.isTokenSet || tokenInfo.configured)) {
                 botTokenInput.placeholder = "Token configurado (oculto)";
                 tokenStatusDiv.innerHTML = '<span style="color:green;font-weight:bold;">Token configurado</span>';
             } else {

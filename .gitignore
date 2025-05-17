@@ -1,10 +1,14 @@
 # Archivos de configuración sensibles
 config.properties
+application.properties
 *.env
 *.key
 *.pem
 *.crt
 *.p12
+
+# Keystore de desarrollo para HTTPS (no subir nunca a git)
+src/main/resources/keystore.p12
 
 # Archivos de logs y temporales
 logs/

@@ -9,7 +9,7 @@ import bot.models.Penalizacion;
 import bot.models.Experiencia;
 import bot.config.ConfigManager;
 import bot.config.ConfigService;
-import bot.config.FileConfigService;
+
 import bot.core.Bot;
 import bot.core.ServiceFactory;
 import bot.db.DatabaseManager;
@@ -73,20 +73,21 @@ public class BotFacadeImpl implements BotFacade {
     private final ConfigService configService;
 
     /**
-     * Constructor para inyección de dependencias (sin Bot).
+     * Constructor para inyección de dependencias (con ConfigService real de Spring).
      * 
      * @param usuarioService    Servicio de usuarios
      * @param moderationService Servicio de moderación
      * @param commandManager    Gestor de comandos
      * @param databaseManager   Gestor de base de datos
+     * @param configService     Servicio de configuración (inyectado por Spring)
      */
     public BotFacadeImpl(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, DatabaseManager databaseManager) {
+            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService) {
         this.usuarioService = usuarioService;
         this.moderationService = moderationService;
         this.commandManager = commandManager;
         this.databaseManager = databaseManager;
-        this.configService = new FileConfigService("src/main/resources/config.properties");
+        this.configService = configService;
     }
 
     /**
