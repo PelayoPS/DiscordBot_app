@@ -1,8 +1,9 @@
 // dashboard.js: Lógica JS específica para el dashboard
 let dashboardPingInterval = null;
+let recentLogsInterval = null; // Variable para el intervalo de logs recientes
 
 // Encapsula toda la lógica en una función global para carga dinámica
-window.initDashboardBotControls = function() {
+window.initDashboardBotControls = function () {
     // Lógica del dashboard: estado del bot y logs recientes
     function getStatusValue(label) {
         const items = document.querySelectorAll('.estado-bot .integracion-item');
@@ -123,96 +124,6 @@ window.initDashboardBotControls = function() {
     }
     updateBotStatus();
 
-    // Logs recientes
-    const logList = document.getElementById('recent-logs-list');
-    let logPollInterval = null;
-    let logItems = [];
-    const MAX_LOGS = 5;
-    function renderLogs(logs) {
-        logList.innerHTML = '';
-        let count = 0;
-        logs.forEach(log => {
-            const match = log.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+(INFO|WARN|ERROR|DEBUG)\s+([^\s]+)\s*-\s*([\s\S]*)$/i);
-            let fecha = '', nivel = '', origen = '', mensaje = '';
-            if (match) {
-                fecha = match[1];
-                nivel = match[2].toUpperCase();
-                origen = match[3];
-                mensaje = match[4].trim();
-            } else {
-                mensaje = log;
-                nivel = 'INFO'; // Predeterminado si no hay match
-            }
-            if (count >= MAX_LOGS) {
-                return;
-            }
-            count++;
-            const logEntryDiv = document.createElement('div');
-            logEntryDiv.className = 'log-entry'; // Clase para el padding y otros estilos base
-
-            let levelClass = nivel.toLowerCase();
-            if (levelClass === 'warning') {
-                levelClass = 'warn'; // Normalizar 'warning' a 'warn' para la clase CSS
-            }
-
-            logEntryDiv.innerHTML = `
-                <div class="log-header">
-                    <span class="log-timestamp">${fecha}</span>
-                    <span class="log-level-tag log-level-${levelClass}">${nivel}</span>
-                    <span class="log-logger">${origen}</span>
-                </div>
-                <div class="log-message-content">
-                    ${mensaje}
-                </div>
-            `;
-            logList.appendChild(logEntryDiv);
-        });
-        if (count === 0) {
-            // Usar una clase para el mensaje de "No hay logs"
-            logList.innerHTML = '<div class="log-info-placeholder">No hay logs recientes</div>';
-        }
-    }
-    async function fetchLogs() {
-        try {
-            // Obtener la fecha de hoy en formato yyyy-MM-dd
-            const today = new Date().toISOString().slice(0, 10);
-            // Pedir los logs del día actual
-            const res = await fetch(`/api/logs?limit=10&from=${today}&to=${today}`);
-            if (!res.ok) {
-                throw new Error('Error al obtener logs');
-            }
-            const logs = await res.json();
-            logItems = logs;
-            renderLogs(logItems);
-        } catch (e) {
-            logList.innerHTML = '<div class="log-item log-error">Error al cargar logs</div>';
-        }
-    }
-    function startLogPolling() {
-        if (!logList) {
-            return;
-        }
-        if (logPollInterval) {
-            clearInterval(logPollInterval);
-        }
-        fetchLogs();
-        logPollInterval = setInterval(fetchLogs, 2000);
-    }
-    function stopLogPolling() {
-        if (logPollInterval) {
-            clearInterval(logPollInterval);
-            logPollInterval = null;
-        }
-    }
-    if (logList) {
-        stopLogPolling();
-        startLogPolling();
-        if (!window._dashboardLogCleanup) {
-            window._dashboardLogCleanup = true;
-            window.addEventListener('beforeunload', stopLogPolling);
-        }
-    }
-
     // Integraciones (JDA, AI API, Base de datos)
     async function safeUpdateIntegraciones() {
         try {
@@ -318,9 +229,105 @@ window.initDashboardBotControls = function() {
     setInterval(updateDatabaseStats, 2000);
     updateDatabaseStats();
 
+    // Logs Recientes
+    const recentLogsListElement = document.getElementById('recent-logs-list');
+
+    async function fetchAndRenderRecentLogs() {
+        if (!recentLogsListElement) {
+            return;
+        }
+
+        try {
+            const params = new URLSearchParams();
+            params.append('limit', '0'); 
+            const res = await fetch(`/api/logs?${params.toString()}`);
+            if (!res.ok) {
+                if (recentLogsListElement) {
+                    recentLogsListElement.innerHTML = '<p class="error-message">Error al cargar logs recientes.</p>';
+                }
+                return;
+            }
+            const logs = await res.json();
+
+            if (!recentLogsListElement) { return; } // Defensa extra
+
+            if (!logs || logs.length === 0) {
+                recentLogsListElement.innerHTML = '<p>No hay logs recientes.</p>';
+                return;
+            }
+
+            recentLogsListElement.innerHTML = ''; // Limpiar logs anteriores
+            const parsedLogs = [];
+
+            // Parsear todos los logs obtenidos y recolectar los parseables
+            logs.forEach(logString => {
+                const logObject = window.logUtils.parseLogEntry(logString);
+                if (logObject.isParsed) {
+                    parsedLogs.push(logObject); 
+                }
+            });
+
+            if (parsedLogs.length === 0) {
+                recentLogsListElement.innerHTML = '<p>No hay logs recientes con formato estándar.</p>';
+                return;
+            }
+
+            // Mostrar solo los últimos X logs parseados (ej. 7)
+            const logsToShow = parsedLogs.slice(0, 7); // Tomar los primeros 7 de la lista (que son los más recientes)
+
+            logsToShow.forEach(logObject => {
+                const logItem = document.createElement('div');
+                logItem.classList.add('recent-log-item');
+                
+                // Aplicar borde izquierdo con el color del tipo de log
+                logItem.style.borderLeft = '3px solid ' + window.logUtils.getLogTypeColor(logObject.tipo);
+                
+                // Hora con estilo
+                const timeSpan = document.createElement('span');
+                timeSpan.classList.add('log-time');
+                timeSpan.textContent = logObject.hora;
+                
+                // Etiqueta de nivel
+                const levelSpan = document.createElement('span');
+                levelSpan.classList.add('log-level-tag');
+                levelSpan.textContent = logObject.tipo;
+                levelSpan.style.backgroundColor = window.logUtils.getLogTypeColor(logObject.tipo);
+                
+                // Origen
+                const originSpan = document.createElement('span');
+                originSpan.classList.add('log-origen');
+                const maxOriginLength = 30;
+                originSpan.textContent = logObject.origen.length > maxOriginLength 
+                    ? logObject.origen.substring(0, maxOriginLength) + '...' 
+                    : logObject.origen;
+                originSpan.title = logObject.origen; // Mostrar origen completo en hover
+                
+                // Añadir elementos en una sola línea
+                logItem.appendChild(timeSpan);
+                logItem.appendChild(levelSpan);
+                logItem.appendChild(originSpan);
+                
+                recentLogsListElement.appendChild(logItem);
+            });
+
+        } catch (e) {
+            console.error('Error fetching recent logs:', e);
+            if (recentLogsListElement) {
+                recentLogsListElement.innerHTML = '<p class="error-message">No se pudieron cargar los logs recientes.</p>';
+            }
+        }
+    }
+
+    // Cargar logs recientes al iniciar y luego periódicamente
+    fetchAndRenderRecentLogs();
+    if (recentLogsInterval) {
+        clearInterval(recentLogsInterval);
+    }
+    recentLogsInterval = setInterval(fetchAndRenderRecentLogs, 15000); // Actualizar cada 15 segundos
+
     // Navegación rápida desde dashboard (Ver base de datos / Ver todos los logs)
     document.querySelectorAll('.view-all-link[data-screen]').forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             const screen = this.getAttribute('data-screen');
             if (!screen) {
@@ -353,9 +360,14 @@ window.initDashboardBotControls = function() {
 };
 
 // Limpieza de recursos del dashboard
-window.destroyDashboardScreen = function() {
+window.destroyDashboardScreen = function () {
     if (dashboardPingInterval) {
         clearInterval(dashboardPingInterval);
         dashboardPingInterval = null;
+    }
+    // No es necesario llamar a stopLogPolling aquí ya que se eliminó
+    if (recentLogsInterval) {
+        clearInterval(recentLogsInterval);
+        recentLogsInterval = null;
     }
 };

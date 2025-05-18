@@ -60,32 +60,7 @@ window.initLogsScreen = function () {
     }
 
     // Función para parsear una línea de log en formato texto plano
-    function parseLogEntry(entry) {
-        // Ejemplo: 2025-05-06 17:47:45 INFO bot.log.LoggingManager - Base de datos ...
-        const regex = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}) (\w+) ([^\-]+)- (.*)$/;
-        const match = entry.match(regex);
-        if (!match) {
-            // Si no coincide, devolver todo como mensaje
-            return {
-                raw: entry, // Guardar la entrada original
-                fecha: '',
-                hora: '',
-                tipo: 'INFO', // Default type, normalizado
-                origen: '',
-                mensaje: entry,
-                isParsed: false
-            };
-        }
-        return {
-            raw: entry, // Guardar la entrada original
-            fecha: match[1],
-            hora: match[2],
-            tipo: match[3].toUpperCase(), // Normalizar a mayúsculas para la comparación
-            origen: match[4].trim(),
-            mensaje: match[5],
-            isParsed: true
-        };
-    }
+    // Se elimina la función parseLogEntry de aquí, ya que se usará window.logUtils.parseLogEntry
 
     function renderLogs(logEntriesFromServer) { // Renombrado para claridad
         if (!logEntriesFromServer || logEntriesFromServer.length === 0) {
@@ -103,7 +78,7 @@ window.initLogsScreen = function () {
         }
 
         // Parsear todas las entradas de log una vez
-        const parsedLogEntries = logEntriesFromServer.map(entryText => parseLogEntry(entryText));
+        const parsedLogEntries = logEntriesFromServer.map(entryText => window.logUtils.parseLogEntry(entryText));
 
         // Obtener valores de los filtros de fecha
         const fromDateFilter = dateInputs[0].value; // YYYY-MM-DD
@@ -172,31 +147,23 @@ window.initLogsScreen = function () {
             logsTableBody.innerHTML = pageEntries.map(logObject => {
                 const { fecha, hora, tipo, origen, mensaje, isParsed, raw } = logObject;
                 
-                if (!isParsed) { 
+                if (!isParsed) {
+                    // Si no se pudo parsear, mostrar la entrada raw completa en la celda de mensaje
                     return `
                         <tr class="log-row-detailed unparsed">
-                            <td class="log-cell-fecha"></td>
-                            <td class="log-cell-hora"></td>
-                            <td class="log-cell-nivel"><span class="log-level-tag" style="background-color: #808080;">RAW</span></td>
-                            <td class="log-cell-origen"></td>
-                            <td class="log-cell-mensaje">${raw}</td>
+                            <td class="log-cell-main" colspan="5">${raw}</td>
                         </tr>
                     `;
                 }
 
-                let levelColor = '#5865f2';
-                let levelText = tipo; // tipo ya está en mayúsculas
-                switch (tipo) {
-                    case 'WARN':
-                        levelColor = '#faa61a';
-                        break;
-                    case 'ERROR':
-                        levelColor = '#ed4245';
-                        break;
-                    case 'INFO':
-                        levelColor = '#5865f2';
-                        break;
-                }
+                let levelColor = window.logUtils.getLogTypeColor(tipo);
+                let levelText = tipo;
+                // El switch para levelText y levelColor se puede simplificar usando getLogTypeColor
+                // y asegurando que 'tipo' ya está en el formato deseado (ej. mayúsculas)
+                // Si se necesita un texto diferente al 'tipo' (ej. 'Warning' en lugar de 'WARN'),
+                // se podría añadir otra función de utilidad o manejarlo aquí.
+                // Por ahora, asumimos que 'tipo' es suficiente como 'levelText'.
+
                 return `
                     <tr class="log-row-detailed ${tipo.toLowerCase()}">
                         <td class="log-cell-fecha">${fecha}</td>

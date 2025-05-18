@@ -454,6 +454,52 @@ body.light-theme .db-count.disponible {
     word-wrap: break-word;
 }
 
+/* Estilos para los logs recientes en el dashboard */
+.recent-log-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+/* Estilos para la hora en los logs */
+.recent-log-item .log-time {
+    margin-right: 8px;
+    font-weight: 500;
+    min-width: 55px;
+    color: #ffffff;
+}
+
+body.light-theme .recent-log-item .log-time {
+    color: #000000;
+}
+
+/* Estilos para la etiqueta de nivel en los logs */
+.recent-log-item .log-level-tag {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 8px;
+    min-width: 35px;
+    text-align: center;
+    color: white;
+}
+
+/* Estilos para el origen en los logs */
+.recent-log-item .log-origen {
+    font-size: 0.9em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ffffff;
+}
+
+body.light-theme .recent-log-item .log-origen {
+    color: #000000;
+}
+
 .log-info-placeholder {
     font-size: 13px;
     color: #b9bbbe;
