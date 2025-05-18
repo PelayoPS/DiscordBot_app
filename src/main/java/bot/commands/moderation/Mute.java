@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.entities.Member;
 
 /**
  * Comando para silenciar a un usuario en el servidor de Discord.
@@ -48,8 +49,13 @@ public class Mute implements Command {
             return;
         }
 
-        // Obtiene el usuario a silenciar
-        User user = event.getOption("usuario").getAsUser();
+        // Obtiene el miembro a silenciar directamente desde la opción
+        Member member = event.getOption("usuario").getAsMember();
+        if (member == null) {
+            event.reply("El usuario no está en el servidor o no se puede encontrar.").setEphemeral(true).queue();
+            return;
+        }
+        User user = member.getUser();
 
         // Obtiene la razón del silencio
         String razon = event.getOption("razon") != null ? event.getOption("razon").getAsString() : "No especificada";
@@ -70,12 +76,29 @@ public class Mute implements Command {
         }
         // Usar la fachada para silenciar
         botFacade.muteUser(event.getGuild().getId(), user.getId(), razon, tiempo);
-        event.getGuild().getMember(user).timeoutFor(tiempo).reason(razon).queue(
+
+        // Comprobar si el miembro es moderador/admin
+        if (member.hasPermission(Permission.ADMINISTRATOR) || member.isOwner()) {
+            event.reply("No puedes silenciar a un administrador o al dueño del servidor.").setEphemeral(true).queue();
+            return;
+        }
+        // Comprobar si el bot tiene permisos suficientes
+        if (!event.getGuild().getSelfMember().canInteract(member)) {
+            event.reply("No puedo silenciar a este usuario porque su rol es igual o superior al mío.").setEphemeral(true).queue();
+            return;
+        }
+
+        // Aplicar el mute
+        member.timeoutFor(tiempo).reason(razon).queue(
                 success -> {
                     event.reply("Usuario silenciado correctamente").setEphemeral(true).queue();
-                    // Guardar penalización en la base de datos
                     serviceFactory.getPenalizacionService().registrarMute(idUsuario, razon, tiempo, idAdminMod);
-                });
+                },
+                error -> {
+                    String errorMsg = error.getMessage();
+                    event.reply("Error al silenciar al usuario: " + errorMsg).setEphemeral(true).queue();
+                }
+        );
     }
 
     /**

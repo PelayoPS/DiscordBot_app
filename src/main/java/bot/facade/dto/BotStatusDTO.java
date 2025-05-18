@@ -1,4 +1,4 @@
-package bot.facade;
+package bot.facade.dto;
 
 /**
  * DTO para representar el estado y métricas del bot.

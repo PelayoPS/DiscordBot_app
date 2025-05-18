@@ -1,4 +1,4 @@
-package bot.facade;
+package bot.facade.controller;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.MediaType;

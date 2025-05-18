@@ -1,5 +1,7 @@
 package bot.commands;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -10,6 +12,7 @@ import net.dv8tion.jda.api.hooks.EventListener;
  * 
  * @author PelayoPS
  */
+@Component
 public class ModuleManager {
     private final Map<String, EventListener> modules = new HashMap<>();
 

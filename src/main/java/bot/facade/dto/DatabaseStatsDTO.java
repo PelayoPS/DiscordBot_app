@@ -1,4 +1,4 @@
-package bot.facade;
+package bot.facade.dto;
 
 /**
  * DTO para transportar las estadísticas resumidas de la base de datos.

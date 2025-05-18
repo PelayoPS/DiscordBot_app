@@ -1,4 +1,4 @@
-package bot.facade;
+package bot.facade.dto;
 
 public class BotPresenceDTO {
     private String statusText;

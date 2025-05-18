@@ -5,7 +5,17 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import bot.models.Usuario;
 import bot.models.Penalizacion;
+import bot.facade.dto.BotConfigDTO;
+import bot.facade.dto.BotIntegracionesDTO;
+import bot.facade.dto.BotPresenceDTO;
+import bot.facade.dto.BotStatusDTO;
+import bot.facade.dto.BotTokenDTO;
+import bot.facade.dto.DatabaseStatsDTO;
+import bot.facade.dto.GeminiKeyDTO;
+import bot.facade.dto.TokenInfoDTO;
 import bot.models.Experiencia;
+import bot.facade.dto.ModuleDTO;
+import bot.facade.service.ModuleService;
 
 /**
  * Controlador REST para exponer las operaciones del bot a través de endpoints
@@ -18,9 +28,20 @@ import bot.models.Experiencia;
 @RestController
 @RequestMapping("/api")
 public class BotRestController {
-    // (Se deja solo la primera definición de cada endpoint, eliminando duplicados)
+    // --- Endpoints de módulos ---
+    private final ModuleService moduleService;
     /**
-     * Devuelve información sobre si el token está configurado (pero nunca el valor real).
+     * Devuelve la lista de módulos y sus comandos.
+     * 
+     * @return ResponseEntity con la lista de módulos
+     */
+    @GetMapping("/modules")
+    public ResponseEntity<List<ModuleDTO>> getModules() {
+        return ResponseEntity.ok(moduleService.getAllModulesWithCommands());
+    }
+    /**
+     * Devuelve información sobre si el token está configurado (pero nunca el valor
+     * real).
      */
     @GetMapping("/config/bot-token-info")
     public ResponseEntity<TokenInfoDTO> getBotTokenInfo() {
@@ -36,15 +57,18 @@ public class BotRestController {
         BotPresenceDTO presence = botFacade.getBotPresence();
         return ResponseEntity.ok(presence);
     }
+
     private final BotFacade botFacade;
 
     /**
      * Constructor de la clase BotRestController.
      * 
      * @param botFacade Fachada principal del bot
+     * @param moduleService Servicio de módulos
      */
-    public BotRestController(BotFacade botFacade) {
+    public BotRestController(BotFacade botFacade, ModuleService moduleService) {
         this.botFacade = botFacade;
+        this.moduleService = moduleService;
     }
 
     /**
@@ -190,7 +214,8 @@ public class BotRestController {
     /**
      * Endpoint para añadir o actualizar la experiencia de un usuario.
      * 
-     * @param experiencia El objeto Experiencia a añadir/actualizar (en el cuerpo de la petición).
+     * @param experiencia El objeto Experiencia a añadir/actualizar (en el cuerpo de
+     *                    la petición).
      * @return ResponseEntity con la Experiencia guardada o error si falla.
      */
     @PostMapping("/experiencias")
@@ -210,7 +235,8 @@ public class BotRestController {
     /**
      * Endpoint para añadir una nueva penalización.
      * 
-     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la petición).
+     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la
+     *                     petición).
      * @return ResponseEntity con la Penalizacion creada o error si falla.
      */
     @PostMapping("/penalizaciones")
@@ -253,6 +279,7 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener estadísticas resumidas de la base de datos.
+     * 
      * @return ResponseEntity con el DTO de estadísticas
      */
     @GetMapping("/db/stats")
@@ -281,12 +308,26 @@ public class BotRestController {
     }
 
     /**
-     * Guarda la presencia/actividad del bot (status, tipo, nombre, url).
+     * Endpoint para obtener el estado de la clave Gemini.
+     * 
+     * @return ResponseEntity con el DTO de clave Gemini
      */
-    @PostMapping("/config/presence")
-    public ResponseEntity<Void> saveBotPresence(@RequestBody BotConfigDTO dto) {
-        // El método ya guarda la presencia, pero nunca la devuelve aquí
-        botFacade.saveBotPresence(dto.getStatusText(), dto.getActivityType(), dto.getActivityName(), dto.getStreamUrl());
+    @GetMapping("/config/gemini-key-info")
+    public ResponseEntity<GeminiKeyDTO> getGeminiKeyInfo() {
+        boolean hasKey = botFacade.hasGeminiKey();
+        return ResponseEntity.ok(new GeminiKeyDTO(hasKey ? "SET" : null));
+    }
+
+    /**
+     * Endpoint para guardar la clave Gemini.
+     * 
+     * @param dto El objeto GeminiKeyDTO con la clave a guardar
+     * @return ResponseEntity vacío
+     */
+    @PostMapping("/config/gemini-key")
+    public ResponseEntity<Void> saveGeminiKey(@RequestBody GeminiKeyDTO dto) {
+        botFacade.saveGeminiKey(dto.getKey());
         return ResponseEntity.ok().build();
     }
+
 }

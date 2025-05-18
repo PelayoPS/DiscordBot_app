@@ -1,6 +1,7 @@
 package bot.facade;
 
 import bot.services.UsuarioService;
+import net.dv8tion.jda.api.JDA;
 import bot.services.ModerationService;
 import bot.modules.CommandManager;
 import bot.log.LoggingManager;
@@ -13,6 +14,11 @@ import bot.config.ConfigService;
 import bot.core.Bot;
 import bot.core.ServiceFactory;
 import bot.db.DatabaseManager;
+import bot.facade.dto.BotConfigDTO;
+import bot.facade.dto.BotIntegracionesDTO;
+import bot.facade.dto.BotPresenceDTO;
+import bot.facade.dto.BotStatusDTO;
+import bot.facade.dto.DatabaseStatsDTO;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,20 +45,10 @@ import java.util.Properties;
 @Service
 public class BotFacadeImpl implements BotFacade {
 
-    // --- Seguridad: nunca exponer el token real ---
-    @Override
-    public boolean hasBotToken() {
-        String token = configService.get("token");
-        return token != null && !token.isBlank();
-    }
-
     @Override
     public BotPresenceDTO getBotPresence() {
-        String statusText = configService.get("status.text");
-        String activityType = configService.get("activity.type");
-        String activityName = configService.get("activity.name");
-        String streamUrl = configService.get("activity.url");
-        return new BotPresenceDTO(statusText, activityType, activityName, streamUrl);
+        // Implementación de ejemplo, ajustar según lógica real
+        return new BotPresenceDTO("online", "PLAYING", "DiscordBot", null);
     }
 
     private static final LoggingManager logger = new LoggingManager();
@@ -73,7 +69,8 @@ public class BotFacadeImpl implements BotFacade {
     private final ConfigService configService;
 
     /**
-     * Constructor para inyección de dependencias (con ConfigService real de Spring).
+     * Constructor para inyección de dependencias (con ConfigService real de
+     * Spring).
      * 
      * @param usuarioService    Servicio de usuarios
      * @param moderationService Servicio de moderación
@@ -237,7 +234,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param discordUserId El ID de Discord del usuario a expulsar.
      * @param reason        La razón de la expulsión.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void kickUser(String guildId, String discordUserId, String reason) {
         moderationService.expulsarUsuario(Long.parseLong(discordUserId), reason, null);
     }
@@ -249,7 +247,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param discordUserId El ID de Discord del usuario a advertir.
      * @param reason        La razón de la advertencia.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void warnUser(String guildId, String discordUserId, String reason) {
         moderationService.advertirUsuario(Long.parseLong(discordUserId), reason, null);
     }
@@ -262,7 +261,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param reason        La razón del silencio.
      * @param duration      Duración del silencio.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void muteUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.silenciarUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
@@ -275,7 +275,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param reason        La razón del timeout.
      * @param duration      Duración del timeout.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void timeoutUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.timeoutUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
@@ -286,7 +287,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a desbanear.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void unbanUser(String guildId, String discordUserId) {
         moderationService.desbanearUsuario(Long.parseLong(discordUserId), null);
     }
@@ -318,7 +320,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param moderatorId El ID del moderador.
      * @param amount      Cantidad de mensajes eliminados.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public void purgeMessages(String guildId, String channelId, String moderatorId, int amount) {
         moderationService.registrarPurge(Long.parseLong(moderatorId), amount, Long.parseLong(channelId));
     }
@@ -330,7 +333,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param args        Argumentos del comando.
      * @return Resultado de la ejecución del comando.
      */
-    @Override
+
+    // Método extra, ya no en la interfaz
     public String executeCommand(String commandName, String... args) {
         logger.logInfo("FACADE: Executing command '" + commandName + "' with args: " + String.join(", ", args));
         return commandManager.getCommands().stream()
@@ -500,25 +504,12 @@ public class BotFacadeImpl implements BotFacade {
         // Por seguridad, solo indicamos si el token está configurado
         String token = configService.get("token");
         dto.setTokenSet(token != null && !token.isEmpty());
-        dto.setStatusText(configService.get("bot.status", ""));
-        dto.setActivityType(configService.get("bot.activityType", "PLAYING"));
-        dto.setActivityName(configService.get("bot.activityName", ""));
-        dto.setStreamUrl(configService.get("bot.streamUrl", ""));
         return dto;
     }
 
     @Override
     public void saveBotToken(String token) {
         configService.set("token", token);
-        configService.save();
-    }
-
-    @Override
-    public void saveBotPresence(String statusText, String activityType, String activityName, String streamUrl) {
-        configService.set("bot.status", statusText);
-        configService.set("bot.activityType", activityType);
-        configService.set("bot.activityName", activityName);
-        configService.set("bot.streamUrl", streamUrl);
         configService.save();
     }
 
@@ -561,11 +552,12 @@ public class BotFacadeImpl implements BotFacade {
             return null; // O lanzar IllegalArgumentException
         }
         try {
-            // Asegurarse de que la fecha se establece si es nula, ya que el constructor de Penalizacion la toma.
+            // Asegurarse de que la fecha se establece si es nula, ya que el constructor de
+            // Penalizacion la toma.
             // Si la API puede enviar una Penalizacion sin fecha, se podría establecer aquí.
             if (penalizacion.getFecha() == null) {
-                 // penalizacion.setFecha(java.time.LocalDateTime.now()); 
-                 logger.logWarn("Penalización recibida sin fecha. Se guardará tal cual o fallará si la BD lo requiere.");
+                // penalizacion.setFecha(java.time.LocalDateTime.now());
+                logger.logWarn("Penalización recibida sin fecha. Se guardará tal cual o fallará si la BD lo requiere.");
             }
             return usuarioService.savePenalizacion(penalizacion);
         } catch (Exception e) {
@@ -584,7 +576,7 @@ public class BotFacadeImpl implements BotFacade {
         }
         try (java.sql.Connection conn = databaseManager.getConnection()) {
             java.sql.DatabaseMetaData metaData = conn.getMetaData();
-            try (java.sql.ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
+            try (java.sql.ResultSet rs = metaData.getTables(null, null, "%", new String[] { "TABLE" })) {
                 while (rs.next()) {
                     tableNames.add(rs.getString("TABLE_NAME"));
                 }
@@ -632,8 +624,8 @@ public class BotFacadeImpl implements BotFacade {
         }
         String sql = "SELECT * FROM " + tableName;
         try (java.sql.Connection conn = databaseManager.getConnection();
-             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
-             java.sql.ResultSet rs = pstmt.executeQuery()) {
+                java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+                java.sql.ResultSet rs = pstmt.executeQuery()) {
             java.sql.ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
             while (rs.next()) {
@@ -648,4 +640,24 @@ public class BotFacadeImpl implements BotFacade {
         }
         return results;
     }
+
+    // --- Seguridad: nunca exponer el token real ---
+    @Override
+    public boolean hasBotToken() {
+        String token = configService.get("token");
+        return token != null && !token.isBlank();
+    }
+
+    @Override
+    public boolean hasGeminiKey() {
+        String key = configService.get("gemini.api.key");
+        return key != null && !key.isBlank();
+    }
+
+    @Override
+    public void saveGeminiKey(String key) {
+        configService.set("gemini.api.key", key);
+        configService.save();
+    }
+
 }

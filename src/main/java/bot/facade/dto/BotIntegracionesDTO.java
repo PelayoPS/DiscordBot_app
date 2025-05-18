@@ -1,4 +1,4 @@
-package bot.facade;
+package bot.facade.dto;
 
 /**
  * DTO para representar el estado de las integraciones del bot (JDA, IA, Base de

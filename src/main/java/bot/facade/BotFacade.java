@@ -2,6 +2,11 @@ package bot.facade;
 
 import bot.models.Usuario;
 import bot.models.Penalizacion;
+import bot.facade.dto.BotConfigDTO;
+import bot.facade.dto.BotIntegracionesDTO;
+import bot.facade.dto.BotPresenceDTO;
+import bot.facade.dto.BotStatusDTO;
+import bot.facade.dto.DatabaseStatsDTO;
 import bot.models.Experiencia;
 import java.util.List;
 
@@ -14,6 +19,38 @@ import java.util.List;
  * @author PelayoPS
  */
 public interface BotFacade {
+
+    // --- Métodos de moderación usados por comandos ---
+
+    /**
+     * Expulsa a un usuario de un servidor específico.
+     */
+    void kickUser(String guildId, String discordUserId, String reason);
+
+    /**
+     * Advierte a un usuario (warn).
+     */
+    void warnUser(String guildId, String discordUserId, String reason);
+
+    /**
+     * Silencia (mute) a un usuario.
+     */
+    void muteUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
+
+    /**
+     * Aplica timeout a un usuario.
+     */
+    void timeoutUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
+
+    /**
+     * Desbanea a un usuario.
+     */
+    void unbanUser(String guildId, String discordUserId);
+
+    /**
+     * Purga mensajes de un canal.
+     */
+    void purgeMessages(String guildId, String channelId, String moderatorId, int amount);
 
     /**
      * Indica si el token del bot está configurado (sin exponer el valor).
@@ -56,136 +93,36 @@ public interface BotFacade {
 
     // --- User Management ---
 
+
     /**
-     * Recupera la información de un usuario por su ID de Discord.
-     *
-     * @param discordUserId El ID de Discord del usuario.
-     * @return Usuario o null si no existe.
+     * Recupera la información de un usuario por su ID de Discord (String).
      */
     Usuario getUserInfo(String discordUserId);
 
-    // --- Moderation ---
-
     /**
-     * Banea a un usuario de un servidor específico.
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario a banear.
-     * @param reason        La razón del baneo.
-     */
-    void banUser(String guildId, String discordUserId, String reason);
-
-    /**
-     * Expulsa a un usuario de un servidor específico.
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario a expulsar.
-     * @param reason        La razón de la expulsión.
-     */
-    void kickUser(String guildId, String discordUserId, String reason);
-
-    /**
-     * Advierte a un usuario (warn).
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario a advertir.
-     * @param reason        La razón de la advertencia.
-     */
-    void warnUser(String guildId, String discordUserId, String reason);
-
-    /**
-     * Silencia (mute) a un usuario.
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario a silenciar.
-     * @param reason        La razón del silencio.
-     * @param duration      Duración del silencio.
-     */
-    void muteUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
-
-    /**
-     * Aplica timeout a un usuario.
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario.
-     * @param reason        La razón del timeout.
-     * @param duration      Duración del timeout.
-     */
-    void timeoutUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
-
-    /**
-     * Desbanea a un usuario.
-     * 
-     * @param guildId       El ID del servidor.
-     * @param discordUserId El ID de Discord del usuario a desbanear.
-     */
-    void unbanUser(String guildId, String discordUserId);
-
-    /**
-     * Obtiene el historial de penalizaciones de un usuario.
-     * 
-     * @param discordUserId El ID de Discord del usuario.
-     * @return Lista de penalizaciones del usuario.
+     * Recupera el historial de penalizaciones de un usuario por su ID de Discord.
      */
     List<Penalizacion> getUserHistory(String discordUserId);
 
     /**
-     * Registra una purga de mensajes.
-     * 
-     * @param guildId     El ID del servidor.
-     * @param channelId   El ID del canal.
-     * @param moderatorId El ID del moderador.
-     * @param amount      Cantidad de mensajes eliminados.
-     */
-    void purgeMessages(String guildId, String channelId, String moderatorId, int amount);
-
-    // --- Other Potential Operations ---
-
-    /**
-     * Ejecuta un comando del bot programáticamente.
-     * 
-     * @param commandName El nombre del comando.
-     * @param args        Argumentos del comando.
-     * @return Resultado de la ejecución del comando.
-     */
-    String executeCommand(String commandName, String... args);
-
-    /**
-     * Recupera los logs de la aplicación filtrados por fecha y tipo.
-     * 
-     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional). Si
-     *              es null o vacía, se devuelven todos los tipos.
-     * @param limit Máximo número de entradas. Si es 0 o negativo, devuelve todas
-     *              las coincidentes.
-     * @param from  Fecha inicial en formato yyyy-MM-dd (opcional).
-     * @param to    Fecha final en formato yyyy-MM-dd (opcional).
-     * @return Lista de logs como String.
+     * Recupera los logs de la aplicación.
+     * @param limit Límite de líneas
+     * @return Lista de logs
      */
     List<String> getLogs(int limit);
 
-    // --- Database Stats ---
-
     /**
-     * Recupera estadísticas resumidas de la base de datos.
-     *
-     * @return DTO con los contadores de entidades.
+     * Banea a un usuario.
      */
-    DatabaseStatsDTO getDatabaseStats();
+    void banUser(String guildId, String discordUserId, String reason);
 
     /**
      * Recupera el estado de las integraciones del bot.
-     *
-     * @return DTO con el estado de las integraciones.
      */
     BotIntegracionesDTO getIntegracionesStatus();
 
-    // --- Entity Management ---
-
     /**
-     * Añade un nuevo usuario al sistema.
-     *
-     * @param usuario El objeto Usuario a añadir.
-     * @return El Usuario guardado, o null si ocurre un error.
+     * Añade un nuevo usuario.
      */
     Usuario addUsuario(Usuario usuario);
 
@@ -241,11 +178,18 @@ public interface BotFacade {
     void saveBotToken(String token);
 
     /**
-     * Guarda la presencia/actividad del bot (status, tipo, nombre, url).
-     * @param statusText Texto de estado
-     * @param activityType Tipo de actividad
-     * @param activityName Nombre de la actividad
-     * @param streamUrl URL del stream (opcional)
+     * Indica si la clave Gemini está configurada (sin exponer el valor).
      */
-    void saveBotPresence(String statusText, String activityType, String activityName, String streamUrl);
+    boolean hasGeminiKey();    
+
+    /**
+     * Guarda la clave Gemini.
+     * @param key Clave Gemini
+     */
+    void saveGeminiKey(String key);
+
+    /**
+     * Recupera estadísticas resumidas de la base de datos.
+     */
+    DatabaseStatsDTO getDatabaseStats();
 }
