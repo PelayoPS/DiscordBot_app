@@ -71,7 +71,7 @@ window.initModulesScreen = async function () {
                                     <div class="command-item ${command.activo ? '' : 'disabled'}">
                                         <span class="command-name">${command.nombre}</span>
                                         <label class="switch small">
-                                            <input type="checkbox" ${command.activo ? 'checked' : ''} disabled>
+                                            <input type="checkbox" ${command.activo ? 'checked' : ''} data-command-toggle="${module.nombre}::${command.nombre}">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
@@ -86,7 +86,6 @@ window.initModulesScreen = async function () {
                         const moduleName = this.getAttribute('data-module-toggle');
                         const { checked } = this;
                         this.disabled = true;
-                        // Mostrar feedback visual (notificación simple)
                         const showNotification = (msg, type = 'info') => {
                             let notif = document.createElement('div');
                             notif.className = 'config-notification ' + type;
@@ -110,21 +109,62 @@ window.initModulesScreen = async function () {
                                 throw new Error('Error al cambiar el estado del módulo');
                             }
                             const updated = await res.json();
-                            // Actualizar el estado en modulesData
                             const idx = modulesData.findIndex(m => m.nombre === moduleName);
                             if (idx !== -1) {
                                 modulesData[idx].activo = updated.activo;
-                                // Actualizar comandos si el backend los devuelve (por ahora, todos igual que el módulo)
                                 if (Array.isArray(updated.comandos)) {
                                     modulesData[idx].comandos = updated.comandos;
                                 }
                             }
-                            // Volver a renderizar para reflejar el cambio
                             renderModules(filter);
                             showNotification(`Módulo ${checked ? 'activado' : 'desactivado'} correctamente`, 'success');
                         } catch (err) {
                             showNotification('No se pudo cambiar el estado del módulo', 'error');
-                            // Revertir el switch visualmente
+                            this.checked = !checked;
+                        } finally {
+                            this.disabled = false;
+                        }
+                    });
+                });
+
+                // Añadir listeners a los switches de comandos individuales
+                document.querySelectorAll('input[data-command-toggle]').forEach(input => {
+                    input.addEventListener('change', async function () {
+                        const [moduleName, commandName] = this.getAttribute('data-command-toggle').split('::');
+                        const { checked } = this;
+                        this.disabled = true;
+                        const showNotification = (msg, type = 'info') => {
+                            let notif = document.createElement('div');
+                            notif.className = 'config-notification ' + type;
+                            notif.textContent = msg;
+                            notif.style.position = 'fixed';
+                            notif.style.top = '24px';
+                            notif.style.right = '24px';
+                            notif.style.zIndex = 9999;
+                            notif.style.background = type === 'success' ? '#4caf50' : (type === 'error' ? '#e53935' : '#333');
+                            notif.style.color = '#fff';
+                            notif.style.padding = '12px 20px';
+                            notif.style.borderRadius = '6px';
+                            notif.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                            document.body.appendChild(notif);
+                            setTimeout(() => notif.remove(), 2200);
+                        };
+                        try {
+                            const endpoint = `/api/modules/${encodeURIComponent(moduleName)}/commands/${encodeURIComponent(commandName)}/${checked ? 'enable' : 'disable'}`;
+                            const res = await fetch(endpoint, { method: 'POST' });
+                            if (!res.ok) throw new Error('Error al cambiar el estado del comando');
+                            // Actualizar el estado en modulesData
+                            const mIdx = modulesData.findIndex(m => m.nombre === moduleName);
+                            if (mIdx !== -1) {
+                                const cIdx = modulesData[mIdx].comandos.findIndex(c => c.nombre === commandName);
+                                if (cIdx !== -1) {
+                                    modulesData[mIdx].comandos[cIdx].activo = checked;
+                                }
+                            }
+                            renderModules(filter);
+                            showNotification(`Comando ${checked ? 'activado' : 'desactivado'} correctamente`, 'success');
+                        } catch (err) {
+                            showNotification('No se pudo cambiar el estado del comando', 'error');
                             this.checked = !checked;
                         } finally {
                             this.disabled = false;

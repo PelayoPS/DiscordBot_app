@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 public abstract class CommandManager implements EventListener {
     protected List<Command> commands = new ArrayList<>();
     private boolean isCommandEnabled = true;
+    // Estado individual de cada comando (por nombre)
+    private final java.util.Map<String, Boolean> commandStates = new java.util.HashMap<>();
 
     /**
      * Obtiene la lista de comandos slash registrados.
@@ -49,6 +51,8 @@ public abstract class CommandManager implements EventListener {
      */
     public void addCommand(Command command) {
         commands.add(command);
+        // Por defecto, cada comando está activo al añadirse
+        commandStates.put(command.getName(), true);
     }
 
     /**
@@ -57,18 +61,41 @@ public abstract class CommandManager implements EventListener {
      * @param event Evento de interacción de comando slash
      */
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        // Verificar si los comandos están habilitados
+        // Verificar si los comandos del módulo están habilitados
         if (!isCommandEnabled()) {
             event.reply("Los comandos están deshabilitados").setEphemeral(true).queue();
             return;
         }
 
-        // Buscar y ejecutar el comando
+        // Buscar el comando y comprobar si está habilitado individualmente
         commands.stream()
                 .filter(cmd -> event.getName().equals(cmd.getName()))
                 .findFirst().ifPresent(cmd -> {
+                    if (!isCommandEnabled(cmd.getName())) {
+                        event.reply("Este comando está desactivado").setEphemeral(true).queue();
+                        return;
+                    }
                     cmd.execute(event);
                 });
+    }
+
+    /**
+     * Habilita o deshabilita un comando individual por nombre.
+     * @param commandName Nombre del comando
+     * @param enabled true para habilitar, false para deshabilitar
+     */
+    public void setCommandEnabled(String commandName, boolean enabled) {
+        // Siempre actualiza el estado, aunque el comando no esté en el mapa 
+        commandStates.put(commandName, enabled);
+    }
+
+    /**
+     * Indica si un comando individual está habilitado.
+     * @param commandName Nombre del comando
+     * @return true si está habilitado, false si no (o si no existe)
+     */
+    public boolean isCommandEnabled(String commandName) {
+        return commandStates.getOrDefault(commandName, true);
     }
 
     /**
@@ -99,6 +126,5 @@ public abstract class CommandManager implements EventListener {
         if (event instanceof SlashCommandInteractionEvent slashEvent) {
             onSlashCommandInteraction(slashEvent);
         }
-        // Puedes dejarlo vacío o enrutar eventos según tu lógica
     }
 }

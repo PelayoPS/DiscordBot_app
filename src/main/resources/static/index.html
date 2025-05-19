@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/styles/content/logs.css">
     <link rel="stylesheet" href="/styles/content/modules.css">
     <link rel="stylesheet" href="/styles/content/config.css">
-    <link rel="stylesheet" href="/styles/content/servers.css">
     <link rel="stylesheet" href="/styles/content/database.css">
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -66,10 +65,6 @@
                             <i class="fas fa-database"></i>
                             Base de Datos
                         </div>
-                        <div class="menu-item" data-screen="servers">
-                            <i class="fas fa-server"></i>
-                            Servidores
-                        </div>
                     </div>
                     <div class="theme-toggle">
                         <i class="fas fa-moon"></i>
@@ -112,7 +107,6 @@
     <script src="/js/logs.js"></script>
     <script src="/js/modules.js"></script>
     <script src="/js/config.js"></script>
-    <script src="/js/servers.js"></script>
     <script>
         // index.html: Inicialización de carga dinámica de pantallas HTML
         document.addEventListener('DOMContentLoaded', () => {
@@ -124,7 +118,6 @@
                 modules: '/html/modules.html',
                 logs: '/html/logs.html',
                 database: '/html/database.html',
-                servers: '/html/servers.html'
             };
             let lastScreen = null;
             async function loadScreen(screen) {

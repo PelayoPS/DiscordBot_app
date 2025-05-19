@@ -20,8 +20,7 @@ public class ModuleServiceImpl implements ModuleService {
     private static final Map<String, String> MODULE_DESCRIPTIONS = Map.of(
             "management", "Funciones de administración de roles y configuración",
             "moderation", "Herramientas de moderación de servidores",
-            "user", "Funciones generales para todos los usuarios"
-    );
+            "user", "Funciones generales para todos los usuarios");
 
     @Autowired
     public ModuleServiceImpl(ModuleManager moduleManager) {
@@ -87,5 +86,25 @@ public class ModuleServiceImpl implements ModuleService {
                     commandDTOs);
         }
         return null;
+    }
+
+    @Override
+    public boolean enableCommand(String nombreModulo, String nombreComando) {
+        var module = moduleManager.getModules().get(nombreModulo);
+        if (module instanceof CommandManager manager) {
+            manager.setCommandEnabled(nombreComando, true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean disableCommand(String nombreModulo, String nombreComando) {
+        var module = moduleManager.getModules().get(nombreModulo);
+        if (module instanceof CommandManager manager) {
+            manager.setCommandEnabled(nombreComando, false);
+            return true;
+        }
+        return false;
     }
 }

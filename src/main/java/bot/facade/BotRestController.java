@@ -70,6 +70,28 @@ public class BotRestController {
     }
 
     /**
+     * Activa un comando individual de un módulo.
+     */
+    @PostMapping("/modules/{nombreModulo}/commands/{nombreComando}/enable")
+    public ResponseEntity<Void> enableCommand(@PathVariable String nombreModulo, @PathVariable String nombreComando) {
+        boolean ok = moduleService.enableCommand(nombreModulo, nombreComando);
+        if (!ok)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Desactiva un comando individual de un módulo.
+     */
+    @PostMapping("/modules/{nombreModulo}/commands/{nombreComando}/disable")
+    public ResponseEntity<Void> disableCommand(@PathVariable String nombreModulo, @PathVariable String nombreComando) {
+        boolean ok = moduleService.disableCommand(nombreModulo, nombreComando);
+        if (!ok)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Devuelve información sobre si el token está configurado (pero nunca el valor
      * real).
      */
