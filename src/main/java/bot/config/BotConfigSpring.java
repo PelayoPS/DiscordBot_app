@@ -1,5 +1,6 @@
 package bot.config;
 
+import bot.commands.ModuleManager;
 import bot.core.ServiceFactory;
 import bot.db.DatabaseManager;
 import bot.log.LoggingManager;
@@ -10,6 +11,7 @@ import bot.services.AIChatService;
 import bot.services.ModerationService;
 import bot.services.UsuarioService;
 import bot.services.UserService;
+
 import bot.services.impl.AIChatServiceImpl;
 import bot.services.impl.ModerationServiceImpl;
 import bot.services.impl.UserServiceImpl;
@@ -28,6 +30,14 @@ import org.springframework.context.annotation.Primary;
  */
 @Configuration
 public class BotConfigSpring {
+    /**
+     * Bean para el gestor de módulos (ModuleManager).
+     * @return ModuleManager instancia gestionada por Spring
+     */
+    @Bean
+    public ModuleManager moduleManager() {
+        return new ModuleManager();
+    }
     /**
      * Bean para el servicio de configuración.
      * 
@@ -72,8 +82,8 @@ public class BotConfigSpring {
      */
     @Bean
     public BotFacade botFacade(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService) {
-        return new BotFacadeImpl(usuarioService, moderationService, commandManager, databaseManager, configService);
+            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService, ModuleManager moduleManager) {
+        return new BotFacadeImpl(usuarioService, moderationService, commandManager, databaseManager, configService, moduleManager);
     }
 
     /**

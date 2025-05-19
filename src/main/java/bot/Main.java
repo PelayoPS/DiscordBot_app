@@ -36,7 +36,8 @@ public class Main {
             }
 
             // Instanciar el bot directamente (sin exponer API REST)
-            Bot bot = new Bot(token, null, null);
+            bot.commands.ModuleManager moduleManager = new bot.commands.ModuleManager();
+            Bot bot = new Bot(token, null, null, moduleManager);
             logger.logInfo("Bot instanciado correctamente (modo manual)");
 
             // Mostrar comandos disponibles

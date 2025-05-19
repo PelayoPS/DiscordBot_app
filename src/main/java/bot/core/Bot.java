@@ -45,13 +45,13 @@ public class Bot {
      * @param serviceFactory  Fábrica de servicios
      * @param databaseManager Gestor de base de datos
      */
-    public Bot(String token, ServiceFactory serviceFactory, DatabaseManager databaseManager) {
+    public Bot(String token, ServiceFactory serviceFactory, DatabaseManager databaseManager, ModuleManager moduleManager) {
         this.serviceFactory = serviceFactory;
         this.databaseManager = databaseManager;
         // Inicializar registros y managers
         this.commandRegistry = new CommandRegistry();
         this.eventRegistry = new EventRegistry();
-        this.moduleManager = new ModuleManager();
+        this.moduleManager = moduleManager;
 
         // Inicializar la base de datos
         initializeDatabase();

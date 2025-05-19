@@ -1,4 +1,6 @@
+
 package bot.facade;
+import bot.commands.ModuleManager;
 
 import bot.services.UsuarioService;
 import net.dv8tion.jda.api.JDA;
@@ -57,6 +59,7 @@ public class BotFacadeImpl implements BotFacade {
     private final CommandManager commandManager;
     private final DatabaseManager databaseManager;
     private Bot botInstance;
+    private final ModuleManager moduleManager;
     private Instant botStartTime;
     @Value("${bot.version:1.0.0}")
     private String botVersion;
@@ -79,12 +82,13 @@ public class BotFacadeImpl implements BotFacade {
      * @param configService     Servicio de configuración (inyectado por Spring)
      */
     public BotFacadeImpl(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService) {
+            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService, ModuleManager moduleManager) {
         this.usuarioService = usuarioService;
         this.moderationService = moderationService;
         this.commandManager = commandManager;
         this.databaseManager = databaseManager;
         this.configService = configService;
+        this.moduleManager = moduleManager;
     }
 
     /**
@@ -96,7 +100,7 @@ public class BotFacadeImpl implements BotFacade {
             // Cargar configuración
             String token = configService.get("token");
             ServiceFactory serviceFactory = new ServiceFactory(configService, databaseManager);
-            botInstance = new Bot(token, serviceFactory, databaseManager);
+            botInstance = new Bot(token, serviceFactory, databaseManager, moduleManager);
             botStartTime = Instant.now();
             logger.logInfo("Bot iniciado desde BotFacadeImpl (con dependencias reales)");
         }

@@ -21,6 +21,8 @@ import bot.log.LoggingManager;
  * 
  * @author PelayoPS
  */
+import bot.commands.ModuleManager;
+
 public class ServiceFactory {
     private final DatabaseManager databaseManager;
     private final UsuarioRepository usuarioRepository;
@@ -44,6 +46,7 @@ public class ServiceFactory {
     private final BotFacade botFacade;
 
     private final LoggingManager loggingManager;
+    private final ModuleManager moduleManager;
 
     /**
      * Constructor de la clase ServiceFactory.
@@ -52,6 +55,10 @@ public class ServiceFactory {
      * @param databaseManager Gestor de base de datos
      */
     public ServiceFactory(ConfigService configService, DatabaseManager databaseManager) {
+        this(configService, databaseManager, new ModuleManager());
+    }
+
+    public ServiceFactory(ConfigService configService, DatabaseManager databaseManager, ModuleManager moduleManager) {
         this.databaseManager = databaseManager;
         this.usuarioRepository = new UsuarioRepositoryImpl(databaseManager);
         this.experienciaRepository = new ExperienciaRepositoryImpl(databaseManager);
@@ -71,8 +78,9 @@ public class ServiceFactory {
         this.userCommands = new UserCommands(userController);
 
         this.loggingManager = new LoggingManager();
+        this.moduleManager = moduleManager;
         // Pasa el configService real al BotFacadeImpl
-        this.botFacade = new BotFacadeImpl(usuarioService, moderationService, null, databaseManager, configService);
+        this.botFacade = new BotFacadeImpl(usuarioService, moderationService, null, databaseManager, configService, moduleManager);
     }
 
     /**
