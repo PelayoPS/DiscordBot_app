@@ -3,7 +3,6 @@ package bot.facade;
 import bot.commands.ModuleManager;
 
 import bot.services.UsuarioService;
-import net.dv8tion.jda.api.JDA;
 import bot.services.ModerationService;
 import bot.modules.CommandManager;
 import bot.log.LoggingManager;

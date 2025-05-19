@@ -82,7 +82,8 @@
                 </div>
                 <!-- Área de contenido principal -->
                 <div class="content-area">
-                    <!-- El contenido de cada pantalla se cargará dinámicamente aquí -->
+                    <!-- Contenedor dinámico para los módulos -->
+                    <div id="modules-container"></div>
                 </div>
             </div>
         </div>
@@ -91,110 +92,13 @@
     <div id="module-config-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Configuración del Módulo: Moderación</h3>
+                <h3>Configuración del Módulo</h3>
                 <button class="close-modal">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="module-enabled">Estado del módulo</label>
-                    <div style="display: flex; align-items: center;">
-                        <label class="switch">
-                            <input type="checkbox" id="module-enabled" checked>
-                            <span class="slider round"></span>
-                        </label>
-                        <span style="margin-left: 10px;">Módulo activo</span>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h4>Permisos</h4>
-                    <div class="form-group">
-                        <label for="module-roles">Roles que pueden usar el módulo</label>
-                        <select id="module-roles" multiple style="height: 80px;">
-                            <option value="user" selected>Usuario</option>
-                            <option value="mod" selected>Moderador</option>
-                            <option value="helper">Ayudante</option>
-                            <option value="everyone">@everyone</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h4>Comandos</h4>
-                    <div class="command-list">
-                        <div class="command-config-item">
-                            <div class="command-details">
-                                <div class="command-name">!ban</div>
-                                <div class="command-description">Banear a un usuario del servidor</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="command-config-item">
-                            <div class="command-details">
-                                <div class="command-name">!kick</div>
-                                <div class="command-description">Expulsar a un usuario del servidor</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="command-config-item">
-                            <div class="command-details">
-                                <div class="command-name">!mute</div>
-                                <div class="command-description">Silenciar a un usuario en el servidor</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="command-config-item">
-                            <div class="command-details">
-                                <div class="command-name">!warn</div>
-                                <div class="command-description">Advertir a un usuario</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="command-config-item">
-                            <div class="command-details">
-                                <div class="command-name">!history</div>
-                                <div class="command-description">Ver historial de infracciones de un usuario</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h4>Opciones avanzadas</h4>
-                    <div class="form-group">
-                        <label for="log-channel">Canal de logs de moderación</label>
-                        <select id="log-channel">
-                            <option value="default">Canal por defecto (#logs)</option>
-                            <option value="mod-logs">#mod-logs</option>
-                            <option value="user-logs">#user-logs</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="auto-mod">Auto-moderación</label>
-                        <div style="display: flex; align-items: center;">
-                            <label class="switch">
-                                <input type="checkbox" id="auto-mod">
-                                <span class="slider round"></span>
-                            </label>
-                            <span style="margin-left: 10px;">Activar auto-moderación</span>
-                        </div>
-                    </div>
-                </div>
+                <!-- El contenido del modal se cargará dinámicamente -->
             </div>
             <div class="modal-footer">
                 <button class="secondary-button">Cancelar</button>

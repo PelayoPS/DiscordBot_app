@@ -30,6 +30,7 @@ import bot.facade.service.ModuleService;
 public class BotRestController {
     // --- Endpoints de módulos ---
     private final ModuleService moduleService;
+
     /**
      * Devuelve la lista de módulos y sus comandos.
      * 
@@ -39,6 +40,35 @@ public class BotRestController {
     public ResponseEntity<List<ModuleDTO>> getModules() {
         return ResponseEntity.ok(moduleService.getAllModulesWithCommands());
     }
+
+    /**
+     * Activa un módulo por nombre.
+     * 
+     * @param nombre Nombre del módulo
+     * @return ModuleDTO actualizado o 404 si no existe
+     */
+    @PostMapping("/modules/{nombre}/enable")
+    public ResponseEntity<ModuleDTO> enableModule(@PathVariable String nombre) {
+        ModuleDTO dto = moduleService.enableModule(nombre);
+        if (dto == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
+     * Desactiva un módulo por nombre.
+     * 
+     * @param nombre Nombre del módulo
+     * @return ModuleDTO actualizado o 404 si no existe
+     */
+    @PostMapping("/modules/{nombre}/disable")
+    public ResponseEntity<ModuleDTO> disableModule(@PathVariable String nombre) {
+        ModuleDTO dto = moduleService.disableModule(nombre);
+        if (dto == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dto);
+    }
+
     /**
      * Devuelve información sobre si el token está configurado (pero nunca el valor
      * real).
@@ -63,7 +93,7 @@ public class BotRestController {
     /**
      * Constructor de la clase BotRestController.
      * 
-     * @param botFacade Fachada principal del bot
+     * @param botFacade     Fachada principal del bot
      * @param moduleService Servicio de módulos
      */
     public BotRestController(BotFacade botFacade, ModuleService moduleService) {
