@@ -16,7 +16,7 @@ public class AdminController {
 
     /**
      * Constructor de la clase AdminController.
-     * 
+     *
      * @param roleService Servicio de roles para operaciones administrativas
      */
     public AdminController(RoleService roleService) {
@@ -25,7 +25,7 @@ public class AdminController {
 
     /**
      * Solicita la creación de un rol en el servidor.
-     * 
+     *
      * @param guild  Servidor de Discord
      * @param nombre Nombre del rol
      * @param color  Color en formato hexadecimal
@@ -37,7 +37,7 @@ public class AdminController {
 
     /**
      * Solicita la eliminación de un rol en el servidor.
-     * 
+     *
      * @param role Rol a eliminar
      * @return true si la solicitud es válida y se delega correctamente
      */

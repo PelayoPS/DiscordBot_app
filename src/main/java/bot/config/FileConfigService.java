@@ -18,7 +18,7 @@ public class FileConfigService implements ConfigService {
     /**
      * Crea una instancia de FileConfigService y carga las propiedades desde el
      * archivo especificado.
-     * 
+     *
      * @param filePath Ruta del archivo de configuración
      */
     public FileConfigService(String filePath) {
@@ -30,11 +30,21 @@ public class FileConfigService implements ConfigService {
             throw new RuntimeException("No se pudo cargar el archivo de configuración: " + filePath, e);
         }
     }
+
+    /**
+     * Establece el valor de una clave de configuración en memoria.
+     *
+     * @param key Clave de la configuración
+     * @param value Valor a establecer
+     */
     @Override
     public void set(String key, String value) {
         properties.setProperty(key, value);
     }
 
+    /**
+     * Persiste los cambios en el archivo de configuración.
+     */
     @Override
     public void save() {
         try (java.io.FileOutputStream out = new java.io.FileOutputStream(filePath)) {
@@ -46,13 +56,12 @@ public class FileConfigService implements ConfigService {
 
     /**
      * Obtiene el valor de una clave de configuración.
-     * 
+     *
      * @param key Clave de la configuración
      * @return Valor asociado a la clave, o null si no existe
      */
     @Override
     public String get(String key) {
-        // Recarga el archivo cada vez que se consulta una clave
         try (FileInputStream fis = new FileInputStream(filePath)) {
             properties.load(fis);
         } catch (IOException e) {
@@ -60,16 +69,15 @@ public class FileConfigService implements ConfigService {
         }
         String value = properties.getProperty(key);
         if ("token".equals(key)) {
-            logger.logInfo("[DEBUG] get('token') desde '" + filePath + "' => '" + value + "'");
+            logger.logInfo("[DEBUG] get('token') desde '" + filePath + "' => ''");
         }
         return value;
     }
 
     /**
-     * Obtiene el valor de una clave de configuración, o un valor por defecto si no
-     * existe.
-     * 
-     * @param key          Clave de la configuración
+     * Obtiene el valor de una clave de configuración, o un valor por defecto si no existe.
+     *
+     * @param key Clave de la configuración
      * @param defaultValue Valor por defecto si la clave no existe
      * @return Valor asociado a la clave, o defaultValue si no existe
      */

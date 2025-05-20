@@ -2,6 +2,7 @@ package bot.core;
 
 import bot.commands.ModuleManager;
 import bot.db.DatabaseManager;
+import bot.listeners.MessageExperienceListener;
 import bot.listeners.ai.AIChatThreadListener;
 import bot.log.LoggingManager;
 import bot.modules.CommandManager;
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @author PelayoPS
  */
 public class Bot {
-    private JDA jda; // Modificado para permitir inicialización tardía en caso de error de JDA
+    private JDA jda; 
     private final ModuleManager moduleManager;
     private final CommandRegistry commandRegistry;
     private final EventRegistry eventRegistry;
@@ -40,7 +41,7 @@ public class Bot {
 
     /**
      * Constructor de la clase Bot.
-     * 
+     *
      * @param token           Token de autenticación de Discord
      * @param serviceFactory  Fábrica de servicios
      * @param databaseManager Gestor de base de datos
@@ -48,34 +49,27 @@ public class Bot {
     public Bot(String token, ServiceFactory serviceFactory, DatabaseManager databaseManager, ModuleManager moduleManager) {
         this.serviceFactory = serviceFactory;
         this.databaseManager = databaseManager;
-        // Inicializar registros y managers
         this.commandRegistry = new CommandRegistry();
         this.eventRegistry = new EventRegistry();
         this.moduleManager = moduleManager;
 
-        // Inicializar la base de datos
         initializeDatabase();
 
-        // Inicializar JDA
         try {
             this.jda = JDABuilder.build(token);
-            // Inicializar y registrar módulos
             initializeModules();
-            // Registrar comandos en Discord
             updateCommands();
         } catch (Exception e) {
             logger.logError("Error crítico al inicializar JDA. El bot no podrá conectarse a Discord.", e);
         }
         
-        // Si la inicialización de la BD falló, programar reintentos
         if (dbInitializationFailed) {
             this.dbRetryScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
                 Thread t = Executors.defaultThreadFactory().newThread(r);
-                t.setDaemon(true); // Marcar como daemon para no impedir el cierre de la JVM
+                t.setDaemon(true);
                 t.setName("DB-Retry-Scheduler");
                 return t;
             });
-            // Iniciar con un retraso inicial y luego periódicamente
             this.dbRetryScheduler.scheduleAtFixedRate(this::attemptDbReinitialization, 5, 120, TimeUnit.SECONDS);
             logger.logInfo("Programador de reintentos de inicialización de BD iniciado. Primer intento en 5 segundos, luego cada 2 minutos.");
         }
@@ -102,18 +96,14 @@ public class Bot {
 
     /**
      * Ejecuta el script SQL para crear el esquema de la base de datos.
-     * 
+     *
      * @param conn Conexión a la base de datos
      * @throws SQLException Si ocurre un error al ejecutar el script
      */
     private void executeSchemaScript(Connection conn) throws SQLException {
         try {
-            // Cargar el script schema.sql desde los recursos
             String schemaScript = loadSchemaScript();
-
-            // Mejorar manejo de errores para sentencias individuales
             try (Statement stmt = conn.createStatement()) {
-                // Dividir el script en sentencias individuales
                 String[] statements = schemaScript.split(";");
                 for (String statement : statements) {
                     statement = statement.trim();
@@ -121,13 +111,9 @@ public class Bot {
                         try {
                             stmt.execute(statement);
                         } catch (SQLException e) {
-                            // Verificar si el error es por un índice duplicado (ignoramos este error
-                            // específico)
                             if (e.getMessage().contains("Duplicate key name")) {
                                 logger.logInfo("Ignorando error de índice duplicado: " + e.getMessage());
                             } else {
-                                // Para otros errores, los registramos pero continuamos con las siguientes
-                                // sentencias
                                 logger.logError("Error al ejecutar sentencia SQL: " + statement, e);
                             }
                         }
@@ -142,7 +128,7 @@ public class Bot {
 
     /**
      * Carga el script SQL desde los recursos.
-     * 
+     *
      * @return Contenido del script SQL
      * @throws IOException Si ocurre un error al leer el archivo
      */
@@ -177,6 +163,14 @@ public class Bot {
             eventRegistry.registerEventListener(module);
         }
 
+        // Registrar el listener de mensajes
+        MessageExperienceListener messageListener = new MessageExperienceListener(
+            serviceFactory.getUsuarioService(),
+            serviceFactory.getConfigService()
+        );
+        jda.addEventListener(messageListener);
+        logger.logInfo("Registrado listener de experiencia de mensajes");
+
         // Registrar el listener para los hilos de chat de IA
         AIChatThreadListener aiChatListener = new AIChatThreadListener();
         jda.addEventListener(aiChatListener);
@@ -207,7 +201,7 @@ public class Bot {
 
     /**
      * Obtiene la instancia de JDA.
-     * 
+     *
      * @return JDA
      */
     public JDA getJda() {
@@ -216,7 +210,7 @@ public class Bot {
 
     /**
      * Obtiene el gestor de módulos.
-     * 
+     *
      * @return ModuleManager
      */
     public ModuleManager getModuleManager() {
@@ -225,7 +219,7 @@ public class Bot {
 
     /**
      * Obtiene el registro de comandos.
-     * 
+     *
      * @return CommandRegistry
      */
     public CommandRegistry getCommandRegistry() {
@@ -234,13 +228,16 @@ public class Bot {
 
     /**
      * Obtiene el registro de eventos.
-     * 
+     *
      * @return EventRegistry
      */
     public EventRegistry getEventRegistry() {
         return eventRegistry;
     }
     
+    /**
+     * Intenta reinicializar la conexión a la base de datos si falló previamente.
+     */
     private synchronized void attemptDbReinitialization() {
         if (!this.dbInitializationFailed) { 
             if (this.dbRetryScheduler != null && !this.dbRetryScheduler.isShutdown()) {

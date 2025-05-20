@@ -16,7 +16,7 @@ public class BotIntegracionesDTO {
 
         /**
          * Constructor de JdaStatus.
-         * 
+         *
          * @param conectado Si está conectado a Discord
          * @param ping      Ping actual de la conexión
          */
@@ -35,7 +35,7 @@ public class BotIntegracionesDTO {
 
         /**
          * Constructor de AiApiStatus.
-         * 
+         *
          * @param disponible Si la API está disponible
          * @param mensaje    Mensaje de estado de la API
          */
@@ -54,7 +54,7 @@ public class BotIntegracionesDTO {
 
         /**
          * Constructor de DatabaseStatus.
-         * 
+         *
          * @param conectada Si la base de datos está conectada
          * @param ping      Ping de la base de datos
          */
@@ -70,7 +70,7 @@ public class BotIntegracionesDTO {
 
     /**
      * Constructor de BotIntegracionesDTO.
-     * 
+     *
      * @param jda      Estado de JDA
      * @param aiApi    Estado de la API de IA
      * @param database Estado de la base de datos

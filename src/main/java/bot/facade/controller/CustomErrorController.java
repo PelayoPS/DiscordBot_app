@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class CustomErrorController implements ErrorController {
     /**
      * Maneja las rutas de error y devuelve una respuesta JSON personalizada.
-     * 
+     *
      * @param request HttpServletRequest con información del error
      * @return ErrorResponse con detalles del error
      */
@@ -45,7 +45,7 @@ public class CustomErrorController implements ErrorController {
 
         /**
          * Constructor de ErrorResponse.
-         * 
+         *
          * @param status  Código de estado HTTP
          * @param message Mensaje de error
          * @param path    Ruta solicitada

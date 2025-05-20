@@ -13,10 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementación del servicio de módulos para gestionar módulos y comandos.
+ * 
+ * @author PelayoPS
+ */
 @Service
 public class ModuleServiceImpl implements ModuleService {
     private final ModuleManager moduleManager;
-    // Descripciones legibles para cada módulo
     private static final Map<String, String> MODULE_DESCRIPTIONS = Map.of(
             "management", "Funciones de administración de roles y configuración",
             "moderation", "Herramientas de moderación de servidores",
@@ -27,6 +31,11 @@ public class ModuleServiceImpl implements ModuleService {
         this.moduleManager = moduleManager;
     }
 
+    /**
+     * Obtiene todos los módulos con sus comandos asociados.
+     *
+     * @return Lista de módulos con comandos
+     */
     @Override
     public List<ModuleDTO> getAllModulesWithCommands() {
         List<ModuleDTO> moduleDTOs = new ArrayList<>();
@@ -50,6 +59,12 @@ public class ModuleServiceImpl implements ModuleService {
         return moduleDTOs;
     }
 
+    /**
+     * Habilita un módulo por nombre.
+     *
+     * @param nombre Nombre del módulo
+     * @return DTO del módulo habilitado o null si no existe
+     */
     @Override
     public ModuleDTO enableModule(String nombre) {
         var module = moduleManager.getModules().get(nombre);
@@ -69,6 +84,12 @@ public class ModuleServiceImpl implements ModuleService {
         return null;
     }
 
+    /**
+     * Deshabilita un módulo por nombre.
+     *
+     * @param nombre Nombre del módulo
+     * @return DTO del módulo deshabilitado o null si no existe
+     */
     @Override
     public ModuleDTO disableModule(String nombre) {
         var module = moduleManager.getModules().get(nombre);
@@ -88,6 +109,13 @@ public class ModuleServiceImpl implements ModuleService {
         return null;
     }
 
+    /**
+     * Habilita un comando específico dentro de un módulo.
+     *
+     * @param nombreModulo  Nombre del módulo
+     * @param nombreComando Nombre del comando
+     * @return true si se habilitó correctamente, false en caso contrario
+     */
     @Override
     public boolean enableCommand(String nombreModulo, String nombreComando) {
         var module = moduleManager.getModules().get(nombreModulo);
@@ -98,6 +126,13 @@ public class ModuleServiceImpl implements ModuleService {
         return false;
     }
 
+    /**
+     * Deshabilita un comando específico dentro de un módulo.
+     *
+     * @param nombreModulo  Nombre del módulo
+     * @param nombreComando Nombre del comando
+     * @return true si se deshabilitó correctamente, false en caso contrario
+     */
     @Override
     public boolean disableCommand(String nombreModulo, String nombreComando) {
         var module = moduleManager.getModules().get(nombreModulo);

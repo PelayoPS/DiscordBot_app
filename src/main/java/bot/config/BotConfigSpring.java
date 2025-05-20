@@ -30,18 +30,21 @@ import org.springframework.context.annotation.Primary;
  */
 @Configuration
 public class BotConfigSpring {
+
     /**
-     * Bean para el gestor de módulos (ModuleManager).
-     * @return ModuleManager instancia gestionada por Spring
+     * Crea el bean para el gestor de módulos.
+     * 
+     * @return instancia de ModuleManager
      */
     @Bean
     public ModuleManager moduleManager() {
         return new ModuleManager();
     }
+
     /**
-     * Bean para el servicio de configuración.
+     * Crea el bean para el servicio de configuración.
      * 
-     * @return ConfigService instancia de configuración
+     * @return instancia de ConfigService
      */
     @Bean
     public ConfigService configService() {
@@ -49,10 +52,10 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el gestor de base de datos.
+     * Crea el bean para el gestor de base de datos.
      * 
-     * @param configService Servicio de configuración
-     * @return DatabaseManager instancia de gestor de base de datos
+     * @param configService servicio de configuración
+     * @return instancia de DatabaseManager
      */
     @Bean
     @Primary
@@ -61,9 +64,9 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el gestor de logs.
+     * Crea el bean para el gestor de logs.
      * 
-     * @return LoggingManager instancia de gestor de logs
+     * @return instancia de LoggingManager
      */
     @Bean
     @Primary
@@ -72,13 +75,15 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para la fachada principal del bot.
+     * Crea el bean para la fachada principal del bot.
      * 
-     * @param usuarioService    Servicio de usuarios
-     * @param moderationService Servicio de moderación
-     * @param commandManager    Gestor de comandos
-     * @param databaseManager   Gestor de base de datos
-     * @return BotFacade instancia de la fachada del bot
+     * @param usuarioService servicio de usuarios
+     * @param moderationService servicio de moderación
+     * @param commandManager gestor de comandos
+     * @param databaseManager gestor de base de datos
+     * @param configService servicio de configuración
+     * @param moduleManager gestor de módulos
+     * @return instancia de BotFacade
      */
     @Bean
     public BotFacade botFacade(UsuarioService usuarioService, ModerationService moderationService,
@@ -87,10 +92,10 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean principal para los comandos de moderación.
+     * Crea el bean principal para los comandos de moderación.
      * 
-     * @param serviceFactory Fábrica de servicios
-     * @return ModCommands instancia de comandos de moderación
+     * @param serviceFactory fábrica de servicios
+     * @return instancia de ModCommands
      */
     @Bean
     public ModCommands modCommands(ServiceFactory serviceFactory) {
@@ -98,10 +103,10 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el gestor de comandos.
+     * Crea el bean para el gestor de comandos.
      * 
-     * @param modCommands Comandos de moderación
-     * @return CommandManager instancia del gestor de comandos
+     * @param modCommands comandos de moderación
+     * @return instancia de CommandManager
      */
     @Bean
     @Primary
@@ -110,11 +115,11 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para la fábrica de servicios.
+     * Crea el bean para la fábrica de servicios.
      * 
-     * @param configService   Servicio de configuración
-     * @param databaseManager Gestor de base de datos
-     * @return ServiceFactory instancia de la fábrica de servicios
+     * @param configService servicio de configuración
+     * @param databaseManager gestor de base de datos
+     * @return instancia de ServiceFactory
      */
     @Bean
     public ServiceFactory serviceFactory(ConfigService configService, DatabaseManager databaseManager) {
@@ -122,10 +127,10 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el servicio de usuario.
+     * Crea el bean para el servicio de usuario.
      * 
-     * @param serviceFactory Fábrica de servicios
-     * @return UsuarioService instancia del servicio de usuario
+     * @param serviceFactory fábrica de servicios
+     * @return instancia de UsuarioService
      */
     @Bean
     @Primary
@@ -134,10 +139,10 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el servicio de moderación.
+     * Crea el bean para el servicio de moderación.
      * 
-     * @param serviceFactory Fábrica de servicios
-     * @return ModerationService instancia del servicio de moderación
+     * @param serviceFactory fábrica de servicios
+     * @return instancia de ModerationService
      */
     @Bean
     @Primary
@@ -146,9 +151,9 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el servicio de usuario (implementación).
+     * Crea el bean para el servicio de usuario (implementación).
      * 
-     * @return UserService instancia del servicio de usuario
+     * @return instancia de UserService
      */
     @Bean
     public UserService userService() {
@@ -156,9 +161,9 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el servicio de chat IA.
+     * Crea el bean para el servicio de chat IA.
      * 
-     * @return AIChatService instancia del servicio de chat IA
+     * @return instancia de AIChatService
      */
     @Bean
     public AIChatService aiChatService() {
@@ -166,11 +171,11 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para el controlador de usuario.
+     * Crea el bean para el controlador de usuario.
      * 
-     * @param userService   Servicio de usuario
-     * @param aiChatService Servicio de chat IA
-     * @return UserController instancia del controlador de usuario
+     * @param userService servicio de usuario
+     * @param aiChatService servicio de chat IA
+     * @return instancia de UserController
      */
     @Bean
     public UserController userController(UserService userService, AIChatService aiChatService) {
@@ -178,13 +183,14 @@ public class BotConfigSpring {
     }
 
     /**
-     * Bean para los comandos de usuario.
+     * Crea el bean para los comandos de usuario.
      * 
-     * @param userController Controlador de usuario
-     * @return UserCommands instancia de comandos de usuario
+     * @param userController controlador de usuario
+     * @param usuarioService servicio de usuario
+     * @return instancia de UserCommands
      */
     @Bean
-    public UserCommands userCommands(UserController userController) {
-        return new UserCommands(userController);
+    public UserCommands userCommands(UserController userController, bot.services.UsuarioService usuarioService) {
+        return new UserCommands(userController, usuarioService);
     }
 }

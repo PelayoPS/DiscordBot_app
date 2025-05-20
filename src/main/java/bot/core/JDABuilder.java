@@ -13,7 +13,7 @@ public class JDABuilder {
 
     /**
      * Crea una instancia de JDA configurada con todos los intents habilitados.
-     * 
+     *
      * @param token El token del bot de Discord.
      * @return Una instancia configurada de JDA.
      * @throws Exception Si ocurre un error durante la construcción de JDA.

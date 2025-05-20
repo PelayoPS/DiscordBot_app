@@ -7,7 +7,6 @@ import bot.facade.dto.BotIntegracionesDTO;
 import bot.facade.dto.BotPresenceDTO;
 import bot.facade.dto.BotStatusDTO;
 import bot.facade.dto.DatabaseStatsDTO;
-import bot.models.Experiencia;
 import java.util.List;
 
 /**
@@ -24,41 +23,71 @@ public interface BotFacade {
 
     /**
      * Expulsa a un usuario de un servidor específico.
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
+     * @param reason        Razón de la expulsión
      */
     void kickUser(String guildId, String discordUserId, String reason);
 
     /**
      * Advierte a un usuario (warn).
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
+     * @param reason        Razón de la advertencia
      */
     void warnUser(String guildId, String discordUserId, String reason);
 
     /**
      * Silencia (mute) a un usuario.
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
+     * @param reason        Razón del mute
+     * @param duration      Duración del mute
      */
     void muteUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
 
     /**
      * Aplica timeout a un usuario.
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
+     * @param reason        Razón del timeout
+     * @param duration      Duración del timeout
      */
     void timeoutUser(String guildId, String discordUserId, String reason, java.time.Duration duration);
 
     /**
      * Desbanea a un usuario.
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
      */
     void unbanUser(String guildId, String discordUserId);
 
     /**
      * Purga mensajes de un canal.
+     *
+     * @param guildId     ID del servidor
+     * @param channelId   ID del canal
+     * @param moderatorId ID del moderador
+     * @param amount      Cantidad de mensajes a purgar
      */
     void purgeMessages(String guildId, String channelId, String moderatorId, int amount);
 
     /**
      * Indica si el token del bot está configurado (sin exponer el valor).
+     *
+     * @return true si el token está configurado, false en caso contrario
      */
     boolean hasBotToken();
 
     /**
      * Devuelve la presencia/actividad actual del bot (status, tipo, nombre, url).
+     *
+     * @return BotPresenceDTO con la presencia actual del bot
      */
     BotPresenceDTO getBotPresence();
 
@@ -79,33 +108,39 @@ public interface BotFacade {
 
     /**
      * Recupera el estado actual del bot (por ejemplo, RUNNING, STOPPED).
-     * 
+     *
      * @return String representando el estado del bot.
      */
     String getBotStatus();
 
     /**
      * Devuelve información extendida del estado del bot (DTO).
-     * 
+     *
      * @return BotStatusDTO con información extendida del estado.
      */
     BotStatusDTO getBotStatusExtended();
 
     // --- User Management ---
 
-
     /**
      * Recupera la información de un usuario por su ID de Discord (String).
+     *
+     * @param discordUserId ID del usuario de Discord
+     * @return Usuario con la información correspondiente
      */
     Usuario getUserInfo(String discordUserId);
 
     /**
      * Recupera el historial de penalizaciones de un usuario por su ID de Discord.
+     *
+     * @param discordUserId ID del usuario de Discord
+     * @return Lista de penalizaciones del usuario
      */
     List<Penalizacion> getUserHistory(String discordUserId);
 
     /**
      * Recupera los logs de la aplicación.
+     *
      * @param limit Límite de líneas
      * @return Lista de logs
      */
@@ -113,16 +148,25 @@ public interface BotFacade {
 
     /**
      * Banea a un usuario.
+     *
+     * @param guildId       ID del servidor
+     * @param discordUserId ID del usuario de Discord
+     * @param reason        Razón del baneo
      */
     void banUser(String guildId, String discordUserId, String reason);
 
     /**
      * Recupera el estado de las integraciones del bot.
+     *
+     * @return BotIntegracionesDTO con el estado de las integraciones
      */
     BotIntegracionesDTO getIntegracionesStatus();
 
     /**
      * Añade un nuevo usuario.
+     *
+     * @param usuario Usuario a añadir
+     * @return Usuario añadido
      */
     Usuario addUsuario(Usuario usuario);
 
@@ -132,7 +176,7 @@ public interface BotFacade {
      * @param experiencia El objeto Experiencia a guardar.
      * @return La Experiencia guardada, o null si ocurre un error.
      */
-    Experiencia addExperiencia(Experiencia experiencia);
+    // Método eliminado: Experiencia addExperiencia(Experiencia experiencia);
 
     /**
      * Añade una nueva penalización al sistema.
@@ -146,12 +190,14 @@ public interface BotFacade {
 
     /**
      * Devuelve los nombres de todas las tablas de la base de datos.
+     *
      * @return Lista de nombres de tablas.
      */
     List<String> getTableNames();
 
     /**
      * Devuelve los nombres de las columnas de una tabla.
+     *
      * @param tableName Nombre de la tabla.
      * @return Lista de nombres de columnas.
      */
@@ -159,6 +205,7 @@ public interface BotFacade {
 
     /**
      * Devuelve el contenido de una tabla (todas las filas).
+     *
      * @param tableName Nombre de la tabla.
      * @return Lista de mapas (columna -> valor) por cada fila.
      */
@@ -168,28 +215,36 @@ public interface BotFacade {
 
     /**
      * Obtiene la configuración general del bot (sin exponer el token).
+     *
+     * @return BotConfigDTO con la configuración general
      */
     BotConfigDTO getBotConfig();
 
     /**
      * Guarda el token del bot.
+     *
      * @param token Token de Discord
      */
     void saveBotToken(String token);
 
     /**
      * Indica si la clave Gemini está configurada (sin exponer el valor).
+     *
+     * @return true si la clave está configurada, false en caso contrario
      */
-    boolean hasGeminiKey();    
+    boolean hasGeminiKey();
 
     /**
      * Guarda la clave Gemini.
+     *
      * @param key Clave Gemini
      */
     void saveGeminiKey(String key);
 
     /**
      * Recupera estadísticas resumidas de la base de datos.
+     *
+     * @return DatabaseStatsDTO con estadísticas de la base de datos
      */
     DatabaseStatsDTO getDatabaseStats();
 }

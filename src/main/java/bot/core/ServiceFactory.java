@@ -1,7 +1,9 @@
 package bot.core;
 
-import bot.repositories.*;
-import bot.repositories.impl.*;
+import bot.repositories.UsuarioRepository;
+import bot.repositories.impl.UsuarioRepositoryImpl;
+import bot.repositories.PenalizacionRepository;
+import bot.repositories.impl.PenalizacionRepositoryImpl;
 import bot.services.*;
 import bot.services.impl.*;
 import bot.modules.admin.AdminCommands;
@@ -24,13 +26,12 @@ import bot.log.LoggingManager;
 import bot.commands.ModuleManager;
 
 public class ServiceFactory {
+    private final ConfigService configService;
     private final DatabaseManager databaseManager;
     private final UsuarioRepository usuarioRepository;
-    private final ExperienciaRepository experienciaRepository;
     private final PenalizacionRepository penalizacionRepository;
 
     private final UsuarioService usuarioService;
-    private final ExperienciaService experienciaService;
     private final PenalizacionService penalizacionService;
     private final RoleService roleService;
     private final UserService userService;
@@ -50,7 +51,7 @@ public class ServiceFactory {
 
     /**
      * Constructor de la clase ServiceFactory.
-     * 
+     *
      * @param configService   Servicio de configuración
      * @param databaseManager Gestor de base de datos
      */
@@ -58,34 +59,48 @@ public class ServiceFactory {
         this(configService, databaseManager, new ModuleManager());
     }
 
+    /**
+     * Constructor de la clase ServiceFactory con gestor de módulos.
+     *
+     * @param configService   Servicio de configuración
+     * @param databaseManager Gestor de base de datos
+     * @param moduleManager   Gestor de módulos
+     */
     public ServiceFactory(ConfigService configService, DatabaseManager databaseManager, ModuleManager moduleManager) {
+        this.configService = configService;
         this.databaseManager = databaseManager;
         this.usuarioRepository = new UsuarioRepositoryImpl(databaseManager);
-        this.experienciaRepository = new ExperienciaRepositoryImpl(databaseManager);
         this.penalizacionRepository = new PenalizacionRepositoryImpl(databaseManager);
 
-        this.usuarioService = new UsuarioServiceImpl(usuarioRepository, experienciaRepository, penalizacionRepository);
-        this.experienciaService = new ExperienciaServiceImpl(experienciaRepository);
+        this.usuarioService = new UsuarioServiceImpl(usuarioRepository, penalizacionRepository);
         this.penalizacionService = new PenalizacionServiceImpl(penalizacionRepository);
         ModerationService moderationService = new ModerationServiceImpl(penalizacionService);
 
         this.roleService = new RoleServiceImpl();
-        this.userService = new UserServiceImpl(); // Ajusta según implementación real
+        this.userService = new UserServiceImpl();
         this.aiChatService = new AIChatServiceImpl();
         this.userController = new UserController(userService, aiChatService);
         this.adminController = new AdminController(roleService);
         this.adminCommands = new AdminCommands(adminController);
-        this.userCommands = new UserCommands(userController);
+        this.userCommands = new UserCommands(userController, usuarioService);
 
         this.loggingManager = new LoggingManager();
         this.moduleManager = moduleManager;
-        // Pasa el configService real al BotFacadeImpl
         this.botFacade = new BotFacadeImpl(usuarioService, moderationService, null, databaseManager, configService, moduleManager);
     }
 
     /**
+     * Obtiene el servicio de configuración.
+     *
+     * @return ConfigService
+     */
+    public ConfigService getConfigService() {
+        return configService;
+    }
+
+    /**
      * Obtiene el servicio de usuarios.
-     * 
+     *
      * @return UsuarioService
      */
     public UsuarioService getUsuarioService() {
@@ -93,17 +108,8 @@ public class ServiceFactory {
     }
 
     /**
-     * Obtiene el servicio de experiencia.
-     * 
-     * @return ExperienciaService
-     */
-    public ExperienciaService getExperienciaService() {
-        return experienciaService;
-    }
-
-    /**
      * Obtiene el servicio de penalizaciones.
-     * 
+     *
      * @return PenalizacionService
      */
     public PenalizacionService getPenalizacionService() {
@@ -112,7 +118,7 @@ public class ServiceFactory {
 
     /**
      * Obtiene los comandos de administración.
-     * 
+     *
      * @return AdminCommands
      */
     public AdminCommands getAdminCommands() {
@@ -121,17 +127,16 @@ public class ServiceFactory {
 
     /**
      * Obtiene los comandos de moderación.
-     * 
+     *
      * @return ModCommands
      */
     public ModCommands getModCommands() {
-        // Ahora pasa también la instancia de ServiceFactory
         return new ModCommands(botFacade, this);
     }
 
     /**
      * Obtiene los comandos de usuario.
-     * 
+     *
      * @return UserCommands
      */
     public UserCommands getUserCommands() {
@@ -140,7 +145,7 @@ public class ServiceFactory {
 
     /**
      * Obtiene la fachada principal del bot.
-     * 
+     *
      * @return BotFacade
      */
     public BotFacade getBotFacade() {
@@ -149,7 +154,7 @@ public class ServiceFactory {
 
     /**
      * Obtiene el gestor de base de datos.
-     * 
+     *
      * @return DatabaseManager
      */
     public DatabaseManager getDatabaseManager() {

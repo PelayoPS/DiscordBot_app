@@ -1,10 +1,8 @@
 package bot.services.impl;
 
 import bot.models.Usuario;
-import bot.models.Experiencia;
 import bot.models.Penalizacion;
 import bot.repositories.UsuarioRepository;
-import bot.repositories.ExperienciaRepository;
 import bot.repositories.PenalizacionRepository;
 import bot.services.UsuarioService;
 import java.time.LocalDateTime;
@@ -19,7 +17,6 @@ import java.util.Optional;
  */
 public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
-    private final ExperienciaRepository experienciaRepository;
     private final PenalizacionRepository penalizacionRepository;
 
     /**
@@ -30,11 +27,9 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
      * @param penalizacionRepository Repositorio de penalizaciones
      */
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository,
-            ExperienciaRepository experienciaRepository,
             PenalizacionRepository penalizacionRepository) {
         super(usuarioRepository);
         this.usuarioRepository = usuarioRepository;
-        this.experienciaRepository = experienciaRepository;
         this.penalizacionRepository = penalizacionRepository;
     }
 
@@ -57,22 +52,20 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
      */
     @Override
     public void actualizarExperiencia(Long idUsuario, int puntosXp) {
-        Optional<Experiencia> experienciaOpt = experienciaRepository.findByIdUsuario(idUsuario);
-        if (experienciaOpt.isPresent()) {
-            Experiencia experiencia = experienciaOpt.get();
-            experiencia.setPuntosXp(experiencia.getPuntosXp() + puntosXp);
-
-            // Verificar si debe subir de nivel (cada 100 puntos)
-            if (experiencia.getPuntosXp() >= (experiencia.getNivel() + 1) * 100) {
-                experiencia.setNivel(experiencia.getNivel() + 1);
-            }
-
-            experienciaRepository.save(experiencia);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        Usuario usuario;
+        if (usuarioOpt.isPresent()) {
+            usuario = usuarioOpt.get();
         } else {
-            // Crear nueva experiencia si no existe
-            Experiencia nuevaExperiencia = new Experiencia(null, idUsuario, 1, puntosXp);
-            experienciaRepository.save(nuevaExperiencia);
+            usuario = new Usuario(idUsuario, "MIEMBRO");
         }
+        usuario.setPuntosXp(usuario.getPuntosXp() + puntosXp);
+        // Verificar si debe subir de nivel (cada 100 puntos)
+        if (usuario.getPuntosXp() >= (usuario.getNivel() + 1) * 100) {
+            usuario.setNivel(usuario.getNivel() + 1);
+        }
+        usuario.setTimestampUltimoMensaje(System.currentTimeMillis());
+        usuarioRepository.save(usuario);
     }
 
     /**
@@ -97,16 +90,7 @@ public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implement
         penalizacionRepository.save(penalizacion);
     }
 
-    /**
-     * Guarda o actualiza una entidad Experiencia.
-     *
-     * @param experiencia La entidad Experiencia a guardar.
-     * @return La entidad Experiencia guardada.
-     */
-    @Override
-    public Experiencia saveExperiencia(Experiencia experiencia) {
-        return experienciaRepository.save(experiencia);
-    }
+    // Método saveExperiencia eliminado, ahora la experiencia se gestiona en Usuario
 
     /**
      * Guarda o actualiza una entidad Penalizacion.

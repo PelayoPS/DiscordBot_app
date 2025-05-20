@@ -17,7 +17,7 @@ public class CommandRegistry {
 
     /**
      * Registra un comando.
-     * 
+     *
      * @param command El comando a registrar.
      */
     public void registerCommand(Command command) {
@@ -26,7 +26,7 @@ public class CommandRegistry {
 
     /**
      * Obtiene todos los comandos registrados.
-     * 
+     *
      * @return Lista de comandos registrados.
      */
     public List<Command> getCommands() {

@@ -15,7 +15,7 @@ public class ModerationController {
 
     /**
      * Constructor de la clase ModerationController.
-     * 
+     *
      * @param penalizacionService Servicio de penalizaciones
      */
     public ModerationController(PenalizacionService penalizacionService) {
@@ -24,7 +24,7 @@ public class ModerationController {
 
     /**
      * Obtiene el historial de penalizaciones de un usuario.
-     * 
+     *
      * @param idUsuario ID del usuario
      * @return Lista de penalizaciones
      */
@@ -34,7 +34,7 @@ public class ModerationController {
 
     /**
      * Registra y ejecuta el baneo de un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario a banear
      * @param razon      Razón del baneo
      * @param idAdminMod ID del moderador que ejecuta el baneo
@@ -42,18 +42,16 @@ public class ModerationController {
      */
     public boolean banearUsuario(Long idUsuario, String razon, Long idAdminMod) {
         try {
-            // Aquí se delega al servicio la lógica de registrar la penalización
             penalizacionService.registrarBaneo(idUsuario, razon, idAdminMod);
             return true;
         } catch (Exception e) {
-            // Se recomienda loggear el error en un sistema real
             return false;
         }
     }
 
     /**
      * Registra una advertencia para un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario advertido
      * @param razon      Razón de la advertencia
      * @param idAdminMod ID del moderador que advierte
@@ -70,7 +68,7 @@ public class ModerationController {
 
     /**
      * Registra un silencio (mute) para un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario silenciado
      * @param razon      Razón del silencio
      * @param duracion   Duración del silencio
@@ -88,7 +86,7 @@ public class ModerationController {
 
     /**
      * Registra una expulsión (kick) para un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario expulsado
      * @param razon      Razón de la expulsión
      * @param idAdminMod ID del moderador que expulsa
@@ -105,7 +103,7 @@ public class ModerationController {
 
     /**
      * Registra un desbaneo para un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario desbaneado
      * @param idAdminMod ID del moderador que desbanea
      * @return true si el registro fue exitoso, false en caso contrario
@@ -121,7 +119,7 @@ public class ModerationController {
 
     /**
      * Registra un timeout para un usuario.
-     * 
+     *
      * @param idUsuario  ID del usuario sancionado
      * @param razon      Razón del timeout
      * @param duracion   Duración del timeout
@@ -139,7 +137,7 @@ public class ModerationController {
 
     /**
      * Registra una acción de purga de mensajes.
-     * 
+     *
      * @param idAdminMod ID del moderador que ejecuta la purga
      * @param cantidad   Cantidad de mensajes eliminados
      * @param idCanal    ID del canal donde se realiza la purga

@@ -21,7 +21,7 @@ public class BotStatusDTO {
 
     /**
      * Constructor con todos los campos.
-     * 
+     *
      * @param estado       Estado del bot
      * @param tiempoActivo Tiempo activo del bot
      * @param version      Versión del bot
@@ -38,7 +38,7 @@ public class BotStatusDTO {
 
     /**
      * Obtiene el estado del bot.
-     * 
+     *
      * @return Estado del bot
      */
     public String getEstado() {
@@ -47,7 +47,7 @@ public class BotStatusDTO {
 
     /**
      * Establece el estado del bot.
-     * 
+     *
      * @param estado Estado del bot
      */
     public void setEstado(String estado) {
@@ -56,7 +56,7 @@ public class BotStatusDTO {
 
     /**
      * Obtiene el tiempo activo del bot.
-     * 
+     *
      * @return Tiempo activo
      */
     public String getTiempoActivo() {
@@ -65,7 +65,7 @@ public class BotStatusDTO {
 
     /**
      * Establece el tiempo activo del bot.
-     * 
+     *
      * @param tiempoActivo Tiempo activo
      */
     public void setTiempoActivo(String tiempoActivo) {
@@ -74,7 +74,7 @@ public class BotStatusDTO {
 
     /**
      * Obtiene la versión del bot.
-     * 
+     *
      * @return Versión
      */
     public String getVersion() {
@@ -83,7 +83,7 @@ public class BotStatusDTO {
 
     /**
      * Establece la versión del bot.
-     * 
+     *
      * @param version Versión
      */
     public void setVersion(String version) {
@@ -92,7 +92,7 @@ public class BotStatusDTO {
 
     /**
      * Obtiene el uso de RAM.
-     * 
+     *
      * @return RAM usada
      */
     public String getRam() {
@@ -101,7 +101,7 @@ public class BotStatusDTO {
 
     /**
      * Establece el uso de RAM.
-     * 
+     *
      * @param ram RAM usada
      */
     public void setRam(String ram) {
@@ -110,7 +110,7 @@ public class BotStatusDTO {
 
     /**
      * Obtiene el uso de CPU.
-     * 
+     *
      * @return CPU usada
      */
     public String getCpu() {
@@ -119,7 +119,7 @@ public class BotStatusDTO {
 
     /**
      * Establece el uso de CPU.
-     * 
+     *
      * @param cpu CPU usada
      */
     public void setCpu(String cpu) {

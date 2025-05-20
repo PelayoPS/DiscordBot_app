@@ -13,7 +13,6 @@ import bot.facade.dto.BotTokenDTO;
 import bot.facade.dto.DatabaseStatsDTO;
 import bot.facade.dto.GeminiKeyDTO;
 import bot.facade.dto.TokenInfoDTO;
-import bot.models.Experiencia;
 import bot.facade.dto.ModuleDTO;
 import bot.facade.service.ModuleService;
 
@@ -28,12 +27,23 @@ import bot.facade.service.ModuleService;
 @RestController
 @RequestMapping("/api")
 public class BotRestController {
-    // --- Endpoints de módulos ---
     private final ModuleService moduleService;
+    private final BotFacade botFacade;
+
+    /**
+     * Constructor de la clase BotRestController.
+     *
+     * @param botFacade     Fachada principal del bot
+     * @param moduleService Servicio de módulos
+     */
+    public BotRestController(BotFacade botFacade, ModuleService moduleService) {
+        this.botFacade = botFacade;
+        this.moduleService = moduleService;
+    }
 
     /**
      * Devuelve la lista de módulos y sus comandos.
-     * 
+     *
      * @return ResponseEntity con la lista de módulos
      */
     @GetMapping("/modules")
@@ -43,7 +53,7 @@ public class BotRestController {
 
     /**
      * Activa un módulo por nombre.
-     * 
+     *
      * @param nombre Nombre del módulo
      * @return ModuleDTO actualizado o 404 si no existe
      */
@@ -57,7 +67,7 @@ public class BotRestController {
 
     /**
      * Desactiva un módulo por nombre.
-     * 
+     *
      * @param nombre Nombre del módulo
      * @return ModuleDTO actualizado o 404 si no existe
      */
@@ -71,6 +81,10 @@ public class BotRestController {
 
     /**
      * Activa un comando individual de un módulo.
+     *
+     * @param nombreModulo  Nombre del módulo
+     * @param nombreComando Nombre del comando
+     * @return ResponseEntity vacío o 404 si no existe
      */
     @PostMapping("/modules/{nombreModulo}/commands/{nombreComando}/enable")
     public ResponseEntity<Void> enableCommand(@PathVariable String nombreModulo, @PathVariable String nombreComando) {
@@ -82,6 +96,10 @@ public class BotRestController {
 
     /**
      * Desactiva un comando individual de un módulo.
+     *
+     * @param nombreModulo  Nombre del módulo
+     * @param nombreComando Nombre del comando
+     * @return ResponseEntity vacío o 404 si no existe
      */
     @PostMapping("/modules/{nombreModulo}/commands/{nombreComando}/disable")
     public ResponseEntity<Void> disableCommand(@PathVariable String nombreModulo, @PathVariable String nombreComando) {
@@ -92,8 +110,9 @@ public class BotRestController {
     }
 
     /**
-     * Devuelve información sobre si el token está configurado (pero nunca el valor
-     * real).
+     * Devuelve información sobre si el token está configurado (pero nunca el valor real).
+     *
+     * @return ResponseEntity con información del token
      */
     @GetMapping("/config/bot-token-info")
     public ResponseEntity<TokenInfoDTO> getBotTokenInfo() {
@@ -103,6 +122,8 @@ public class BotRestController {
 
     /**
      * Devuelve la presencia/actividad actual del bot (status, tipo, nombre, url).
+     *
+     * @return ResponseEntity con la presencia del bot
      */
     @GetMapping("/config/presence")
     public ResponseEntity<BotPresenceDTO> getBotPresence() {
@@ -110,22 +131,9 @@ public class BotRestController {
         return ResponseEntity.ok(presence);
     }
 
-    private final BotFacade botFacade;
-
-    /**
-     * Constructor de la clase BotRestController.
-     * 
-     * @param botFacade     Fachada principal del bot
-     * @param moduleService Servicio de módulos
-     */
-    public BotRestController(BotFacade botFacade, ModuleService moduleService) {
-        this.botFacade = botFacade;
-        this.moduleService = moduleService;
-    }
-
     /**
      * Obtiene la información de un usuario por su ID.
-     * 
+     *
      * @param id ID del usuario
      * @return ResponseEntity con el usuario o 404 si no existe
      */
@@ -139,7 +147,7 @@ public class BotRestController {
 
     /**
      * Obtiene el historial de penalizaciones de un usuario.
-     * 
+     *
      * @param id ID del usuario
      * @return ResponseEntity con la lista de penalizaciones
      */
@@ -150,20 +158,20 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener logs filtrados por tipo y fecha.
-     * Ejemplo de uso:
-     * /api/logs?types=INFO&types=ERROR&from=2025-05-01&to=2025-05-06&limit=0
+     *
+     * @param limit Límite de líneas
+     * @return ResponseEntity con la lista de logs
      */
     @GetMapping("/logs")
     public ResponseEntity<List<String>> getLogs(
             @RequestParam(required = false, defaultValue = "0") int limit) {
         List<String> logs = botFacade.getLogs(limit);
-
         return ResponseEntity.ok(logs);
     }
 
     /**
      * Banea a un usuario.
-     * 
+     *
      * @param guildId ID del servidor
      * @param userId  ID del usuario
      * @param reason  Razón del baneo
@@ -176,11 +184,9 @@ public class BotRestController {
         return ResponseEntity.ok().build();
     }
 
-    // --- Control del Bot ---
-
     /**
      * Obtiene el estado extendido del bot.
-     * 
+     *
      * @return ResponseEntity con el estado del bot
      */
     @GetMapping("/bot/status")
@@ -190,7 +196,7 @@ public class BotRestController {
 
     /**
      * Inicia el bot.
-     * 
+     *
      * @return ResponseEntity vacío
      */
     @PostMapping("/bot/start")
@@ -201,7 +207,7 @@ public class BotRestController {
 
     /**
      * Detiene el bot.
-     * 
+     *
      * @return ResponseEntity vacío
      */
     @PostMapping("/bot/stop")
@@ -212,7 +218,7 @@ public class BotRestController {
 
     /**
      * Reinicia el bot.
-     * 
+     *
      * @return ResponseEntity vacío
      */
     @PostMapping("/bot/restart")
@@ -223,7 +229,7 @@ public class BotRestController {
 
     /**
      * Obtiene el estado de las integraciones del bot.
-     * 
+     *
      * @return ResponseEntity con el DTO de integraciones
      */
     @GetMapping("/bot/integraciones")
@@ -233,7 +239,7 @@ public class BotRestController {
 
     /**
      * Endpoint para comprobar si el backend está activo (ping).
-     * 
+     *
      * @return ResponseEntity con status 200 y un mensaje simple
      */
     @GetMapping("/botfacade/ping")
@@ -241,11 +247,9 @@ public class BotRestController {
         return ResponseEntity.ok("pong");
     }
 
-    // --- Entity Management Endpoints ---
-
     /**
      * Endpoint para añadir un nuevo usuario.
-     * 
+     *
      * @param usuario El objeto Usuario a añadir (en el cuerpo de la petición).
      * @return ResponseEntity con el Usuario creado o error si falla.
      */
@@ -264,31 +268,9 @@ public class BotRestController {
     }
 
     /**
-     * Endpoint para añadir o actualizar la experiencia de un usuario.
-     * 
-     * @param experiencia El objeto Experiencia a añadir/actualizar (en el cuerpo de
-     *                    la petición).
-     * @return ResponseEntity con la Experiencia guardada o error si falla.
-     */
-    @PostMapping("/experiencias")
-    public ResponseEntity<Experiencia> addExperiencia(@RequestBody Experiencia experiencia) {
-        try {
-            Experiencia nuevaExperiencia = botFacade.addExperiencia(experiencia);
-            if (nuevaExperiencia != null) {
-                return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(nuevaExperiencia);
-            } else {
-                return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    /**
      * Endpoint para añadir una nueva penalización.
-     * 
-     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la
-     *                     petición).
+     *
+     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la petición).
      * @return ResponseEntity con la Penalizacion creada o error si falla.
      */
     @PostMapping("/penalizaciones")
@@ -307,6 +289,8 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener los nombres de todas las tablas de la base de datos.
+     *
+     * @return ResponseEntity con la lista de nombres de tablas
      */
     @GetMapping("/db/tables")
     public ResponseEntity<List<String>> getTableNames() {
@@ -315,6 +299,9 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener los nombres de las columnas de una tabla.
+     *
+     * @param tableName Nombre de la tabla
+     * @return ResponseEntity con la lista de nombres de columnas
      */
     @GetMapping("/db/tables/{tableName}/columns")
     public ResponseEntity<List<String>> getTableColumns(@PathVariable String tableName) {
@@ -323,6 +310,9 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener el contenido de una tabla.
+     *
+     * @param tableName Nombre de la tabla
+     * @return ResponseEntity con la lista de filas de la tabla
      */
     @GetMapping("/db/tables/{tableName}/data")
     public ResponseEntity<List<java.util.Map<String, Object>>> getTableData(@PathVariable String tableName) {
@@ -331,7 +321,7 @@ public class BotRestController {
 
     /**
      * Endpoint para obtener estadísticas resumidas de la base de datos.
-     * 
+     *
      * @return ResponseEntity con el DTO de estadísticas
      */
     @GetMapping("/db/stats")
@@ -339,10 +329,10 @@ public class BotRestController {
         return ResponseEntity.ok(botFacade.getDatabaseStats());
     }
 
-    // --- Configuración del Bot ---
-
     /**
      * Devuelve la configuración actual del bot (sin exponer el token).
+     *
+     * @return ResponseEntity con la configuración del bot
      */
     @GetMapping("/config")
     public ResponseEntity<BotConfigDTO> getBotConfig() {
@@ -351,17 +341,19 @@ public class BotRestController {
 
     /**
      * Guarda el token del bot.
+     *
+     * @param dto DTO con el token a guardar
+     * @return ResponseEntity vacío
      */
     @PostMapping("/config/token")
     public ResponseEntity<Void> saveBotToken(@RequestBody BotTokenDTO dto) {
-        // Extrae el valor real del token del JSON recibido
         botFacade.saveBotToken(dto.getToken());
         return ResponseEntity.ok().build();
     }
 
     /**
      * Endpoint para obtener el estado de la clave Gemini.
-     * 
+     *
      * @return ResponseEntity con el DTO de clave Gemini
      */
     @GetMapping("/config/gemini-key-info")
@@ -372,7 +364,7 @@ public class BotRestController {
 
     /**
      * Endpoint para guardar la clave Gemini.
-     * 
+     *
      * @param dto El objeto GeminiKeyDTO con la clave a guardar
      * @return ResponseEntity vacío
      */

@@ -3,16 +3,10 @@
 -- Tabla de Usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id_usuario BIGINT PRIMARY KEY,
-    tipo_usuario VARCHAR(50) NOT NULL
-);
-
--- Tabla de Experiencia
-CREATE TABLE IF NOT EXISTS experiencias (
-    id_experiencia BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario BIGINT UNIQUE NOT NULL,
+    tipo_usuario VARCHAR(50) NOT NULL,
     nivel INT NOT NULL DEFAULT 1,
     puntos_xp INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+    timestamp_ultimo_mensaje BIGINT
 );
 
 -- Tabla de Penalizaciones

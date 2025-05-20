@@ -35,9 +35,10 @@ public class Kick implements Command {
     }
 
     /**
-     * Expulsa a un usuario.
+     * Ejecuta la lógica del comando cuando es invocado por un usuario.
+     * Verifica permisos y solicita la expulsión del usuario.
      * 
-     * @param event El evento de interacción del comando.
+     * @param event El evento de interacción del comando
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
@@ -46,29 +47,22 @@ public class Kick implements Command {
             return;
         }
 
-        // Obtiene el usuario a expulsar
         User user = event.getOption("usuario").getAsUser();
-
-        // Obtiene la razón de la expulsión
         String razon = event.getOption("razon") != null ? event.getOption("razon").getAsString() : "No especificada";
 
-        // Usar la fachada para expulsar
         botFacade.kickUser(event.getGuild().getId(), user.getId(), razon);
         Long idUsuario = Long.valueOf(user.getId());
         Long idAdminMod = Long.valueOf(event.getUser().getId());
-        // Registrar usuario si no existe
         var usuarioService = serviceFactory.getUsuarioService();
         if (usuarioService.findById(idUsuario).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
         }
-        // Registrar admin/mod si no existe
         if (usuarioService.findById(idAdminMod).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
         }
         event.getGuild().kick(user).reason(razon).queue(
                 success -> {
                     event.reply("Usuario expulsado correctamente").setEphemeral(true).queue();
-                    // Guardar penalización en la base de datos
                     serviceFactory.getPenalizacionService().registrarExpulsion(idUsuario, razon, idAdminMod);
                 });
     }
@@ -78,11 +72,11 @@ public class Kick implements Command {
      * 
      * @return SlashCommandData La información del comando de slash.
      */
+    @Override
     public SlashCommandData getSlash() {
-        SlashCommandData slash = Commands.slash("kick", "Expulsa a un usuario")
+        return Commands.slash("kick", "Expulsa a un usuario")
                 .addOption(OptionType.USER, "usuario", "El usuario a expulsar", true)
                 .addOption(OptionType.STRING, "razon", "La razón de la expulsión", false);
-        return slash;
     }
 
     /**
@@ -90,6 +84,7 @@ public class Kick implements Command {
      * 
      * @return El nombre del comando
      */
+    @Override
     public String getName() {
         return name;
     }

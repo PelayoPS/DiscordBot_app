@@ -34,4 +34,5 @@ public class ModuleManager {
     public Map<String, EventListener> getModules() {
         return modules;
     }
+
 }

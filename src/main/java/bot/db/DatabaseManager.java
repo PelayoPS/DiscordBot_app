@@ -21,7 +21,7 @@ public class DatabaseManager {
 
     /**
      * Constructor de la clase DatabaseManager.
-     * 
+     *
      * @param configService Servicio de configuración para obtener los datos de
      *                      conexión
      */
@@ -31,14 +31,13 @@ public class DatabaseManager {
             createDatabaseIfNotExists();
         } catch (SQLException e) {
             logger.logError("Error al crear o verificar la base de datos durante la inicialización. El bot continuará sin conexión a BD activa.", e);
-            // No relanzar la excepción para permitir que la aplicación continúe
         }
     }
 
     /**
      * Obtiene una conexión a la base de datos.
      * Si la conexión no existe o está cerrada, la crea.
-     * 
+     *
      * @return Conexión a la base de datos
      * @throws SQLException si ocurre un error al conectar
      */
@@ -59,7 +58,7 @@ public class DatabaseManager {
 
     /**
      * Crea la base de datos si no existe.
-     * 
+     *
      * @throws SQLException si hay un error al crear la base de datos
      */
     private void createDatabaseIfNotExists() throws SQLException {

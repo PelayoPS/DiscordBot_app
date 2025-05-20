@@ -49,8 +49,7 @@ public class AIChat implements Command {
     /**
      * Constructor de la clase AIChat.
      * 
-     * @param userController Controlador de usuario para gestionar la sesión de chat
-     *                       IA
+     * @param userController Controlador de usuario para gestionar la sesión de chat IA
      */
     public AIChat(UserController userController) {
         this.userController = userController;
@@ -296,8 +295,7 @@ public class AIChat implements Command {
     }
 
     /**
-     * Envía una respuesta fragmentada al canal si excede el límite de caracteres de
-     * Discord.
+     * Envía una respuesta fragmentada al canal si excede el límite de caracteres de Discord.
      * 
      * @param canal   Canal de hilo de Discord
      * @param mensaje Mensaje a enviar

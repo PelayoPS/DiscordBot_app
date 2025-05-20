@@ -48,7 +48,14 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Usuario, Long> imp
     protected Usuario mapResultSetToEntity(ResultSet rs) throws SQLException {
         Long idUsuario = rs.getLong("id_usuario");
         String tipoUsuario = rs.getString("tipo_usuario");
-        return new Usuario(idUsuario, tipoUsuario);
+        int nivel = rs.getInt("nivel");
+        int puntosXp = rs.getInt("puntos_xp");
+        long timestampUltimoMensaje = rs.getLong("timestamp_ultimo_mensaje");
+        Usuario usuario = new Usuario(idUsuario, tipoUsuario);
+        usuario.setNivel(nivel);
+        usuario.setPuntosXp(puntosXp);
+        usuario.setTimestampUltimoMensaje(timestampUltimoMensaje);
+        return usuario;
     }
 
     /**
@@ -58,6 +65,9 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Usuario, Long> imp
     protected void setStatementParameters(PreparedStatement stmt, Usuario usuario) throws SQLException {
         stmt.setLong(1, usuario.getIdUsuario());
         stmt.setString(2, usuario.getTipoUsuario());
+        stmt.setInt(3, usuario.getNivel());
+        stmt.setInt(4, usuario.getPuntosXp());
+        stmt.setLong(5, usuario.getTimestampUltimoMensaje());
     }
 
     /**
@@ -69,11 +79,11 @@ public class UsuarioRepositoryImpl extends AbstractRepository<Usuario, Long> imp
     @Override
     public Usuario save(Usuario usuario) {
         try (var conn = getConnection()) {
-            String sql = "INSERT INTO usuarios (id_usuario, tipo_usuario) VALUES (?, ?) " +
-                    "ON DUPLICATE KEY UPDATE tipo_usuario = ?";
+            String sql = "INSERT INTO usuarios (id_usuario, tipo_usuario, nivel, puntos_xp, timestamp_ultimo_mensaje) " +
+                    "VALUES (?, ?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE tipo_usuario = VALUES(tipo_usuario), nivel = VALUES(nivel), puntos_xp = VALUES(puntos_xp), timestamp_ultimo_mensaje = VALUES(timestamp_ultimo_mensaje)";
             try (var stmt = conn.prepareStatement(sql)) {
                 setStatementParameters(stmt, usuario);
-                stmt.setString(3, usuario.getTipoUsuario());
                 stmt.executeUpdate();
                 return usuario;
             }

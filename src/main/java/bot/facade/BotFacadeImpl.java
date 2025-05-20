@@ -1,4 +1,3 @@
-
 package bot.facade;
 import bot.commands.ModuleManager;
 
@@ -8,7 +7,6 @@ import bot.modules.CommandManager;
 import bot.log.LoggingManager;
 import bot.models.Usuario;
 import bot.models.Penalizacion;
-import bot.models.Experiencia;
 import bot.config.ConfigManager;
 import bot.config.ConfigService;
 
@@ -46,9 +44,13 @@ import java.util.Properties;
 @Service
 public class BotFacadeImpl implements BotFacade {
 
+    /**
+     * Devuelve la presencia/actividad actual del bot.
+     *
+     * @return BotPresenceDTO con la presencia actual del bot
+     */
     @Override
     public BotPresenceDTO getBotPresence() {
-        // Implementación de ejemplo, ajustar según lógica real
         return new BotPresenceDTO("online", "PLAYING", "DiscordBot", null);
     }
 
@@ -96,7 +98,6 @@ public class BotFacadeImpl implements BotFacade {
     @Override
     public synchronized void startBot() {
         if (botInstance == null) {
-            // Cargar configuración
             String token = configService.get("token");
             ServiceFactory serviceFactory = new ServiceFactory(configService, databaseManager);
             botInstance = new Bot(token, serviceFactory, databaseManager, moduleManager);
@@ -123,7 +124,6 @@ public class BotFacadeImpl implements BotFacade {
     @Override
     public synchronized void restartBot() {
         stopBot();
-        // Recargar configuración si es necesario
         ConfigManager config = new ConfigManager();
         config.loadConfig();
         startBot();
@@ -131,8 +131,8 @@ public class BotFacadeImpl implements BotFacade {
     }
 
     /**
-     * Recupera el estado actual del bot (por ejemplo, RUNNING, STOPPED).
-     * 
+     * Recupera el estado actual del bot.
+     *
      * @return String representando el estado del bot.
      */
     @Override
@@ -143,8 +143,8 @@ public class BotFacadeImpl implements BotFacade {
     }
 
     /**
-     * Devuelve información extendida del estado del bot (DTO).
-     * 
+     * Devuelve información extendida del estado del bot.
+     *
      * @return BotStatusDTO con información extendida del estado.
      */
     @Override
@@ -201,7 +201,7 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Recupera la información de un usuario por su ID de Discord.
-     * 
+     *
      * @param discordUserId El ID de Discord del usuario.
      * @return Usuario o null si no existe.
      */
@@ -220,7 +220,7 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Banea a un usuario de un servidor específico.
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a banear.
      * @param reason        La razón del baneo.
@@ -232,73 +232,63 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Expulsa a un usuario de un servidor específico.
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a expulsar.
      * @param reason        La razón de la expulsión.
      */
-
-    // Método extra, ya no en la interfaz
     public void kickUser(String guildId, String discordUserId, String reason) {
         moderationService.expulsarUsuario(Long.parseLong(discordUserId), reason, null);
     }
 
     /**
      * Advierte a un usuario (warn).
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a advertir.
      * @param reason        La razón de la advertencia.
      */
-
-    // Método extra, ya no en la interfaz
     public void warnUser(String guildId, String discordUserId, String reason) {
         moderationService.advertirUsuario(Long.parseLong(discordUserId), reason, null);
     }
 
     /**
      * Silencia (mute) a un usuario.
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a silenciar.
      * @param reason        La razón del silencio.
      * @param duration      Duración del silencio.
      */
-
-    // Método extra, ya no en la interfaz
     public void muteUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.silenciarUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
 
     /**
      * Aplica timeout a un usuario.
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario.
      * @param reason        La razón del timeout.
      * @param duration      Duración del timeout.
      */
-
-    // Método extra, ya no en la interfaz
     public void timeoutUser(String guildId, String discordUserId, String reason, Duration duration) {
         moderationService.timeoutUsuario(Long.parseLong(discordUserId), reason, duration, null);
     }
 
     /**
      * Desbanea a un usuario.
-     * 
+     *
      * @param guildId       El ID del servidor.
      * @param discordUserId El ID de Discord del usuario a desbanear.
      */
-
-    // Método extra, ya no en la interfaz
     public void unbanUser(String guildId, String discordUserId) {
         moderationService.desbanearUsuario(Long.parseLong(discordUserId), null);
     }
 
     /**
      * Obtiene el historial de penalizaciones de un usuario.
-     * 
+     *
      * @param discordUserId El ID de Discord del usuario.
      * @return Lista de penalizaciones del usuario.
      */
@@ -317,27 +307,23 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Registra una purga de mensajes.
-     * 
+     *
      * @param guildId     El ID del servidor.
      * @param channelId   El ID del canal.
      * @param moderatorId El ID del moderador.
      * @param amount      Cantidad de mensajes eliminados.
      */
-
-    // Método extra, ya no en la interfaz
     public void purgeMessages(String guildId, String channelId, String moderatorId, int amount) {
         moderationService.registrarPurge(Long.parseLong(moderatorId), amount, Long.parseLong(channelId));
     }
 
     /**
      * Ejecuta un comando del bot programáticamente.
-     * 
+     *
      * @param commandName El nombre del comando.
      * @param args        Argumentos del comando.
      * @return Resultado de la ejecución del comando.
      */
-
-    // Método extra, ya no en la interfaz
     public String executeCommand(String commandName, String... args) {
         logger.logInfo("FACADE: Executing command '" + commandName + "' with args: " + String.join(", ", args));
         return commandManager.getCommands().stream()
@@ -351,13 +337,8 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Recupera los logs de la aplicación filtrados por fecha y tipo.
-     * 
-     * @param types Lista de tipos de log (INFO, WARN, ERROR, DEBUG, opcional). Si
-     *              es null o vacía, se devuelven todos los tipos.
-     * @param limit Máximo número de entradas. Si es 0 o negativo, devuelve todas
-     *              las coincidentes.
-     * @param from  Fecha inicial en formato yyyy-MM-dd (opcional).
-     * @param to    Fecha final en formato yyyy-MM-dd (opcional).
+     *
+     * @param limit Máximo número de entradas.
      * @return Lista de logs como String.
      */
     @Override
@@ -408,7 +389,8 @@ public class BotFacadeImpl implements BotFacade {
                 var rs1 = stmt.executeQuery("SELECT COUNT(*) FROM usuarios");
                 if (rs1.next())
                     userCount = rs1.getLong(1);
-                var rs2 = stmt.executeQuery("SELECT COUNT(*) FROM experiencias");
+                // Ahora la experiencia se almacena en la tabla usuarios
+                var rs2 = stmt.executeQuery("SELECT SUM(puntos_xp) FROM usuarios");
                 if (rs2.next())
                     experienceCount = rs2.getLong(1);
                 var rs3 = stmt.executeQuery("SELECT COUNT(*) FROM penalizaciones");
@@ -483,7 +465,7 @@ public class BotFacadeImpl implements BotFacade {
 
     /**
      * Comprueba el estado de la API de IA.
-     * 
+     *
      * @return Array con el estado y mensaje de la API de IA.
      */
     private String[] comprobarAiApiStruct() {
@@ -500,7 +482,11 @@ public class BotFacadeImpl implements BotFacade {
         }
     }
 
-    // --- Configuración del Bot ---
+    /**
+     * Obtiene la configuración general del bot (sin exponer el token).
+     *
+     * @return BotConfigDTO con la configuración general
+     */
     @Override
     public BotConfigDTO getBotConfig() {
         BotConfigDTO dto = new BotConfigDTO();
@@ -510,14 +496,23 @@ public class BotFacadeImpl implements BotFacade {
         return dto;
     }
 
+    /**
+     * Guarda el token del bot.
+     *
+     * @param token Token de Discord
+     */
     @Override
     public void saveBotToken(String token) {
         configService.set("token", token);
         configService.save();
     }
 
-    // --- Entity Management ---
-
+    /**
+     * Añade un nuevo usuario.
+     *
+     * @param usuario Usuario a añadir
+     * @return Usuario añadido
+     */
     @Override
     public Usuario addUsuario(Usuario usuario) {
         if (usuario == null) {
@@ -533,21 +528,12 @@ public class BotFacadeImpl implements BotFacade {
         }
     }
 
-    @Override
-    public Experiencia addExperiencia(Experiencia experiencia) {
-        if (experiencia == null) {
-            logger.logWarn("Intento de añadir una experiencia nula.");
-            return null; // O lanzar IllegalArgumentException
-        }
-        try {
-            return usuarioService.saveExperiencia(experiencia);
-        } catch (Exception e) {
-            logger.logError("Error al añadir experiencia para el usuario: " + experiencia.getIdUsuario(), e);
-            // Considerar lanzar una excepción personalizada
-            return null;
-        }
-    }
-
+    /**
+     * Añade una nueva penalización al sistema.
+     *
+     * @param penalizacion El objeto Penalizacion a añadir.
+     * @return La Penalizacion guardada, o null si ocurre un error.
+     */
     @Override
     public Penalizacion addPenalizacion(Penalizacion penalizacion) {
         if (penalizacion == null) {
@@ -570,6 +556,11 @@ public class BotFacadeImpl implements BotFacade {
         }
     }
 
+    /**
+     * Devuelve los nombres de todas las tablas de la base de datos.
+     *
+     * @return Lista de nombres de tablas.
+     */
     @Override
     public List<String> getTableNames() {
         List<String> tableNames = new ArrayList<>();
@@ -590,6 +581,12 @@ public class BotFacadeImpl implements BotFacade {
         return tableNames;
     }
 
+    /**
+     * Devuelve los nombres de las columnas de una tabla.
+     *
+     * @param tableName Nombre de la tabla.
+     * @return Lista de nombres de columnas.
+     */
     @Override
     public List<String> getTableColumns(String tableName) {
         List<String> columns = new ArrayList<>();
@@ -614,6 +611,12 @@ public class BotFacadeImpl implements BotFacade {
         return columns;
     }
 
+    /**
+     * Devuelve el contenido de una tabla (todas las filas).
+     *
+     * @param tableName Nombre de la tabla.
+     * @return Lista de mapas (columna -> valor) por cada fila.
+     */
     @Override
     public List<java.util.Map<String, Object>> getTableData(String tableName) {
         List<java.util.Map<String, Object>> results = new ArrayList<>();
@@ -644,19 +647,33 @@ public class BotFacadeImpl implements BotFacade {
         return results;
     }
 
-    // --- Seguridad: nunca exponer el token real ---
+    /**
+     * Indica si el token del bot está configurado (sin exponer el valor).
+     *
+     * @return true si el token está configurado, false en caso contrario
+     */
     @Override
     public boolean hasBotToken() {
         String token = configService.get("token");
         return token != null && !token.isBlank();
     }
 
+    /**
+     * Indica si la clave Gemini está configurada (sin exponer el valor).
+     *
+     * @return true si la clave está configurada, false en caso contrario
+     */
     @Override
     public boolean hasGeminiKey() {
         String key = configService.get("gemini.api.key");
         return key != null && !key.isBlank();
     }
 
+    /**
+     * Guarda la clave Gemini.
+     *
+     * @param key Clave Gemini
+     */
     @Override
     public void saveGeminiKey(String key) {
         configService.set("gemini.api.key", key);

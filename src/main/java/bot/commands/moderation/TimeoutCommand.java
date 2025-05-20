@@ -71,14 +71,12 @@ public class TimeoutCommand implements Command {
         var duration = event.getOption("duracion").getAsInt();
         var reason = event.getOption("razon") != null ? event.getOption("razon").getAsString()
                 : "No se proporcionó razón";
-        // Registrar usuario si no existe
         Long idUsuario = Long.valueOf(target.getId());
         Long idAdminMod = Long.valueOf(event.getUser().getId());
         var usuarioService = serviceFactory.getUsuarioService();
         if (usuarioService.findById(idUsuario).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
         }
-        // Registrar admin/mod si no existe
         if (usuarioService.findById(idAdminMod).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
         }

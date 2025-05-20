@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig {
     /**
      * Bean que configura las reglas de CORS para la aplicación.
-     * 
+     *
      * @return WebMvcConfigurer con la configuración de CORS
      */
     @Bean
@@ -24,13 +24,13 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             /**
              * Configura las reglas de mapeo de CORS.
-             * 
+             *
              * @param registry CorsRegistry para definir las reglas de CORS
              */
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // Puedes poner aquí la IP de tu móvil o PC para más seguridad
+                        .allowedOrigins("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "FETCH")
                         .allowedHeaders("*");
             }

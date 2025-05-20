@@ -38,9 +38,10 @@ public class Mute implements Command {
     }
 
     /**
-     * Silencia a un usuario.
+     * Ejecuta la lógica del comando cuando es invocado por un usuario.
+     * Verifica permisos y solicita el silencio del usuario.
      * 
-     * @param event El evento de interacción del comando.
+     * @param event El evento de interacción del comando
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
@@ -49,46 +50,35 @@ public class Mute implements Command {
             return;
         }
 
-        // Obtiene el miembro a silenciar directamente desde la opción
         Member member = event.getOption("usuario").getAsMember();
         if (member == null) {
             event.reply("El usuario no está en el servidor o no se puede encontrar.").setEphemeral(true).queue();
             return;
         }
         User user = member.getUser();
-
-        // Obtiene la razón del silencio
         String razon = event.getOption("razon") != null ? event.getOption("razon").getAsString() : "No especificada";
-
-        // Obtiene el tiempo del silencio
         Duration tiempo = parseTime(event.getOption("tiempo").getAsString());
 
-        // Registrar usuario si no existe
         Long idUsuario = Long.valueOf(user.getId());
         Long idAdminMod = Long.valueOf(event.getUser().getId());
         var usuarioService = serviceFactory.getUsuarioService();
         if (usuarioService.findById(idUsuario).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
         }
-        // Registrar admin/mod si no existe
         if (usuarioService.findById(idAdminMod).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
         }
-        // Usar la fachada para silenciar
         botFacade.muteUser(event.getGuild().getId(), user.getId(), razon, tiempo);
 
-        // Comprobar si el miembro es moderador/admin
         if (member.hasPermission(Permission.ADMINISTRATOR) || member.isOwner()) {
             event.reply("No puedes silenciar a un administrador o al dueño del servidor.").setEphemeral(true).queue();
             return;
         }
-        // Comprobar si el bot tiene permisos suficientes
         if (!event.getGuild().getSelfMember().canInteract(member)) {
             event.reply("No puedo silenciar a este usuario porque su rol es igual o superior al mío.").setEphemeral(true).queue();
             return;
         }
 
-        // Aplicar el mute
         member.timeoutFor(tiempo).reason(razon).queue(
                 success -> {
                     event.reply("Usuario silenciado correctamente").setEphemeral(true).queue();
@@ -106,6 +96,7 @@ public class Mute implements Command {
      * 
      * @return SlashCommandData La información del comando de slash.
      */
+    @Override
     public SlashCommandData getSlash() {
         SlashCommandData slash = Commands.slash("mute", "Silencia a un usuario")
                 .addOption(OptionType.USER, "usuario", "El usuario a silenciar", true)
@@ -146,6 +137,7 @@ public class Mute implements Command {
      * 
      * @return El nombre del comando
      */
+    @Override
     public String getName() {
         return name;
     }

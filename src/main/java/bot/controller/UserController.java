@@ -17,7 +17,7 @@ public class UserController {
 
     /**
      * Constructor de la clase UserController.
-     * 
+     *
      * @param userService   Servicio de usuarios
      * @param aiChatService Servicio de chat IA
      */
@@ -28,7 +28,7 @@ public class UserController {
 
     /**
      * Obtiene la URL del avatar de un usuario.
-     * 
+     *
      * @param user Usuario de Discord
      * @return URL del avatar
      */
@@ -38,7 +38,7 @@ public class UserController {
 
     /**
      * Inicia un chat IA en un canal de hilo.
-     * 
+     *
      * @param thread Canal de hilo
      * @param user   Usuario de Discord
      * @param prompt Mensaje inicial para el chat IA

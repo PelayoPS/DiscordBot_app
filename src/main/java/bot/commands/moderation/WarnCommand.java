@@ -69,14 +69,12 @@ public class WarnCommand implements Command {
         var target = event.getOption("usuario").getAsMember();
         var reason = event.getOption("razon").getAsString();
 
-        // Registrar usuario si no existe
         Long idUsuario = Long.valueOf(target.getId());
         Long idAdminMod = Long.valueOf(event.getUser().getId());
         var usuarioService = serviceFactory.getUsuarioService();
         if (usuarioService.findById(idUsuario).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
         }
-        // Registrar admin/mod si no existe
         if (usuarioService.findById(idAdminMod).isEmpty()) {
             usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
         }
@@ -84,7 +82,6 @@ public class WarnCommand implements Command {
         botFacade.warnUser(event.getGuild().getId(), target.getId(), reason);
         event.reply("Se ha advertido a " + target.getAsMention() + " por: " + reason).queue();
 
-        // Guardar penalización en la base de datos
         serviceFactory.getPenalizacionService().registrarAdvertencia(idUsuario, reason, idAdminMod);
     }
 }

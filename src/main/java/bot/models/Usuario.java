@@ -12,7 +12,9 @@ import java.util.List;
 public class Usuario {
     private Long idUsuario;
     private String tipoUsuario;
-    private Experiencia experiencia;
+    private int nivel;
+    private int puntosXp;
+    private long timestampUltimoMensaje;
     private List<Penalizacion> penalizaciones;
 
     /**
@@ -21,9 +23,13 @@ public class Usuario {
      * @param idUsuario   ID del usuario
      * @param tipoUsuario Tipo de usuario
      */
+
     public Usuario(Long idUsuario, String tipoUsuario) {
         this.idUsuario = idUsuario;
         this.tipoUsuario = tipoUsuario;
+        this.nivel = 1;
+        this.puntosXp = 0;
+        this.timestampUltimoMensaje = 0L;
         this.penalizaciones = new ArrayList<>();
     }
 
@@ -34,13 +40,7 @@ public class Usuario {
      * @param tipoUsuario Tipo de usuario
      * @param experiencia Experiencia asociada
      */
-    public Usuario(Long idUsuario, String tipoUsuario, Experiencia experiencia) {
-        this.idUsuario = idUsuario;
-        this.tipoUsuario = tipoUsuario;
-        this.experiencia = experiencia;
-        this.experiencia.setUsuario(this);
-        this.penalizaciones = new ArrayList<>();
-    }
+    // El constructor con Experiencia se elimina, ya no es necesario
 
     /**
      * Obtiene el ID del usuario.
@@ -69,22 +69,28 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
-    /**
-     * Obtiene la experiencia asociada al usuario.
-     * 
-     * @return Experiencia
-     */
-    public Experiencia getExperiencia() {
-        return experiencia;
+    public int getNivel() {
+        return nivel;
     }
 
-    /**
-     * Establece la experiencia asociada al usuario.
-     * 
-     * @param experiencia Experiencia a asociar
-     */
-    public void setExperiencia(Experiencia experiencia) {
-        this.experiencia = experiencia;
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+
+    public int getPuntosXp() {
+        return puntosXp;
+    }
+
+    public void setPuntosXp(int puntosXp) {
+        this.puntosXp = puntosXp;
+    }
+
+    public long getTimestampUltimoMensaje() {
+        return timestampUltimoMensaje;
+    }
+
+    public void setTimestampUltimoMensaje(long timestampUltimoMensaje) {
+        this.timestampUltimoMensaje = timestampUltimoMensaje;
     }
 
     /**

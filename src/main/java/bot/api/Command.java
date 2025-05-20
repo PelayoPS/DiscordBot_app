@@ -11,15 +11,16 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  * @author PelayoPS
  */
 public interface Command {
+
     /**
-     * Ejecuta el comando.
+     * Ejecuta la lógica del comando cuando es invocado por un usuario.
      * 
      * @param event El evento de interacción del comando
      */
     void execute(SlashCommandInteractionEvent event);
 
     /**
-     * Obtiene los datos para registrar el comando slash.
+     * Obtiene los datos necesarios para registrar el comando slash en Discord.
      * 
      * @return Los datos del comando slash
      */

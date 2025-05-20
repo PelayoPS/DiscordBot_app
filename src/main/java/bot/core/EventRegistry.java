@@ -17,7 +17,7 @@ public class EventRegistry {
 
     /**
      * Registra un listener de eventos.
-     * 
+     *
      * @param listener El listener a registrar.
      */
     public void registerEventListener(EventListener listener) {
@@ -26,7 +26,7 @@ public class EventRegistry {
 
     /**
      * Obtiene todos los listeners registrados.
-     * 
+     *
      * @return Lista de listeners registrados.
      */
     public List<EventListener> getEventListeners() {

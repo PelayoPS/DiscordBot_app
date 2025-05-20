@@ -64,7 +64,6 @@ public class Ban implements Command {
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        // Verificar permisos
         if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
             event.reply("No tienes permisos para banear usuarios").setEphemeral(true).queue();
             return;
@@ -75,16 +74,13 @@ public class Ban implements Command {
                 : "No se proporcionó razón";
 
         if (target != null) {
-            // Usar la fachada para banear
             botFacade.banUser(event.getGuild().getId(), target.getId(), reason);
             Long idUsuario = Long.valueOf(target.getId());
             Long idAdminMod = Long.valueOf(event.getUser().getId());
-            // Registrar usuario si no existe
             var usuarioService = serviceFactory.getUsuarioService();
             if (usuarioService.findById(idUsuario).isEmpty()) {
                 usuarioService.save(new bot.models.Usuario(idUsuario, "MIEMBRO"));
             }
-            // Registrar admin/mod si no existe
             if (usuarioService.findById(idAdminMod).isEmpty()) {
                 usuarioService.save(new bot.models.Usuario(idAdminMod, "MOD"));
             }

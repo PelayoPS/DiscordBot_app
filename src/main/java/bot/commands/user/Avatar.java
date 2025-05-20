@@ -39,16 +39,13 @@ public class Avatar implements Command {
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        // Obtener el usuario (si no se especifica, usar el autor del comando)
         User targetUser = event.getOption("usuario", event.getUser(), OptionMapping::getAsUser);
         boolean showBanner = event.getOption("banner", false, OptionMapping::getAsBoolean);
 
-        // Usar el controlador para obtener la URL del avatar
         String avatarUrl = userController.obtenerAvatar(targetUser) + "?size=1024";
         MessageEmbed avatarEmbed = buildAvatarEmbed(avatarUrl, targetUser.getAsTag());
 
         if (showBanner) {
-            // Realizar la obtención del banner de forma asíncrona
             event.deferReply().queue();
             targetUser.retrieveProfile().queue(
                     profile -> {

@@ -1,15 +1,24 @@
-
 package bot.facade.service;
 
 import bot.facade.dto.ModuleDTO;
 import java.util.List;
 
+/**
+ * Servicio para la gestión de módulos y comandos del bot.
+ * 
+ * @author PelayoPS
+ */
 public interface ModuleService {
+    /**
+     * Obtiene todos los módulos con sus comandos asociados.
+     *
+     * @return Lista de módulos con comandos
+     */
     List<ModuleDTO> getAllModulesWithCommands();
 
     /**
      * Activa el módulo especificado por nombre.
-     * 
+     *
      * @param nombre Nombre del módulo
      * @return ModuleDTO actualizado, o null si no existe
      */
@@ -17,7 +26,7 @@ public interface ModuleService {
 
     /**
      * Desactiva el módulo especificado por nombre.
-     * 
+     *
      * @param nombre Nombre del módulo
      * @return ModuleDTO actualizado, o null si no existe
      */
@@ -25,7 +34,7 @@ public interface ModuleService {
 
     /**
      * Activa un comando individual de un módulo.
-     * 
+     *
      * @param nombreModulo  Nombre del módulo
      * @param nombreComando Nombre del comando
      * @return true si se activó correctamente, false si no existe
@@ -34,7 +43,7 @@ public interface ModuleService {
 
     /**
      * Desactiva un comando individual de un módulo.
-     * 
+     *
      * @param nombreModulo  Nombre del módulo
      * @param nombreComando Nombre del comando
      * @return true si se desactivó correctamente, false si no existe

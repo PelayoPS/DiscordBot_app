@@ -57,7 +57,6 @@ public class CreateRole implements Command {
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        // Verificar permisos
         if (!event.getMember().hasPermission(Permission.MANAGE_ROLES)) {
             event.reply("No tienes permisos para crear roles").setEphemeral(true).queue();
             return;
@@ -70,8 +69,7 @@ public class CreateRole implements Command {
         if (exito) {
             event.reply("Solicitud de creación de rol enviada correctamente").setEphemeral(true).queue();
         } else {
-            event.reply("No se pudo crear el rol. Verifica el color hexadecimal o los permisos.").setEphemeral(true)
-                    .queue();
+            event.reply("No se pudo crear el rol. Verifica el color hexadecimal o los permisos.").setEphemeral(true).queue();
         }
     }
 }

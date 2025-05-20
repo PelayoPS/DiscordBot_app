@@ -86,4 +86,5 @@ public class ConfigManager {
             logger.logError("Error al guardar el archivo de configuración: " + DEFAULT_CONFIG_PATH, e);
         }
     }
+
 }

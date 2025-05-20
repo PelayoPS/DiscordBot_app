@@ -56,7 +56,6 @@ public class DeleteRole implements Command {
      */
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        // Verificar permisos
         if (!event.getMember().hasPermission(Permission.MANAGE_ROLES)) {
             event.reply("No tienes permisos para eliminar roles").setEphemeral(true).queue();
             return;
