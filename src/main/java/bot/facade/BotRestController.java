@@ -110,7 +110,8 @@ public class BotRestController {
     }
 
     /**
-     * Devuelve información sobre si el token está configurado (pero nunca el valor real).
+     * Devuelve información sobre si el token está configurado (pero nunca el valor
+     * real).
      *
      * @return ResponseEntity con información del token
      */
@@ -270,7 +271,8 @@ public class BotRestController {
     /**
      * Endpoint para añadir una nueva penalización.
      *
-     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la petición).
+     * @param penalizacion El objeto Penalizacion a añadir (en el cuerpo de la
+     *                     petición).
      * @return ResponseEntity con la Penalizacion creada o error si falla.
      */
     @PostMapping("/penalizaciones")
@@ -298,13 +300,13 @@ public class BotRestController {
     }
 
     /**
-     * Endpoint para obtener los nombres de las columnas de una tabla.
+     * Endpoint para obtener los nombres y etiquetas de las columnas de una tabla.
      *
      * @param tableName Nombre de la tabla
-     * @return ResponseEntity con la lista de nombres de columnas
+     * @return ResponseEntity con la lista de columnas (nombre y etiqueta)
      */
     @GetMapping("/db/tables/{tableName}/columns")
-    public ResponseEntity<List<String>> getTableColumns(@PathVariable String tableName) {
+    public ResponseEntity<java.util.List<bot.facade.dto.ColumnDTO>> getTableColumns(@PathVariable String tableName) {
         return ResponseEntity.ok(botFacade.getTableColumns(tableName));
     }
 
@@ -372,6 +374,47 @@ public class BotRestController {
     public ResponseEntity<Void> saveGeminiKey(@RequestBody GeminiKeyDTO dto) {
         botFacade.saveGeminiKey(dto.getKey());
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Endpoint para actualizar un registro de experiencia.
+     *
+     * @param id ID del registro a actualizar
+     * @param experiencia El objeto con los datos actualizados de experiencia
+     * @return ResponseEntity con el registro actualizado o error si falla
+     */
+    @PutMapping("/db/experiencia/{id}")
+    public ResponseEntity<java.util.Map<String, Object>> updateExperiencia(
+            @PathVariable Long id,
+            @RequestBody java.util.Map<String, Object> experiencia) {
+        try {
+            boolean updated = botFacade.updateExperiencia(id, experiencia);
+            if (updated) {
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Endpoint para eliminar un registro de experiencia.
+     *
+     * @param id ID del registro a eliminar
+     * @return ResponseEntity vacío o error si falla
+     */
+    @DeleteMapping("/db/experiencia/{id}")
+    public ResponseEntity<Void> deleteExperiencia(@PathVariable Long id) {
+        try {
+            boolean deleted = botFacade.deleteExperiencia(id);
+            if (deleted) {
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

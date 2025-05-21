@@ -1,4 +1,5 @@
 package bot.facade;
+
 import bot.commands.ModuleManager;
 
 import bot.services.UsuarioService;
@@ -83,7 +84,8 @@ public class BotFacadeImpl implements BotFacade {
      * @param configService     Servicio de configuración (inyectado por Spring)
      */
     public BotFacadeImpl(UsuarioService usuarioService, ModerationService moderationService,
-            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService, ModuleManager moduleManager) {
+            CommandManager commandManager, DatabaseManager databaseManager, ConfigService configService,
+            ModuleManager moduleManager) {
         this.usuarioService = usuarioService;
         this.moderationService = moderationService;
         this.commandManager = commandManager;
@@ -563,6 +565,8 @@ public class BotFacadeImpl implements BotFacade {
      */
     @Override
     public List<String> getTableNames() {
+        // Solo mostrar tablas relevantes para la interfaz
+        List<String> tablasPermitidas = List.of("usuarios", "penalizaciones");
         List<String> tableNames = new ArrayList<>();
         if (databaseManager == null) {
             logger.logError("DatabaseManager no está disponible.", null);
@@ -572,7 +576,10 @@ public class BotFacadeImpl implements BotFacade {
             java.sql.DatabaseMetaData metaData = conn.getMetaData();
             try (java.sql.ResultSet rs = metaData.getTables(null, null, "%", new String[] { "TABLE" })) {
                 while (rs.next()) {
-                    tableNames.add(rs.getString("TABLE_NAME"));
+                    String nombre = rs.getString("TABLE_NAME");
+                    if (tablasPermitidas.contains(nombre)) {
+                        tableNames.add(nombre);
+                    }
                 }
             }
         } catch (java.sql.SQLException e) {
@@ -582,30 +589,25 @@ public class BotFacadeImpl implements BotFacade {
     }
 
     /**
-     * Devuelve los nombres de las columnas de una tabla.
-     *
-     * @param tableName Nombre de la tabla.
-     * @return Lista de nombres de columnas.
+     * Devuelve los nombres y etiquetas de las columnas de una tabla.
+     * 
+     * @param tableName Nombre de la tabla
+     * @return Lista de columnas (nombre y etiqueta)
      */
-    @Override
-    public List<String> getTableColumns(String tableName) {
-        List<String> columns = new ArrayList<>();
-        if (databaseManager == null) {
-            logger.logError("DatabaseManager no está disponible.", null);
-            return columns;
-        }
-        if (tableName == null || tableName.isBlank() || !tableName.matches("[a-zA-Z0-9_]+")) {
-            logger.logError("Nombre de tabla inválido: " + tableName, null);
-            return columns;
-        }
+    public java.util.List<bot.facade.dto.ColumnDTO> getTableColumns(String tableName) {
+        java.util.List<bot.facade.dto.ColumnDTO> columns = new java.util.ArrayList<>();
         try (java.sql.Connection conn = databaseManager.getConnection()) {
             java.sql.DatabaseMetaData metaData = conn.getMetaData();
             try (java.sql.ResultSet rs = metaData.getColumns(null, null, tableName, null)) {
                 while (rs.next()) {
-                    columns.add(rs.getString("COLUMN_NAME"));
+                    String name = rs.getString("COLUMN_NAME");
+                    String label = rs.getString("REMARKS");
+                    if (label == null || label.isEmpty())
+                        label = name;
+                    columns.add(new bot.facade.dto.ColumnDTO(name, label));
                 }
             }
-        } catch (java.sql.SQLException e) {
+        } catch (Exception e) {
             logger.logError("Error al obtener las columnas de la tabla " + tableName, e);
         }
         return columns;
@@ -645,6 +647,87 @@ public class BotFacadeImpl implements BotFacade {
             logger.logError("Error al obtener datos de la tabla " + tableName, e);
         }
         return results;
+    }
+
+    @Override
+    public boolean updateExperiencia(Long id, java.util.Map<String, Object> data) {
+        if (id == null || data == null || data.isEmpty()) {
+            logger.logWarn("ID o datos nulos/vacíos para actualizar experiencia.");
+            return false;
+        }
+        try {
+            Usuario usuario = usuarioService.findById(id).orElse(null);
+            if (usuario == null) {
+                logger.logWarn("No se encontró usuario con ID: " + id + " para actualizar experiencia.");
+                return false;
+            }
+
+            boolean updated = false;
+            if (data.containsKey("puntos_xp")) {
+                Object puntosXpObj = data.get("puntos_xp");
+                if (puntosXpObj instanceof Number) {
+                    usuario.setPuntosXp(((Number) puntosXpObj).intValue());
+                    updated = true;
+                } else if (puntosXpObj instanceof String) {
+                    try {
+                        usuario.setPuntosXp(Integer.parseInt((String) puntosXpObj));
+                        updated = true;
+                    } catch (NumberFormatException e) {
+                        logger.logWarn("Valor de puntos_xp no válido: " + puntosXpObj);
+                    }
+                }
+            }
+            if (data.containsKey("nivel")) {
+                 Object nivelObj = data.get("nivel");
+                if (nivelObj instanceof Number) {
+                    usuario.setNivel(((Number) nivelObj).intValue());
+                    updated = true;
+                } else if (nivelObj instanceof String) {
+                    try {
+                        usuario.setNivel(Integer.parseInt((String) nivelObj));
+                        updated = true;
+                    } catch (NumberFormatException e) {
+                        logger.logWarn("Valor de nivel no válido: " + nivelObj);
+                    }
+                }
+            }
+
+            if (updated) {
+                usuarioService.save(usuario);
+                logger.logInfo("Experiencia actualizada para usuario ID: " + id);
+                return true;
+            } else {
+                logger.logInfo("No se realizaron cambios en la experiencia para el usuario ID: " + id + ". Datos proporcionados: " + data);
+                return false; // O true si se considera éxito no hacer nada. Por ahora false.
+            }
+        } catch (Exception e) {
+            logger.logError("Error al actualizar experiencia para usuario ID: " + id, e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteExperiencia(Long id) {
+        if (id == null) {
+            logger.logWarn("ID nulo para eliminar experiencia.");
+            return false;
+        }
+        try {
+            Usuario usuario = usuarioService.findById(id).orElse(null);
+            if (usuario == null) {
+                logger.logWarn("No se encontró usuario con ID: " + id + " para eliminar/resetear experiencia.");
+                return false;
+            }
+            // En lugar de eliminar el usuario, reseteamos su experiencia.
+            usuario.setPuntosXp(0);
+            usuario.setNivel(0); // Asumiendo que el nivel base es 0 o 1. Ajustar si es necesario.
+            usuarioService.save(usuario);
+            logger.logInfo("Experiencia reseteada para usuario ID: " + id);
+            return true;
+        } catch (Exception e) {
+            logger.logError("Error al eliminar/resetear experiencia para usuario ID: " + id, e);
+            return false;
+        }
     }
 
     /**

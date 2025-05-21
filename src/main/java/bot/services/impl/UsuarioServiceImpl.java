@@ -16,6 +16,27 @@ import java.util.Optional;
  * @author PelayoPS
  */
 public class UsuarioServiceImpl extends AbstractService<Usuario, Long> implements UsuarioService {
+    /**
+     * Guarda o actualiza un usuario, asignando valores por defecto a los campos obligatorios si están vacíos o nulos.
+     *
+     * @param usuario Usuario a guardar
+     * @return Usuario guardado
+     */
+    @Override
+    public Usuario save(Usuario usuario) {
+        // Asignar valores por defecto si están a null o inválidos
+        if (usuario.getTipoUsuario() == null || usuario.getTipoUsuario().isBlank()) {
+            usuario.setTipoUsuario("MIEMBRO");
+        }
+        if (usuario.getNivel() <= 0) {
+            usuario.setNivel(1);
+        }
+        if (usuario.getPuntosXp() < 0) {
+            usuario.setPuntosXp(0);
+        }
+        // timestamp_ultimo_mensaje opcional, no forzamos
+        return usuarioRepository.save(usuario);
+    }
     private final UsuarioRepository usuarioRepository;
     private final PenalizacionRepository penalizacionRepository;
 

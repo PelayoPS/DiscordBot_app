@@ -134,6 +134,18 @@
                 const res = await fetch(screenMap[screen]);
                 const html = await res.text();
                 contentArea.innerHTML = html;
+                // Ejecutar scripts embebidos manualmente (para pantallas dinámicas)
+                const scripts = contentArea.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    document.body.appendChild(newScript);
+                    oldScript.remove();
+                });
                 // Asegura que la pantalla cargada tenga la clase 'active'
                 const firstScreen = contentArea.querySelector('.screen');
                 if (firstScreen) {
@@ -142,9 +154,6 @@
                 // Inicialización específica por pantalla
                 if (screen === 'dashboard' && window.initDashboardBotControls) {
                     window.initDashboardBotControls();
-                }
-                if (screen === 'database' && window.initDatabaseTabs) {
-                    window.initDatabaseTabs();
                 }
                 // Inicialización genérica: busca window.init{Screen}Screen
                 const fnName = 'init' + screen.charAt(0).toUpperCase() + screen.slice(1) + 'Screen';

@@ -134,3 +134,41 @@
     cursor: not-allowed;
     opacity: 0.6;
 }
+
+/* Hover para botones de configuración de módulos */
+.module-config-button:hover {
+    background-color: var(--color-secondary-dark);
+}
+
+/* Override de colores para modo claro */
+body.light-theme .module-icon i {
+    color: var(--color-text-primary);
+}
+
+body.light-theme .command-item {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .command-name {
+    color: var(--color-text-primary);
+}
+
+body.light-theme .module-config-button {
+    background-color: var(--color-secondary);
+    color: var(--color-text-primary);
+}
+
+/* Asegurar que el título y la descripción de los módulos sean negros en el modo claro */
+body.light-theme .module-title h3 {
+    color: var(--color-text-primary);
+}
+
+body.light-theme .module-title p {
+    color: var(--color-text-secondary);
+}
+
+/* Asegurar que el texto de los filtros sea negro en el modo claro */
+body.light-theme .modules-container .modules-filters label,
+body.light-theme .modules-container .modules-filters .filter-label {
+    color: var(--color-text-primary) !important;
+}

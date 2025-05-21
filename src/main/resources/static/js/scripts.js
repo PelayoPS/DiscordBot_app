@@ -30,22 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Inicialización de pestañas en la pantalla de base de datos
-window.initDatabaseTabs = function() {
-    const databaseTabs = document.querySelectorAll('.database-tabs .tab');
-    const databaseTables = document.querySelectorAll('.database-table-container');
-    databaseTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            databaseTabs.forEach(t => t.classList.remove('active'));
-            databaseTables.forEach(table => table.classList.remove('active'));
-            tab.classList.add('active');
-            const tableId = tab.getAttribute('data-tab');
-            const table = document.getElementById(tableId);
-            if (table) {
-                table.classList.add('active');
-            }
-        });
-    });
-};
+
 
 // Muestra notificaciones flotantes
 function showNotification(message, type = 'info') {

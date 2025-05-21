@@ -196,12 +196,12 @@ public interface BotFacade {
     List<String> getTableNames();
 
     /**
-     * Devuelve los nombres de las columnas de una tabla.
+     * Devuelve los nombres y etiquetas de las columnas de una tabla.
      *
-     * @param tableName Nombre de la tabla.
-     * @return Lista de nombres de columnas.
+     * @param tableName Nombre de la tabla
+     * @return Lista de columnas (nombre y etiqueta)
      */
-    List<String> getTableColumns(String tableName);
+    List<bot.facade.dto.ColumnDTO> getTableColumns(String tableName);
 
     /**
      * Devuelve el contenido de una tabla (todas las filas).
@@ -210,6 +210,25 @@ public interface BotFacade {
      * @return Lista de mapas (columna -> valor) por cada fila.
      */
     List<java.util.Map<String, Object>> getTableData(String tableName);
+
+    // --- Database Management (CRUD specific) ---
+
+    /**
+     * Actualiza un registro de experiencia existente.
+     *
+     * @param id El ID del registro de experiencia a actualizar.
+     * @param data Un mapa con los nombres de las columnas y sus nuevos valores.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     */
+    boolean updateExperiencia(Long id, java.util.Map<String, Object> data);
+
+    /**
+     * Elimina un registro de experiencia.
+     *
+     * @param id El ID del registro de experiencia a eliminar.
+     * @return true si la eliminación fue exitosa, false en caso contrario.
+     */
+    boolean deleteExperiencia(Long id);
 
     // --- Configuración del Bot ---
 

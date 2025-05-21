@@ -8,7 +8,13 @@
 
 .database-tabs {
     display: flex;
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    background: var(--color-surface);
+    border-bottom: 2px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
 }
 
 .tab {
@@ -18,42 +24,52 @@
     color: white;
     cursor: pointer;
     margin-right: 2px;
-    padding: 8px 16px;
-    transition: background-color var(--transition-fast);
+    padding: 10px 24px 8px 24px;
+    font-weight: 500;
+    font-size: 1.05em;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.03);
 }
 
 .tab:hover {
     background-color: var(--color-secondary-dark);
+    color: var(--color-primary);
 }
 
 .tab.active {
     background-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.08);
 }
 
 .database-actions {
     align-items: center;
     display: flex;
     gap: 12px;
-    margin-bottom: 16px;
+    margin: 16px 0 16px 0;
+    padding: 0 8px;
 }
 
-.database-table-container {
+.database-table-container, #tables-container {
     background-color: var(--color-surface);
     border-radius: var(--border-radius-md);
     border: 1px solid var(--color-border);
-    display: none;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0 0 16px 0;
+    display: block;
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
 }
 
-.database-table-container.active {
-    display: block;
-    overflow-y: auto;
-}
 
 .database-table {
     border-collapse: collapse;
     width: 100%;
+    background: transparent;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .database-table th {
