@@ -201,6 +201,10 @@ function renderTable(tableName) {
         columns.forEach(column => {
             const td = document.createElement('td');
             let value = row[column.name];
+            // Forzar id_usuario a string siempre
+            if (column.name === 'id_usuario' && value != null) {
+                value = String(value);
+            }
             // Formato especial para timestamp
             if (column.name === 'timestamp_ultimo_mensaje' && value) {
                 try {
@@ -227,9 +231,16 @@ function renderTable(tableName) {
                     }
                     // Actualizar en backend
                     try {
-                        // El id debe ser numérico y obligatorio
-                        const id = row['id_usuario'] || row['id'] || row['usuario'] || row['idUsuario'];
+                        // El id debe ser string y obligatorio
+                        const id = String(row['id_usuario']);
                         if (!id) throw new Error('ID de usuario no encontrado');
+                        // Prueba GET para debug
+                        const testRes = await fetch(`/api/user/${id}`);
+                        if (!testRes.ok) {
+                            showNotification('El usuario no existe en el backend (GET /api/user/' + id + ')', 'error');
+                            td.textContent = row[column.name];
+                            return;
+                        }
                         const payload = {};
                         payload[column.name] = Number(newValue);
                         const res = await fetch(`/api/db/experiencia/${id}`, {
