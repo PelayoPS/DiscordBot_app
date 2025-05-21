@@ -222,7 +222,9 @@ function renderTable(tableName) {
                 td.textContent = value != null ? value : '';
                 td.addEventListener('blur', async function (e) {
                     const newValue = td.textContent.trim();
-                    if (newValue === String(row[column.name])) return;
+                    if (newValue === String(row[column.name])) {
+                      return;
+                    }
                     // Validación básica: solo números
                     if (isNaN(newValue) || newValue === '') {
                         showNotification('Introduce un valor numérico válido', 'warning');
@@ -233,7 +235,9 @@ function renderTable(tableName) {
                     try {
                         // El id debe ser string y obligatorio
                         const id = String(row['id_usuario']);
-                        if (!id) throw new Error('ID de usuario no encontrado');
+                        if (!id) {
+                          throw new Error('ID de usuario no encontrado');
+                        }
                         // Prueba GET para debug
                         const testRes = await fetch(`/api/user/${id}`);
                         if (!testRes.ok) {
@@ -248,7 +252,9 @@ function renderTable(tableName) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload),
                         });
-                        if (!res.ok) throw new Error('Error al actualizar');
+                        if (!res.ok) {
+                          throw new Error('Error al actualizar');
+                        }
                         row[column.name] = Number(newValue);
                         showNotification('Actualizado correctamente', 'success');
                     } catch (err) {
