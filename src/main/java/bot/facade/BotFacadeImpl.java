@@ -214,7 +214,7 @@ public class BotFacadeImpl implements BotFacade {
             if (discordUserId == null || discordUserId.isBlank())
                 return null;
             return usuarioService.findById(Long.parseLong(discordUserId))
-            .orElse(null);
+                    .orElse(null);
         } catch (Exception e) {
             logger.logError("Error al obtener información de usuario", e);
             return null;
@@ -640,7 +640,15 @@ public class BotFacadeImpl implements BotFacade {
             while (rs.next()) {
                 java.util.Map<String, Object> row = new java.util.LinkedHashMap<>();
                 for (int i = 1; i <= columnCount; i++) {
-                    row.put(metaData.getColumnLabel(i), rs.getObject(i));
+                    String columnLabel = metaData.getColumnLabel(i);
+                    Object value = rs.getObject(i);
+                    // Forzar id_usuario a String si la tabla es usuarios
+                    if ("usuarios".equalsIgnoreCase(tableName) && "id_usuario".equalsIgnoreCase(columnLabel)
+                            && value != null) {
+                        row.put(columnLabel, String.valueOf(value));
+                    } else {
+                        row.put(columnLabel, value);
+                    }
                 }
                 results.add(row);
             }
@@ -679,7 +687,7 @@ public class BotFacadeImpl implements BotFacade {
                 }
             }
             if (data.containsKey("nivel")) {
-                 Object nivelObj = data.get("nivel");
+                Object nivelObj = data.get("nivel");
                 if (nivelObj instanceof Number) {
                     usuario.setNivel(((Number) nivelObj).intValue());
                     updated = true;
@@ -698,7 +706,8 @@ public class BotFacadeImpl implements BotFacade {
                 logger.logInfo("Experiencia actualizada para usuario ID: " + id);
                 return true;
             } else {
-                logger.logInfo("No se realizaron cambios en la experiencia para el usuario ID: " + id + ". Datos proporcionados: " + data);
+                logger.logInfo("No se realizaron cambios en la experiencia para el usuario ID: " + id
+                        + ". Datos proporcionados: " + data);
                 return false; // O true si se considera éxito no hacer nada. Por ahora false.
             }
         } catch (Exception e) {

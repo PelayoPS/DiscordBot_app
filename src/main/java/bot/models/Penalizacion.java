@@ -10,9 +10,15 @@ import java.time.Duration;
  * 
  * @author PelayoPS
  */
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 public class Penalizacion {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long idPenalizacion;
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long idUsuario;
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long idAdminMod;
     private String tipo;
     private LocalDateTime fecha;

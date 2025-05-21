@@ -2,6 +2,8 @@ package bot.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * Clase que representa un usuario en el sistema.
@@ -10,6 +12,7 @@ import java.util.List;
  * @author PelayoPS
  */
 public class Usuario {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long idUsuario;
     private String tipoUsuario;
     private int nivel;
