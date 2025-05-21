@@ -213,7 +213,8 @@ public class BotFacadeImpl implements BotFacade {
         try {
             if (discordUserId == null || discordUserId.isBlank())
                 return null;
-            return usuarioService.findById(Long.parseLong(discordUserId)).orElse(null);
+            return usuarioService.findById(Long.parseLong(discordUserId))
+            .orElse(null);
         } catch (Exception e) {
             logger.logError("Error al obtener información de usuario", e);
             return null;

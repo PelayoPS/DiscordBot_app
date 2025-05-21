@@ -204,9 +204,10 @@ window.initDashboardBotControls = function () {
             .then(data => {
                 const dbItems = document.querySelectorAll('.dashboard-card.base-datos .integracion-item');
                 if (dbItems.length >= 4) {
-                    dbItems[0].querySelector('.db-count').textContent = data.userCount;
-                    dbItems[1].querySelector('.db-count').textContent = data.experienceCount;
-                    dbItems[2].querySelector('.db-count').textContent = data.penaltyCount;
+                    // Mantener valores como strings para evitar errores de redondeo con IDs grandes
+                    dbItems[0].querySelector('.db-count').textContent = data.userCount?.toString() || '0';
+                    dbItems[1].querySelector('.db-count').textContent = data.experienceCount?.toString() || '0';
+                    dbItems[2].querySelector('.db-count').textContent = data.penaltyCount?.toString() || '0';
                     const estadoSpan = dbItems[3].querySelector('.db-count');
                     estadoSpan.textContent = data.available ? 'Disponible' : 'No disponible';
                     estadoSpan.classList.remove('disponible', 'no-disponible');
