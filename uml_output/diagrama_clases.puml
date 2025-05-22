@@ -13,8 +13,40 @@ skinparam ArrowColor #b3b3ff
 skinparam shadowing false
 skinparam linetype ortho
 
+' Clases DTO auxiliares y de estado
+package facade.dto {
+  class JdaStatus
+  class AiApiStatus
+  class DatabaseStatus
+}
+
+' Clases de error y respuesta
+class ErrorResponse
+
+' Clases externas relevantes (solo nombres, no métodos)
+class JDA
+class SlashCommandInteractionEvent
+class SlashCommandData
+class MessageEmbed
+class ThreadChannel
+class User
+class Guild
+class Role
+class EventListener
+class Connection
+class HttpClient
+class Gson
+class Logger
+class ScheduledExecutorService
+class Instant
+class Properties
+class List
+class Map
+class Optional
+
 package bot {
   class Main
+  class BotApplication
   package core {
     class Bot
     class CommandRegistry
@@ -46,19 +78,14 @@ package bot {
     package user {
       class Avatar
       class AIChat
+      class Exp
     }
   }
   package modules {
     abstract class CommandManager
-    package admin {
-      class AdminCommands
-    }
-    package mod {
-      class ModCommands
-    }
-    package user {
-      class UserCommands
-    }
+    class AdminCommands
+    class ModCommands
+    class UserCommands
   }
   package db {
     class DatabaseManager
@@ -66,8 +93,10 @@ package bot {
   package config {
     class ConfigManager
     class BotConfig
+    class BotConfigSpring
     class ConfigService
     class FileConfigService
+    class WebConfig
   }
   package log {
     class LoggingManager
@@ -78,6 +107,29 @@ package bot {
   package facade {
     class BotFacade
     class BotFacadeImpl
+    class BotRestController
+    package controller {
+      class CustomErrorController
+    }
+    package dto {
+      class BotConfigDTO
+      class BotIntegracionesDTO
+      class BotPresenceDTO
+      class BotStatusDTO
+      class BotTokenDTO
+      class ColumnDTO
+      class CommandDTO
+      class DatabaseStatsDTO
+      class GeminiKeyDTO
+      class ModuleDTO
+      class TokenInfoDTO
+    }
+    package service {
+      class ModuleService
+      package impl {
+        class ModuleServiceImpl
+      }
+    }
   }
   package controller {
     class AdminController
@@ -85,19 +137,10 @@ package bot {
     class ModerationController
   }
   package listeners {
+    class MessageExperienceListener
     package ai {
       class AIChatThreadListener
       class AIChatListener
-    }
-  }
-  package gui {
-    class LoginApp
-    package controllers {
-      class LoginController
-      class HomeController
-    }
-    package components {
-      class BaseWindowController
     }
   }
   package services {
@@ -114,6 +157,7 @@ package bot {
       class UserServiceImpl
       class RoleServiceImpl
       class PenalizacionServiceImpl
+      class ModerationServiceImpl
       class ExperienciaServiceImpl
       class AIChatServiceImpl
       class AbstractService
@@ -126,21 +170,12 @@ package bot {
     class ExperienciaRepository
     package impl {
       class AbstractRepository
-      class ExperienciaRepositoryImpl
       class PenalizacionRepositoryImpl
       class UsuarioRepositoryImpl
-    }
-  }
-  package adapters {
-    package discord {
-      class Controller
-      class ExperienciaController
-      class PenalizacionController
-      class UsuarioController
+      class ExperienciaRepositoryImpl
     }
   }
   package models {
-    class Experiencia
     class Penalizacion
     class Usuario
   }
@@ -201,10 +236,7 @@ DatabaseManager o-- LoggingManager : agregación
 Utils <.. Bot
 LoggingManager <.. Bot
 
-' GUI
-LoginApp o-- LoginController : agregación
-LoginApp o-- HomeController : agregación
-LoginApp o-- BaseWindowController : agregación
+
 
 ' Servicios y repositorios
 UsuarioServiceImpl ..|> UsuarioService
@@ -220,8 +252,111 @@ AbstractRepository <|-- ExperienciaRepositoryImpl
 AbstractRepository <|-- PenalizacionRepositoryImpl
 AbstractRepository <|-- UsuarioRepositoryImpl
 
-' Ejemplo de composición en modelos
-Usuario *-- Experiencia
 Usuario *-- Penalizacion
+
+' Relaciones DTO auxiliares
+BotIntegracionesDTO *-- JdaStatus
+BotIntegracionesDTO *-- AiApiStatus
+BotIntegracionesDTO *-- DatabaseStatus
+
+' Relaciones de comandos y controladores
+CreateRole --> AdminController
+DeleteRole --> AdminController
+Ban --> BotFacade
+Ban --> ServiceFactory
+HistoryCommand --> BotFacade
+Kick --> BotFacade
+Kick --> ServiceFactory
+Mute --> BotFacade
+Mute --> ServiceFactory
+PurgeCommand --> BotFacade
+TimeoutCommand --> BotFacade
+TimeoutCommand --> ServiceFactory
+Unban --> BotFacade
+WarnCommand --> BotFacade
+WarnCommand --> ServiceFactory
+Avatar --> UserController
+AIChat --> UserController
+Exp --> UsuarioService
+
+' Relaciones de infraestructura y servicios
+Bot --> JDA
+Bot --> ModuleManager
+Bot --> CommandRegistry
+Bot --> EventRegistry
+Bot --> LoggingManager
+Bot --> ServiceFactory
+Bot --> DatabaseManager
+Bot --> JDABuilder
+Bot --> BotFacade
+Bot --> AIChatThreadListener
+CommandRegistry --> Command
+EventRegistry --> EventListener
+ServiceFactory --> ConfigService
+ServiceFactory --> DatabaseManager
+ServiceFactory --> UsuarioRepository
+ServiceFactory --> PenalizacionRepository
+ServiceFactory --> UsuarioService
+ServiceFactory --> PenalizacionService
+ServiceFactory --> RoleService
+ServiceFactory --> UserService
+ServiceFactory --> AIChatService
+ServiceFactory --> AdminCommands
+ServiceFactory --> UserCommands
+ServiceFactory --> AdminController
+ServiceFactory --> UserController
+ServiceFactory --> BotFacade
+ServiceFactory --> LoggingManager
+ServiceFactory --> ModuleManager
+
+' Relaciones de modelos
+Penalizacion --> Usuario : usuario
+Penalizacion --> Usuario : adminMod
+Usuario --> Penalizacion : penalizaciones
+
+
+' Relaciones faltantes detectadas en el diagrama automático
+' Controladores y servicios concretos (no redundantes)
+AdminController --> RoleService
+ModerationController --> PenalizacionService
+UserController --> UserService
+UserController --> AIChatService
+
+' Servicios de implementación y sus repositorios (no redundantes)
+PenalizacionServiceImpl --> PenalizacionRepository
+UsuarioServiceImpl --> UsuarioRepository
+UsuarioServiceImpl --> PenalizacionRepository
+
+' BotRestController y servicios
+BotRestController --> ModuleService
+BotRestController --> BotFacade
+
+' Listeners y servicios (no redundantes)
+MessageExperienceListener --> UsuarioService
+MessageExperienceListener --> ConfigService
+AIChatListener --> UserController
+
+' ModerationServiceImpl y dependencias
+ModerationServiceImpl --> PenalizacionService
+
+' ExperienciaServiceImpl y dependencias
+ExperienciaServiceImpl --> ExperienciaRepository
+
+' UserServiceImpl y dependencias
+UserServiceImpl --> UsuarioRepository
+
+' RoleServiceImpl y dependencias
+RoleServiceImpl --> UsuarioRepository
+
+' ModuleServiceImpl y dependencias
+ModuleServiceImpl --> ModuleService
+
+' Relaciones de herencia/implementación
+BotFacadeImpl ..|> BotFacade
+ModuleServiceImpl ..|> ModuleService
+AIChatServiceImpl ..|> AIChatService
+ModerationServiceImpl ..|> ModerationService
+PenalizacionRepositoryImpl ..|> PenalizacionRepository
+UsuarioRepositoryImpl ..|> UsuarioRepository
 
 @enduml
