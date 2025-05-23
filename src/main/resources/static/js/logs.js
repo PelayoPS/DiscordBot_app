@@ -1,8 +1,13 @@
 // Inicialización de la pantalla de logs
 window.initLogsScreen = function () {
-    const logFilterCheckboxes = document.querySelectorAll('.filter-checkbox input');
+    const filterToggles = document.querySelectorAll('.filter-toggle');
     const dateInputs = document.querySelectorAll('.date-filter input[type="date"]');
     const logsTableBody = document.querySelector('.logs-table tbody');
+    const reloadBtn = document.getElementById('reload-logs-btn');
+    let currentPage = 1;
+    const logsPerPage = 20;
+    let allLogsRaw = [];
+    let allLogsParsed = [];
 
     // Establecer la fecha de hoy por defecto si está vacío
     const today = new Date().toISOString().slice(0, 10);
@@ -12,216 +17,248 @@ window.initLogsScreen = function () {
         }
     });
 
-    async function fetchAndRenderLogs() {
-        // Tipos seleccionados
-        const types = Array.from(logFilterCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => {
-                let t = cb.nextElementSibling.classList[1];
-                if (t.toUpperCase() === "WARNING") {
-                  return "WARN";
+    // Función para animar la recarga
+    function animateReload() {
+        if (reloadBtn) {
+            reloadBtn.classList.add('reloading');
+            const icon = reloadBtn.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'rotate(360deg)';
+            }
+            setTimeout(() => {
+                reloadBtn.classList.remove('reloading');
+                if (icon) {
+                    icon.style.transform = '';
                 }
-                return t.toUpperCase();
-            });
-        // Fechas
-        const fromDate = dateInputs[0].value;
-        const toDate = dateInputs[1].value;
-        // Construir query
-        const params = new URLSearchParams();
-        if (fromDate) {
-            params.append('from', fromDate);
+            }, 1000);
         }
-        if (toDate) {
-            params.append('to', toDate);
-        }
-        if (types.length > 0) {
-            types.forEach(t => params.append('types', t.toUpperCase()));
-        }
-        // Indicar al backend que queremos todos los logs que coincidan con los filtros de tipo/fecha
-        // para realizar la paginación en el frontend.
-        params.append('limit', '0'); 
+    }
 
+    function getActiveTypes() {
+        // Devuelve los tipos activos en mayúsculas para comparación case-insensitive
+        return Array.from(filterToggles)
+            .filter(btn => btn.classList.contains('active'))
+            .map(btn => btn.getAttribute('data-type').toUpperCase());
+    }
+
+    // Función para animar la transición de los filtros
+    function animateFilterTransition(element) {
+        element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        element.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            element.style.transform = 'scale(1)';
+        }, 150);
+    }
+
+    // Usar la función de utilidades global para parsear una línea de log
+    function parseLogLine(line) {
+        return window.logUtils.parseLogEntry(line);
+    }
+
+    // Agrupar líneas de stacktrace antes de parsear
+    function groupLogLines(rawLines) {
+        const grouped = [];
+        const logStartRegex = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/;
+        let current = '';
+        rawLines.forEach(line => {
+            if (logStartRegex.test(line)) {
+                if (current) grouped.push(current);
+                current = line;
+            } else {
+                // Línea de stacktrace o continuación
+                current += '\n' + line;
+            }
+        });
+        if (current) grouped.push(current);
+        return grouped;
+    }
+
+    // Función para filtrar logs por fecha y tipo
+    function filterLogs() {
+        const startDate = document.querySelector('#start-date')?.value;
+        const endDate = document.querySelector('#end-date')?.value;
+        const activeTypes = getActiveTypes();
+        return allLogsParsed.filter(log => {
+            if (!log.isParsed) return true; // Mostrar líneas no parseadas
+            let fechaOk = true;
+            let tipoOk = true;
+            // Comparar fechas como strings YYYY-MM-DD
+            if (startDate) fechaOk = log.fecha >= startDate;
+            if (endDate) fechaOk = fechaOk && log.fecha <= endDate;
+            if (activeTypes.length > 0) tipoOk = activeTypes.includes(log.tipo.toUpperCase());
+            return fechaOk && tipoOk;
+        });
+    }
+
+    // Función para cargar todos los logs del backend
+    async function fetchAllLogs() {
         try {
-            const res = await fetch(`/api/logs?${params.toString()}`);
-            const logs = await res.json();
-            renderLogs(logs); // 'logs' ya es la lista de entradas de log completas
-        } catch (e) {
-            logsTableBody.innerHTML = '<tr><td class="log-cell-main">Error al cargar logs</td></tr>';
+            animateReload();
+            const response = await fetch('/api/logs?limit=0');
+            if (!response.ok) throw new Error('Error al cargar los logs');
+            const data = await response.json();
+            // Usar la función automática para filtrar solo las primeras líneas de cada bloque
+            allLogsParsed = window.logUtils.parseMainLogLines(data);
+            allLogsRaw = data; // Guardar el array original por si se necesita
+        } catch (error) {
+            console.error('Error:', error);
+            allLogsRaw = [];
+            allLogsParsed = [];
         }
     }
 
-    // Hacer fetchAndRenderLogs accesible globalmente para el botón
-    window.reloadLogs = fetchAndRenderLogs;
-
-    // Asignar evento al botón de recargar
-    const reloadBtn = document.getElementById('reload-logs-btn');
-    if (reloadBtn) {
-        reloadBtn.addEventListener('click', fetchAndRenderLogs);
+    // Función para obtener el color del nivel
+    function getLevelColor(tipo) {
+        if (window.logUtils?.getLogTypeColor) {
+            return window.logUtils.getLogTypeColor(tipo);
+        }
+        // Fallback por tipo
+        switch (tipo) {
+            case 'INFO': return '#1976d2';
+            case 'WARN': return '#ff9800';
+            case 'ERROR': return '#e53935';
+            case 'DEBUG': return '#747f8d';
+            default: return '#5865f2';
+        }
     }
 
-    // Función para parsear una línea de log en formato texto plano
-    // Se elimina la función parseLogEntry de aquí, ya que se usará window.logUtils.parseLogEntry
+    // Función para renderizar los logs con animaciones y paginación
+    function renderLogsPage(page) {
+        const filteredLogs = filterLogs();
+        const totalPages = Math.max(1, Math.ceil(filteredLogs.length / logsPerPage));
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        currentPage = page;
+        const startIdx = (currentPage - 1) * logsPerPage;
+        const endIdx = startIdx + logsPerPage;
+        const logsToShow = filteredLogs.slice(startIdx, endIdx);
 
-    function renderLogs(logEntriesFromServer) { // Renombrado para claridad
-        if (!logEntriesFromServer || logEntriesFromServer.length === 0) {
-            logsTableBody.innerHTML = '<tr><td class="log-cell-main" colspan="5">No hay logs para los filtros seleccionados</td></tr>';
-            // Limpiar paginación si no hay logs
-            const paginationContainer = document.querySelector('.pagination');
-            const paginationInfo = document.querySelector('.pagination-info');
-            if (paginationContainer) {
+        if (logsToShow.length === 0) {
+            logsTableBody.innerHTML = '<tr><td colspan="5" class="no-logs-message">No hay logs disponibles</td></tr>';
+        } else {
+            logsTableBody.style.opacity = '0';
+            setTimeout(() => {
+                logsTableBody.innerHTML = '';
+                logsTableBody.style.opacity = '1';
+                logsToShow.forEach((logObject, index) => {
+                    const row = document.createElement('tr');
+                    row.classList.add('log-row-detailed');
+                    if (logObject.isParsed && logObject.tipo) row.classList.add(logObject.tipo.toLowerCase());
+                    row.style.animationDelay = `${index * 50}ms`;
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(10px)';
+                    if (!logObject.isParsed) {
+                        row.innerHTML = `<td class="log-cell-main" colspan="5">${logObject.raw}</td>`;
+                    } else {
+                        let levelColor = getLevelColor(logObject.tipo);
+                        row.innerHTML = `
+                            <td class="log-cell-fecha">${logObject.fecha}</td>
+                            <td class="log-cell-hora">${logObject.hora}</td>
+                            <td class="log-cell-nivel">
+                                <span class="log-level-tag" style="background-color: ${levelColor};">${logObject.tipo}</span>
+                            </td>
+                            <td class="log-cell-origen">${logObject.origen}</td>
+                            <td class="log-cell-mensaje">${logObject.mensaje}</td>
+                        `;
+                    }
+                    logsTableBody.appendChild(row);
+                    row.offsetHeight;
+                    row.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                });
+            }, 200);
+        }
+        updatePagination(totalPages);
+    }
+
+    // Función para actualizar la paginación con animaciones
+    function updatePagination(totalPages) {
+        const paginationContainer = document.querySelector('.pagination');
+        const paginationInfo = document.querySelector('.pagination-info');
+        const prevBtn = paginationContainer?.querySelector('.pagination-button:first-child');
+        const nextBtn = paginationContainer?.querySelector('.pagination-button:last-child');
+        if (!paginationContainer || !paginationInfo || !prevBtn || !nextBtn) {
+            if (paginationContainer) paginationContainer.style.display = 'none';
+            if (paginationInfo) paginationInfo.textContent = '';
+            return;
+        }
+        paginationContainer.style.opacity = '0';
+        setTimeout(() => {
+            if (totalPages > 0) {
+                paginationContainer.style.display = 'flex';
+                paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+            } else {
                 paginationContainer.style.display = 'none';
-            }
-            if (paginationInfo) {
                 paginationInfo.textContent = '';
-            }
-            return;
-        }
-
-        // Parsear todas las entradas de log una vez
-        const parsedLogEntries = logEntriesFromServer.map(entryText => window.logUtils.parseLogEntry(entryText));
-
-        // Obtener valores de los filtros de fecha
-        const fromDateFilter = dateInputs[0].value; // YYYY-MM-DD
-        const toDateFilter = dateInputs[1].value;   // YYYY-MM-DD
-
-        // Filtrar por fecha
-        let dateFilteredEntries = parsedLogEntries;
-        if (fromDateFilter) {
-            dateFilteredEntries = dateFilteredEntries.filter(log => {
-                if (!log.isParsed || !log.fecha) { return false; }
-                return log.fecha >= fromDateFilter;
-            });
-        }
-        if (toDateFilter) {
-            dateFilteredEntries = dateFilteredEntries.filter(log => {
-                if (!log.isParsed || !log.fecha) { return false; }
-                return log.fecha <= toDateFilter;
-            });
-        }
-        
-        // Obtener tipos seleccionados en los checkboxes
-        const selectedTypes = Array.from(logFilterCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => {
-                let t = cb.nextElementSibling.classList[1];
-                if (t.toUpperCase() === "WARNING") {
-                  return "WARN";
-                }
-                return t.toUpperCase();
-            });
-
-        // Filtrar por tipo (sobre los ya filtrados por fecha)
-        let finalFilteredEntries = dateFilteredEntries;
-        if (selectedTypes.length > 0) {
-            finalFilteredEntries = dateFilteredEntries.filter(log => {
-                // El tipo en log ya está en mayúsculas por parseLogEntry
-                return selectedTypes.includes(log.tipo);
-            });
-        }
-
-        if (finalFilteredEntries.length === 0) {
-            logsTableBody.innerHTML = '<tr><td class="log-cell-main" colspan="5">No hay logs para los filtros seleccionados</td></tr>';
-            const paginationContainer = document.querySelector('.pagination');
-            const paginationInfo = document.querySelector('.pagination-info');
-            if (paginationContainer) { paginationContainer.style.display = 'none'; }
-            if (paginationInfo) { paginationInfo.textContent = ''; }
-            return;
-        }
-
-        // La paginación se hace localmente sobre estos resultados (finalFilteredEntries).
-        let currentPage = 1;
-        const pageSize = 20; // O el tamaño de página que prefieras
-        let totalPages = Math.ceil(finalFilteredEntries.length / pageSize);
-        
-        let paginationContainer = document.querySelector('.pagination');
-        let paginationInfo = document.querySelector('.pagination-info');
-        let prevBtn = paginationContainer ? paginationContainer.querySelectorAll('.pagination-button')[0] : null;
-        let nextBtn = paginationContainer ? paginationContainer.querySelectorAll('.pagination-button')[1] : null;
-        
-        function renderPage(page) {
-            currentPage = page;
-            const start = (page - 1) * pageSize;
-            const end = start + pageSize;
-            const pageEntries = finalFilteredEntries.slice(start, end);
-            
-            logsTableBody.innerHTML = pageEntries.map(logObject => {
-                const { fecha, hora, tipo, origen, mensaje, isParsed, raw } = logObject;
-                
-                if (!isParsed) {
-                    // Si no se pudo parsear, mostrar la entrada raw completa en la celda de mensaje
-                    return `
-                        <tr class="log-row-detailed unparsed">
-                            <td class="log-cell-main" colspan="5">${raw}</td>
-                        </tr>
-                    `;
-                }
-
-                let levelColor = window.logUtils.getLogTypeColor(tipo);
-                let levelText = tipo;
-                // El switch para levelText y levelColor se puede simplificar usando getLogTypeColor
-                // y asegurando que 'tipo' ya está en el formato deseado (ej. mayúsculas)
-                // Si se necesita un texto diferente al 'tipo' (ej. 'Warning' en lugar de 'WARN'),
-                // se podría añadir otra función de utilidad o manejarlo aquí.
-                // Por ahora, asumimos que 'tipo' es suficiente como 'levelText'.
-
-                return `
-                    <tr class="log-row-detailed ${tipo.toLowerCase()}">
-                        <td class="log-cell-fecha">${fecha}</td>
-                        <td class="log-cell-hora">${hora}</td>
-                        <td class="log-cell-nivel"><span class="log-level-tag" style="background-color: ${levelColor};">${levelText}</span></td>
-                        <td class="log-cell-origen">${origen}</td>
-                        <td class="log-cell-mensaje">${mensaje}</td>
-                    </tr>
-                `;
-            }).join('');
-            renderPagination();
-        }
-        
-        function renderPagination() {
-            if (!paginationContainer || !paginationInfo || !prevBtn || !nextBtn) {
-                if (paginationContainer) { paginationContainer.style.display = 'none'; }
-                if (paginationInfo) { paginationInfo.textContent = ''; }
                 return;
             }
-
-            if (totalPages > 0) {
-                if (paginationContainer) {
-                    paginationContainer.style.display = 'flex'; 
-                }
-                if (paginationInfo) {
-                    paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-                }
-            } else {
-                 if (paginationContainer) {
-                    paginationContainer.style.display = 'none'; 
-                 }
-                 if (paginationInfo) {
-                    paginationInfo.textContent = '';
-                 }
-                 return;
-            }
-            
             prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
             prevBtn.onclick = () => {
                 if (currentPage > 1) {
-                    renderPage(currentPage - 1);
+                    prevBtn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        prevBtn.style.transform = 'scale(1)';
+                        renderLogsPage(currentPage - 1);
+                    }, 150);
                 }
             };
-            nextBtn.disabled = currentPage === totalPages;
             nextBtn.onclick = () => {
                 if (currentPage < totalPages) {
-                    renderPage(currentPage + 1);
+                    nextBtn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        nextBtn.style.transform = 'scale(1)';
+                        renderLogsPage(currentPage + 1);
+                    }, 150);
                 }
             };
-        }
-        renderPage(1);
+            paginationContainer.style.opacity = '1';
+        }, 200);
     }
 
-    logFilterCheckboxes.forEach(cb => cb.addEventListener('change', fetchAndRenderLogs));
-    dateInputs.forEach(input => input.addEventListener('change', fetchAndRenderLogs));
-    fetchAndRenderLogs();
+    // Eventos para los filtros
+    filterToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            animateFilterTransition(this);
+            currentPage = 1;
+            renderLogsPage(currentPage);
+        });
+    });
+
+    // Eventos para inputs de fecha con animaciones
+    dateInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            input.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                input.style.transform = 'scale(1)';
+                currentPage = 1;
+                renderLogsPage(currentPage);
+            }, 150);
+        });
+    });
+
+    // Evento para el botón de recargar
+    if (reloadBtn) {
+        reloadBtn.addEventListener('click', async () => {
+            currentPage = 1;
+            await fetchAllLogs();
+            renderLogsPage(currentPage);
+        });
+    }
+
+    // Cargar logs iniciales
+    (async () => {
+        await fetchAllLogs();
+        renderLogsPage(currentPage);
+    })();
 };
 
 // Limpieza de recursos de la pantalla de logs
 window.destroyLogsScreen = function () {
+    const reloadBtn = document.getElementById('reload-logs-btn');
+    if (reloadBtn) {
+        reloadBtn.replaceWith(reloadBtn.cloneNode(true));
+    }
 };

@@ -1,4 +1,3 @@
-
 (function() {
 // Variables "privadas" dentro del IIFE
 let currentTable = null;
@@ -219,6 +218,7 @@ function renderTable(tableName) {
             ) {
                 td.contentEditable = true;
                 td.classList.add('editable-cell');
+                td.classList.add('editable-field');
                 td.textContent = value != null ? value : '';
                 td.addEventListener('blur', async function (e) {
                     const newValue = td.textContent.trim();

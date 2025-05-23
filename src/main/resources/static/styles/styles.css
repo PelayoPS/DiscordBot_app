@@ -534,19 +534,26 @@ body.light-theme .filter-label {
     color: black !important;
 }
 
+/* Estilos mejorados para los filtros de logs */
 .filter-options {
     display: flex;
-    gap: 12px;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .filter-option {
     align-items: center;
     cursor: pointer;
     display: flex;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-option:hover {
+    transform: translateY(-1px);
 }
 
 .filter-option input {
-    margin-right: 4px;
+    margin-right: 6px;
 }
 
 .main-interface.hidden,
@@ -555,7 +562,7 @@ body.light-theme .filter-label {
 }
 
 .logs-filters .filter-label {
-    border-radius: 4px;
+    border-radius: 8px;
     border: none;
     box-shadow: none;
     color: #fff !important;
@@ -564,36 +571,116 @@ body.light-theme .filter-label {
     font-weight: bold;
     margin-right: 8px;
     opacity: 0.7;
-    padding: 2px 16px;
-    transition: filter 0.15s, opacity 0.15s, box-shadow 0.15s;
+    padding: 8px 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.logs-filters .filter-checkbox input:checked+.filter-label {
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.10);
+.logs-filters .filter-checkbox input:checked + .filter-label {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     color: #fff !important;
     filter: none;
     opacity: 1;
+    transform: translateY(-1px);
 }
 
 .logs-filters .filter-label.info,
 body.light-theme .logs-filters .filter-label.info {
-    background: #1976d2;
+    background: linear-gradient(135deg, #1976d2, #1565c0);
 }
 
 .logs-filters .filter-label.warning,
 body.light-theme .logs-filters .filter-label.warning {
-    background: #ff9800;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
 }
 
 .logs-filters .filter-label.error,
 body.light-theme .logs-filters .filter-label.error {
-    background: #e53935;
+    background: linear-gradient(135deg, #e53935, #c62828);
 }
 
 body.light-theme .logs-filters .filter-label,
-body.light-theme .logs-filters .filter-checkbox input:checked+.filter-label,
+body.light-theme .logs-filters .filter-checkbox input:checked + .filter-label,
 body.light-theme .menu-item.active i {
     color: #fff !important;
+}
+
+/* Mejoras para los botones de filtro */
+.filter-toggle {
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 8px 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.7;
+    filter: grayscale(0.3) brightness(0.85);
+}
+
+.filter-toggle:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+.filter-toggle.active {
+    opacity: 1;
+    filter: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.filter-toggle.info {
+    background: linear-gradient(135deg, #1976d2, #1565c0);
+}
+
+.filter-toggle.warning {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+}
+
+.filter-toggle.error {
+    background: linear-gradient(135deg, #e53935, #c62828);
+}
+
+.filter-toggle i {
+    margin-right: 6px;
+    transition: transform 0.3s ease;
+}
+
+.filter-toggle:hover i {
+    transform: scale(1.1);
+}
+
+/* Mejoras para el botón de recargar */
+#reload-logs-btn {
+    background: linear-gradient(135deg, #a259e6, #8d3fd6) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(162, 89, 230, 0.15);
+    color: white !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#reload-logs-btn:hover {
+    background: linear-gradient(135deg, #8d3fd6, #7a2fc2) !important;
+    box-shadow: 0 6px 16px rgba(162, 89, 230, 0.25);
+    transform: translateY(-2px);
+}
+
+#reload-logs-btn:active {
+    background: linear-gradient(135deg, #7a2fc2, #6a2aad) !important;
+    box-shadow: 0 2px 8px rgba(162, 89, 230, 0.15);
+    transform: scale(0.98);
+}
+
+#reload-logs-btn i {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#reload-logs-btn:hover i {
+    transform: rotate(180deg);
 }
 
 /* === Login: contenedor principal === */

@@ -544,37 +544,60 @@ body.light-theme .db-count.disponible {
     word-wrap: break-word;
 }
 
-/* Estilos para los logs recientes en el dashboard */
+/* Estilos mejorados para los logs recientes en el dashboard */
 .recent-log-item {
     display: flex;
     align-items: center;
-    padding: 5px 8px;
-    margin-bottom: 5px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+}
+
+.recent-log-item:hover {
+    transform: translateX(4px);
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para la hora en los logs */
 .recent-log-item .log-time {
-    margin-right: 8px;
+    margin-right: 12px;
     font-weight: 500;
     min-width: 55px;
-    color: #ffffff;
+    color: var(--color-text-secondary);
+    font-size: 0.9em;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.recent-log-item:hover .log-time {
+    opacity: 1;
 }
 
 body.light-theme .recent-log-item .log-time {
-    color: #000000;
+    color: #666666;
 }
 
 /* Estilos para la etiqueta de nivel en los logs */
 .recent-log-item .log-level-tag {
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 4px 8px;
+    border-radius: 6px;
     font-size: 0.8em;
     font-weight: bold;
-    margin-right: 8px;
+    margin-right: 12px;
     min-width: 35px;
     text-align: center;
     color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.recent-log-item:hover .log-level-tag {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Estilos para el origen en los logs */
@@ -583,37 +606,91 @@ body.light-theme .recent-log-item .log-time {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #ffffff;
+    color: var(--color-text-primary);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.recent-log-item:hover .log-origen {
+    opacity: 1;
 }
 
 body.light-theme .recent-log-item .log-origen {
-    color: #000000;
+    color: #333333;
 }
 
-.log-info-placeholder {
-    font-size: 13px;
-    color: #b9bbbe;
-    padding: 4px 0;
+/* Animación para nuevos logs */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-body.light-theme .log-info-placeholder {
-    color: var(--color-text-secondary);
+.recent-log-item {
+    animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body.light-theme .log-entry {
-    border-bottom-color: var(--color-border);
+/* Estilos para el contenedor de logs recientes */
+#recent-logs-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-body.light-theme .log-timestamp {
-    color: #555555;
+#recent-logs-list::-webkit-scrollbar {
+    width: 6px;
 }
 
-body.light-theme .log-logger {
-    color: #666666;
+#recent-logs-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
 }
 
-body.light-theme .log-message-content {
-    color: #000000;
+#recent-logs-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+#recent-logs-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Estilos para el enlace "Ver todos los logs" */
+.view-all-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.view-all-link:hover {
+    background: rgba(88, 101, 242, 0.1);
+    transform: translateY(-1px);
+}
+
+.view-all-link:active {
+    transform: translateY(0);
+}
+
+body.light-theme .view-all-link {
+    color: #5865f2;
+}
+
+body.light-theme .view-all-link:hover {
+    background: rgba(88, 101, 242, 0.1);
 }
 
 .summary-card {
