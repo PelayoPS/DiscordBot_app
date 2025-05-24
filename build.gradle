@@ -2,9 +2,10 @@ plugins {
     id 'java'
     id 'application'
     id 'org.springframework.boot' version '3.4.5'
+    id 'org.beryx.runtime' version '1.13.0'
 }
 
-group = 'com.example'
+group = 'com.discordbot'
 version = '1.0.0'
 
 repositories {
@@ -40,11 +41,25 @@ java {
 }
 
 application {
-    mainClass = 'backend.BotApplication'
+    mainClass = 'com.discordbot.BackendGUI'
+    applicationName = 'discord-manager-backend'
 }
 
 tasks.withType(JavaCompile) {
     options.compilerArgs += ['-parameters']
+}
+
+// Configurar el JAR para incluir todas las dependencias
+bootJar {
+    enabled = true
+    archiveClassifier = ''
+    archiveBaseName = 'discord-manager-backend'
+}
+
+jar {
+    enabled = true
+    archiveClassifier = 'original'
+    archiveBaseName = 'discord-manager-backend'
 }
 
 // Sincroniza la versión de build.gradle con config.properties
@@ -75,3 +90,39 @@ task syncVersionToConfig {
 }
 
 compileJava.dependsOn syncVersionToConfig
+
+runtime {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    modules = [
+        'java.base',
+        'java.desktop',
+        'java.sql',
+        'java.naming',
+        'java.management',
+        'java.security.jgss',
+        'java.xml',
+        'java.instrument',
+        'java.logging',
+        'java.net.http',
+        'java.rmi',
+        'java.scripting',
+        'java.transaction.xa',
+        'java.compiler',
+        'jdk.unsupported',
+        'jdk.zipfs'
+    ]
+    launcher {
+        noConsole = true
+    }
+    jpackage {
+        // Opciones de jpackage
+        installerType = 'msi'
+        installerOptions = [
+            '--win-dir-chooser',
+            '--win-menu',
+            '--win-shortcut',
+            '--win-per-user-install',
+            '--win-menu-group', 'Discord Bot'
+        ]
+    }
+}

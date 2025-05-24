@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discord Bot Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="titlebar">
+        <div class="titlebar-title">Discord Bot Manager</div>
+        <div class="titlebar-controls">
+            <div class="titlebar-button minimize" id="minimize-button">
+                <svg viewBox="0 0 12 12">
+                    <rect x="2" y="5" width="8" height="2" rx="1"/>
+                </svg>
+            </div>
+            <div class="titlebar-button maximize" id="maximize-button">
+                <svg viewBox="0 0 12 12">
+                    <rect x="2" y="2" width="8" height="8" rx="1"/>
+                </svg>
+            </div>
+            <div class="titlebar-button close" id="close-button">
+                <svg viewBox="0 0 12 12">
+                    <path d="M2.4 1.4L6 5l3.6-3.6 1 1L7 6l3.6 3.6-1 1L6 7l-3.6 3.6-1-1L5 6 1.4 2.4l1-1z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <!-- El contenido de la aplicación se cargará aquí -->
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Función para minimizar la ventana
+        document.getElementById('minimize-button').addEventListener('click', () => {
+            ipcRenderer.send('window-minimize');
+        });
+
+        // Función para maximizar/restaurar la ventana
+        document.getElementById('maximize-button').addEventListener('click', () => {
+            ipcRenderer.send('window-maximize');
+        });
+
+        // Función para cerrar la ventana
+        document.getElementById('close-button').addEventListener('click', () => {
+            ipcRenderer.send('window-close');
+        });
+
+        // Escuchar eventos de cambio de estado de la ventana
+        ipcRenderer.on('window-maximized', () => {
+            document.getElementById('maximize-button').innerHTML = `
+                <svg viewBox="0 0 12 12">
+                    <rect x="2" y="2" width="8" height="8" rx="1"/>
+                    <rect x="3" y="3" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
+                </svg>
+            `;
+        });
+
+        ipcRenderer.on('window-unmaximized', () => {
+            document.getElementById('maximize-button').innerHTML = `
+                <svg viewBox="0 0 12 12">
+                    <rect x="2" y="2" width="8" height="8" rx="1"/>
+                </svg>
+            `;
+        });
+
+        // Doble clic en la barra de título para maximizar/restaurar
+        document.querySelector('.titlebar').addEventListener('dblclick', () => {
+            ipcRenderer.send('window-maximize');
+        });
+    </script>
+</body>
+</html> 
