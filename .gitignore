@@ -49,6 +49,13 @@ proto/
 node_modules/
 npm-debug.log*
 yarn-debug.log*
+
+# Electron build outputs
+src/main/desktop/electron-build/
+src/main/desktop/dist/
+*.exe
+*.dmg
+*.AppImage
 yarn-error.log*
 package-lock.json
 yarn.lock
