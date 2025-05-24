@@ -1,0 +1,25 @@
+directories:
+  output: build-output
+  buildResources: build
+appId: com.discordbot.app
+productName: Discord Bot Manager
+files:
+  - filter:
+      - main.js
+      - index.html
+      - styles.css
+nsis:
+  oneClick: false
+win:
+  target:
+    target: dir
+    arch:
+      - x64
+  sign: false
+  verifyUpdateCodeSignature: false
+mac:
+  target: dmg
+linux:
+  target: AppImage
+  category: Utility
+electronVersion: 28.3.3

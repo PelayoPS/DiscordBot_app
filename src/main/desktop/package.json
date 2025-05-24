@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron .",
     "dev": "cross-env NODE_ENV=development electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
   },
   "author": "",
   "license": "ISC",
@@ -23,16 +26,32 @@
     "appId": "com.discordbot.app",
     "productName": "Discord Bot Manager",
     "directories": {
-      "output": "dist"
+      "output": "electron-build"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "styles.css"
+    ],
+    "nsis": {
+      "oneClick": false
     },
     "win": {
-      "target": "nsis"
+      "target": {
+        "target": "dir",
+        "arch": [
+          "x64"
+        ]
+      },
+      "sign": false,
+      "verifyUpdateCodeSignature": false
     },
     "mac": {
       "target": "dmg"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "category": "Utility"
     }
   }
 }
