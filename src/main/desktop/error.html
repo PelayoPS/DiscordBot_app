@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error de Conexión - Discord Bot Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Barra de título personalizada */
+        .custom-title-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(44, 44, 44, 0.95);
+            border-bottom: 1px solid rgba(64, 64, 64, 0.8);
+            z-index: 10000;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .title-bar-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .title-bar-drag-region {
+            flex: 1;
+            height: 100%;
+            -webkit-app-region: drag;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+        }
+
+        .app-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-title i {
+            color: #7289da;
+        }
+
+        .window-controls {
+            display: flex;
+            height: 100%;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-control-btn {
+            width: 46px;
+            height: 100%;
+            border: none;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            font-size: 12px;
+        }
+
+        .window-control-btn:hover {
+            background-color: rgba(64, 64, 64, 0.8);
+        }
+
+        .window-control-btn.close-btn:hover {
+            background-color: #e81123;
+        }
+
+        /* Contenido principal */
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 60px 40px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .error-icon {
+            font-size: 120px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .error-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .error-details {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+        }
+
+        .error-details h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .error-details ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .error-details li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .error-details li::before {
+            content: "•";
+            color: #7289da;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #7289da, #5b73e0);
+            color: white;
+            box-shadow: 0 4px 15px rgba(114, 137, 218, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(114, 137, 218, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .status-indicator {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+
+        .status-indicator.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .checking {
+            color: #ffd700;
+        }
+
+        .success {
+            color: #43b581;
+        }
+
+        .error {
+            color: #f04747;
+        }
+
+        /* Partículas de fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 60px 20px 20px;
+            }
+
+            .error-title {
+                font-size: 24px;
+            }
+
+            .error-message {
+                font-size: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de título personalizada -->
+    <div class="custom-title-bar">
+        <div class="title-bar-content">
+            <div class="title-bar-drag-region">
+                <div class="app-title">
+                    <i class="fas fa-robot"></i>
+                    Discord Bot Manager
+                </div>
+            </div>
+            <div class="window-controls">
+                <button class="window-control-btn minimize-btn" id="minimize-btn" title="Minimizar">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                        <rect x="0" y="5" width="12" height="2"/>
+                    </svg>
+                </button>
+                <button class="window-control-btn maximize-btn" id="maximize-btn" title="Maximizar">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                        <rect x="1" y="1" width="10" height="10" stroke="currentColor" stroke-width="1" fill="none"/>
+                    </svg>
+                </button>
+                <button class="window-control-btn close-btn" id="close-btn" title="Cerrar">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                        <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1"/>
+                        <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Contenido principal -->
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-plug"></i>
+        </div>
+        
+        <h1 class="error-title">Sin conexión al servidor</h1>
+        
+        <p class="error-message">
+            No se pudo establecer conexión con el backend del Discord Bot Manager. 
+            Asegúrate de que el servidor esté ejecutándose antes de continuar.
+        </p>        <div class="error-details">
+            <h3><i class="fas fa-info-circle"></i> ¿Qué puedes hacer?</h3>
+            <ul>
+                <li>Usa el botón "Abrir Backend GUI" para buscar y ejecutar discord-bot.exe automáticamente</li>
+                <li>Verifica que el servidor esté en el puerto 8080</li>
+                <li>Comprueba tu conexión de red</li>
+                <li>Reinicia la aplicación si el problema persiste</li>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="retry-btn">
+                <i class="fas fa-sync-alt"></i>
+                Reintentar conexión
+            </button>
+            <button class="btn btn-secondary" id="open-backend-btn">
+                <i class="fas fa-external-link-alt"></i>
+                Abrir Backend GUI
+            </button>
+        </div>
+
+        <div class="status-indicator" id="status-indicator">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span id="status-text">Verificando conexión...</span>
+        </div>
+    </div>
+
+    <script>
+        // Crear partículas de fondo
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                
+                particles.appendChild(particle);
+            }
+        }
+
+        // Funciones de control de ventana
+        function setupWindowControls() {
+            document.getElementById('minimize-btn')?.addEventListener('click', () => {
+                if (window.electronAPI) {
+                    window.electronAPI.minimizeWindow();
+                }
+            });
+
+            document.getElementById('maximize-btn')?.addEventListener('click', () => {
+                if (window.electronAPI) {
+                    window.electronAPI.maximizeWindow();
+                }
+            });
+
+            document.getElementById('close-btn')?.addEventListener('click', () => {
+                if (window.electronAPI) {
+                    window.electronAPI.closeWindow();
+                }
+            });
+        }
+
+        // Función para mostrar estado
+        function showStatus(message, type = 'checking') {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            const icon = indicator.querySelector('i');
+            
+            indicator.className = `status-indicator show ${type}`;
+            statusText.textContent = message;
+            
+            // Cambiar icono según el tipo
+            icon.className = type === 'checking' ? 'fas fa-spinner fa-spin' :
+                           type === 'success' ? 'fas fa-check-circle' :
+                           'fas fa-exclamation-triangle';
+        }        // Función para verificar estado sin reintentar
+        async function checkStatus() {
+            try {
+                if (window.electronAPI && window.electronAPI.checkBackendStatus) {
+                    return await window.electronAPI.checkBackendStatus();
+                }
+                return false;
+            } catch (error) {
+                console.error('Error al verificar estado:', error);
+                return false;
+            }
+        }
+
+        // Función para reintentar conexión
+        async function retryConnection() {
+            const retryBtn = document.getElementById('retry-btn');
+            const openBackendBtn = document.getElementById('open-backend-btn');
+            
+            retryBtn.disabled = true;
+            openBackendBtn.disabled = true;
+            
+            showStatus('Verificando conexión con el servidor...', 'checking');
+            
+            try {
+                if (window.electronAPI && window.electronAPI.retryBackendConnection) {
+                    const connected = await window.electronAPI.retryBackendConnection();
+                    
+                    if (connected) {
+                        showStatus('¡Conexión establecida! Redirigiendo...', 'success');
+                        setTimeout(() => {
+                            // La ventana debería redirigir automáticamente
+                        }, 1500);
+                    } else {
+                        showStatus('No se pudo establecer conexión. Verifica que el backend esté ejecutándose.', 'error');
+                        setTimeout(() => {
+                            document.getElementById('status-indicator').classList.remove('show');
+                        }, 4000);
+                    }
+                } else {
+                    showStatus('Error: API de Electron no disponible', 'error');
+                }
+            } catch (error) {
+                showStatus('Error al verificar conexión: ' + error.message, 'error');
+                console.error('Error al reintentar conexión:', error);
+            }
+            
+            retryBtn.disabled = false;
+            openBackendBtn.disabled = false;
+        }        // Función para abrir Backend GUI usando búsqueda automática
+        async function openBackendGUI() {
+            const openBackendBtn = document.getElementById('open-backend-btn');
+            openBackendBtn.disabled = true;
+            
+            showStatus('Buscando discord-bot.exe en el dispositivo...', 'checking');
+            
+            try {
+                if (window.electronAPI && window.electronAPI.launchDiscordBot) {
+                    const result = await window.electronAPI.launchDiscordBot();
+                    
+                    if (result.success) {
+                        showStatus(`¡discord-bot.exe encontrado y ejecutado! Ubicación: ${result.path}`, 'success');
+                        setTimeout(() => {
+                            showStatus('Espera unos momentos para que el backend se inicie completamente...', 'checking');
+                        }, 3000);
+                        
+                        // Verificar conexión después de 10 segundos
+                        setTimeout(async () => {
+                            await autoCheck();
+                        }, 10000);
+                    } else {
+                        showStatus(`Error al ejecutar discord-bot.exe: ${result.error}`, 'error');
+                        setTimeout(() => {
+                            showStatus('Por favor, ejecuta discord-bot.exe manualmente desde su ubicación.', 'error');
+                        }, 3000);
+                    }
+                } else {
+                    showStatus('Error: API de lanzamiento no disponible', 'error');
+                }
+            } catch (error) {
+                showStatus('Error al buscar el archivo: ' + error.message, 'error');
+                console.error('Error al abrir discord-bot:', error);
+            }
+            
+            setTimeout(() => {
+                if (document.getElementById('status-indicator').textContent.includes('Error')) {
+                    document.getElementById('status-indicator').classList.remove('show');
+                }
+            }, 8000);
+            
+            openBackendBtn.disabled = false;
+        }
+
+        // Auto-verificación mejorada
+        async function autoCheck() {
+            const connected = await checkStatus();
+            if (connected) {
+                showStatus('¡Conexión detectada! Reconectando...', 'success');
+                await retryConnection();
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupWindowControls();
+            
+            // Event listeners
+            document.getElementById('retry-btn')?.addEventListener('click', retryConnection);
+            document.getElementById('open-backend-btn')?.addEventListener('click', openBackendGUI);
+              // Auto-reintento cada 15 segundos con verificación silenciosa
+            setInterval(autoCheck, 15000);
+            
+            // Verificación inicial después de 3 segundos
+            setTimeout(autoCheck, 3000);
+        });
+    </script>
+</body>
+</html>

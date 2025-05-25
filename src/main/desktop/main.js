@@ -1,9 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('path')
 const http = require('http')
+const fs = require('fs').promises
+const { spawn } = require('child_process')
+const os = require('os')
 
 // Variable global para la ventana principal
 let mainWindow
+let connectionMonitorInterval = null
 
 // Función para verificar si el backend está corriendo
 const checkBackendConnection = () => {
@@ -23,6 +27,151 @@ const checkBackendConnection = () => {
   })
 }
 
+// Función para monitorear la conexión continuamente
+const startConnectionMonitor = () => {
+  if (connectionMonitorInterval) {
+    clearInterval(connectionMonitorInterval)
+  }  
+  connectionMonitorInterval = setInterval(async () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      const isConnected = await checkBackendConnection()
+      const currentURL = mainWindow.webContents.getURL()
+      
+      console.log(`Estado de conexión: ${isConnected}, URL actual: ${currentURL}`)
+      
+      // Si estamos en la página principal pero no hay conexión, mostrar error
+      if (currentURL.includes('localhost:8080') && !isConnected) {
+        console.log('❌ Conexión perdida detectada, mostrando página de error')
+        mainWindow.loadFile(path.join(__dirname, 'error.html'))
+      }
+      // Si estamos en la página de error pero ahora hay conexión, recargar
+      else if (currentURL.includes('error.html') && isConnected) {
+        console.log('✅ Conexión restablecida detectada, cargando aplicación')
+        mainWindow.loadURL('http://localhost:8080/')
+      }
+      // También verificar si el webContents falló en cargar
+      else if (currentURL.includes('localhost:8080') && isConnected) {
+        // Verificar si la página realmente se cargó o si hay un error de red
+        mainWindow.webContents.executeJavaScript('document.readyState')
+          .then((readyState) => {
+            if (readyState !== 'complete') {
+              console.log('⚠️ Página no completamente cargada, verificando conexión')
+            }
+          })
+          .catch(() => {
+            // Si hay error ejecutando JavaScript, la página probablemente falló
+            console.log('❌ Error ejecutando JavaScript, posible fallo de página')
+            mainWindow.loadFile(path.join(__dirname, 'error.html'))
+          })
+      }
+    }
+  }, 5000) // Verificar cada 5 segundos para detección más rápida
+}
+
+// Función para buscar un archivo recursivamente en un directorio
+const searchFileRecursively = async (directory, fileName, maxDepth = 5, currentDepth = 0) => {
+  if (currentDepth >= maxDepth) {
+    return null
+  }
+  
+  try {
+    const items = await fs.readdir(directory, { withFileTypes: true })
+    
+    // Buscar el archivo en el directorio actual
+    for (const item of items) {
+      if (item.isFile() && item.name.toLowerCase() === fileName.toLowerCase()) {
+        return path.join(directory, item.name)
+      }
+    }
+    
+    // Buscar recursivamente en subdirectorios
+    for (const item of items) {
+      if (item.isDirectory() && !item.name.startsWith('.') && !item.name.startsWith('$')) {        try {
+          const fullPath = path.join(directory, item.name)
+          const result = await searchFileRecursively(fullPath, fileName, maxDepth, currentDepth + 1)
+          if (result) {
+            return result
+          }
+        } catch (error) {
+          // Ignorar errores de acceso a directorios (permisos, etc.)
+          continue
+        }
+      }
+    }
+  } catch (error) {
+    // Ignorar errores de acceso al directorio
+  }
+  
+  return null
+}
+
+// Función para buscar discord-bot.exe en ubicaciones comunes
+const findDiscordBotExecutable = async () => {
+  const fileName = 'discord-bot.exe'
+  const searchPaths = [
+    // Directorio actual del proyecto
+    process.cwd(),
+    // Directorio del usuario
+    os.homedir(),
+    // Desktop
+    path.join(os.homedir(), 'Desktop'),
+    // Downloads
+    path.join(os.homedir(), 'Downloads'),
+    // Documents
+    path.join(os.homedir(), 'Documents'),
+    // Unidades del sistema (C:, D:, etc.)
+    ...['C:', 'D:', 'E:', 'F:'].map(drive => `${drive}\\`)
+  ]
+
+  console.log('Buscando discord-bot.exe en ubicaciones comunes...')
+  
+  for (const searchPath of searchPaths) {
+    try {
+      console.log(`Buscando en: ${searchPath}`)
+      const result = await searchFileRecursively(searchPath, fileName)
+      if (result) {
+        console.log(`discord-bot.exe encontrado en: ${result}`)
+        return result
+      }
+    } catch (error) {
+      // Ignorar errores y continuar con la siguiente ubicación
+      continue
+    }
+  }
+  
+  console.log('discord-bot.exe no encontrado en ubicaciones comunes')
+  return null
+}
+
+// Función para ejecutar discord-bot.exe
+const launchDiscordBot = async () => {
+  try {
+    const executablePath = await findDiscordBotExecutable()
+    
+    if (!executablePath) {
+      throw new Error('No se pudo encontrar discord-bot.exe en el dispositivo')
+    }
+    
+    console.log(`Ejecutando discord-bot.exe desde: ${executablePath}`)
+    
+    // Ejecutar el archivo
+    const process = spawn(executablePath, [], {
+      detached: true,
+      stdio: 'ignore'
+    })
+    
+    // Desacoplar el proceso del proceso padre
+    process.unref()
+    
+    console.log('discord-bot.exe ejecutado exitosamente')
+    return { success: true, path: executablePath }
+    
+  } catch (error) {
+    console.error('Error al ejecutar discord-bot.exe:', error.message)
+    return { success: false, error: error.message }
+  }
+}
+
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -37,15 +186,42 @@ const createWindow = () => {
       enableRemoteModule: false,
       preload: require('path').join(__dirname, 'preload.js')
     }
-  })
-
-  // Verificar conexión al backend antes de cargar
+  })  // Verificar conexión al backend antes de cargar
   checkBackendConnection().then((isConnected) => {
     if (isConnected) {
       mainWindow.loadURL('http://localhost:8080/')
     } else {
       // Cargar página de error local
       mainWindow.loadFile(path.join(__dirname, 'error.html'))
+    }    // Iniciar monitoreo inmediatamente sin importar el estado inicial
+    setTimeout(() => startConnectionMonitor(), 2000)
+  })
+
+  // Detectar fallos de carga inmediatamente
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    console.log(`❌ Fallo al cargar ${validatedURL}: ${errorDescription} (Código: ${errorCode})`)
+    if (validatedURL.includes('localhost:8080')) {
+      console.log('❌ Fallo de conexión al backend detectado, mostrando página de error')
+      mainWindow.loadFile(path.join(__dirname, 'error.html'))
+    }
+  })
+
+  // Detectar errores de respuesta HTTP
+  mainWindow.webContents.on('did-finish-load', () => {
+    const currentURL = mainWindow.webContents.getURL()
+    if (currentURL.includes('localhost:8080')) {
+      // Verificar si la página se cargó correctamente
+      mainWindow.webContents.executeJavaScript('document.title')
+        .then((title) => {
+          if (title.includes('Error') || title.includes('404') || title.includes('500')) {
+            console.log('❌ Página de error detectada, mostrando página de error local')
+            mainWindow.loadFile(path.join(__dirname, 'error.html'))
+          }
+        })
+        .catch(() => {
+          console.log('❌ Error accediendo al contenido de la página')
+          mainWindow.loadFile(path.join(__dirname, 'error.html'))
+        })
     }
   })
 
@@ -257,12 +433,29 @@ ipcMain.handle('window-is-maximized', () => {
 
 // Handler para reintentar conexión al backend
 ipcMain.handle('retry-backend-connection', async () => {
+  console.log('Reintentando conexión al backend...')
   const isConnected = await checkBackendConnection()
-  if (isConnected) {
+  console.log('Estado de conexión:', isConnected)
+  
+  if (isConnected && mainWindow && !mainWindow.isDestroyed()) {
+    console.log('Conexión exitosa, cargando aplicación principal')
     mainWindow.loadURL('http://localhost:8080/')
+    // Reiniciar monitoreo después de cargar
+    setTimeout(() => startConnectionMonitor(), 5000)
     return true
   }
   return false
+})
+
+// Handler para verificar estado de conexión sin recargar
+ipcMain.handle('check-backend-status', async () => {
+  return await checkBackendConnection()
+})
+
+// Handler para buscar y ejecutar discord-bot.exe
+ipcMain.handle('launch-discord-bot', async () => {
+  console.log('Iniciando búsqueda y ejecución de discord-bot.exe...')
+  return await launchDiscordBot()
 })
 
 app.whenReady().then(() => {
@@ -276,6 +469,11 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+  // Limpiar el intervalo de monitoreo
+  if (connectionMonitorInterval) {
+    clearInterval(connectionMonitorInterval)
+  }
+  
   if (process.platform !== 'darwin') {
     app.quit()
   }

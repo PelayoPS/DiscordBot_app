@@ -6,7 +6,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   minimizeWindow: () => ipcRenderer.invoke('window-minimize'),
   maximizeWindow: () => ipcRenderer.invoke('window-maximize'),
   closeWindow: () => ipcRenderer.invoke('window-close'),
-  isWindowMaximized: () => ipcRenderer.invoke('window-is-maximized'),
+  isWindowMaximized: () => ipcRenderer.invoke('window-is-maximized'),  // Funciones para manejar la conexión con el backend
+  retryBackendConnection: () => ipcRenderer.invoke('retry-backend-connection'),
+  checkBackendStatus: () => ipcRenderer.invoke('check-backend-status'),
+  launchDiscordBot: () => ipcRenderer.invoke('launch-discord-bot'),
 
   // Escuchar eventos de la ventana
   onWindowMaximized: (callback) => {
