@@ -1,0 +1,53 @@
+{
+  "name": "discord-bot-manager-mobile",
+  "version": "1.0.0",
+  "description": "Discord Bot Manager - Aplicación móvil Android",
+  "main": "index.html",
+  "scripts": {
+    "build": "npm run copy && npm run sync",
+    "copy": "node sync-static.js",
+    "sync": "npx cap sync",
+    "open": "npx cap open android",
+    "run": "npx cap run android",
+    "add-android": "npx cap add android",
+    "update": "npx cap update",
+    "serve": "http-server www -p 8100",
+    "live-reload": "npx cap run android --livereload --external",
+    "dev": "npm run copy && npm run serve",
+    "clean": "rmdir /s /q www\\static 2>nul || true",
+    "build-apk": "powershell -ExecutionPolicy Bypass -File build-apk.ps1",
+    "build-apk-debug": "powershell -ExecutionPolicy Bypass -File build-apk.ps1 -BuildType debug",
+    "build-apk-release": "powershell -ExecutionPolicy Bypass -File build-apk.ps1 -BuildType release",
+    "apk": "build-apk.bat",
+    "doctor": "npx cap doctor",
+    "status": "node check-status.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.6.0",
+    "@capacitor/app": "^5.0.6",
+    "@capacitor/core": "^5.6.0",
+    "@capacitor/haptics": "^5.0.6",
+    "@capacitor/keyboard": "^5.0.6",
+    "@capacitor/network": "^5.0.6",
+    "@capacitor/preferences": "^5.0.6",
+    "@capacitor/splash-screen": "^5.0.6",
+    "@capacitor/status-bar": "^5.0.6",
+    "@capacitor/toast": "^5.0.6",
+    "discord-bot-manager-mobile": "file:"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.6.0",
+    "http-server": "^14.1.1",
+    "rimraf": "^5.0.5"
+  },
+  "author": "Pelayo Palacio Suárez",
+  "license": "MIT",
+  "keywords": [
+    "discord",
+    "bot",
+    "manager",
+    "android",
+    "capacitor",
+    "mobile"
+  ]
+}

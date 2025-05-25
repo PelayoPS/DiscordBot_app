@@ -1,4 +1,6 @@
-# Archivos de configuración sensibles
+# ================================
+# ARCHIVOS SENSIBLES Y CREDENCIALES (CRÍTICO)
+# ================================
 config.properties
 application.properties
 *.env
@@ -10,14 +12,24 @@ application.properties
 # Keystore de desarrollo para HTTPS (no subir nunca a git)
 src/main/resources/keystore.p12
 
-# Archivos de logs y temporales
+# ================================
+# ARCHIVOS COMPILADOS (CONTIENEN CREDENCIALES)
+# ================================
+# CRÍTICO: Toda la carpeta bin/ contiene archivos compilados con credenciales
+/bin/
+**/bin/
+
+# ================================
+# LOGS Y TEMPORALES
+# ================================
 logs/
 *.log
 *.tmp
 
-# Salidas de compilación y distribución
+# ================================
+# SALIDAS DE COMPILACIÓN Y DISTRIBUCIÓN
+# ================================
 /build/
-/bin/
 /dist/
 /libs/
 /reports/

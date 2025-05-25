@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Discord Bot Manager</title>
+    
+    <!-- Meta tags para PWA -->
+    <meta name="theme-color" content="#7289da">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Discord Bot Manager">
+    
+    <!-- Capacitor Core -->
+    <script type="module" src="capacitor.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: #2c2f36;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }        .web-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: none;
+            background: #ffffff;
+            z-index: 1;
+        }
+
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ffffff;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #7289da;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        .error-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ffffff;
+            background: rgba(220, 53, 69, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            max-width: 80%;
+            display: none;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            color: #dc3545;
+            margin-bottom: 16px;
+        }
+
+        .error-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            font-size: 14px;
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+
+        .retry-button {
+            background: #7289da;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }        .retry-button:hover {
+            background: #5b6eae;
+        }
+
+        /* Safe area para dispositivos con notch */
+        .safe-area {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Asegurar que el iframe ocupe toda la pantalla */
+        #webFrame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de configuración de URL -->
+    <div class="loading-container" id="configContainer" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Introduce la URL del servidor</div>
+        <form id="serverUrlForm" style="margin-top: 20px;">
+            <input id="serverUrlInput" type="text" placeholder="https://midominio.com" style="padding:10px;width:220px;border-radius:6px;border:none;outline:none;max-width:90%;" required />
+            <br>
+            <button type="submit" class="retry-button" style="margin-top:16px;width:120px;">Guardar</button>
+        </form>
+    </div>
+
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Cargando Discord Bot Manager...</div>
+    </div>    <div class="error-container" id="errorContainer">
+        <div class="error-icon">⚠️</div>
+        <div class="error-title">Error de conexión</div>
+        <div class="error-message">No se pudo conectar con el servidor. Verifica tu conexión a internet e inténtalo de nuevo.</div>
+        <button class="retry-button" onclick="loadWebApp()">Reintentar</button>
+        <button class="retry-button" style="background:#444;margin-top:10px;" onclick="showConfigScreen()">Cambiar URL</button>
+        <button class="retry-button" style="background:#17a2b8;margin-top:10px;" onclick="runDiagnostics()">Diagnóstico</button>
+    </div>
+
+    <iframe id="webFrame" class="web-container" style="display: none;"></iframe>    <script>
+
+        let isCapacitorReady = false;
+        let serverUrl = null;        // Variables para plugins de Capacitor (se cargan cuando Capacitor esté listo)
+        let StatusBar, SplashScreen, App, Network, Toast, Capacitor;
+
+        // Inicializar plugins de Capacitor cuando esté disponible
+        function initializeCapacitorPlugins() {
+            try {
+                if (window.Capacitor) {
+                    Capacitor = window.Capacitor.Capacitor;
+                    StatusBar = window.Capacitor.StatusBar;
+                    SplashScreen = window.Capacitor.SplashScreen;
+                    App = window.Capacitor.App;
+                    Network = window.Capacitor.Network;
+                    Toast = window.Capacitor.Toast;
+                    console.log('Plugins de Capacitor inicializados');
+                    return true;
+                }
+            } catch (error) {
+                console.log('Capacitor plugins no disponibles:', error);
+            }
+            return false;
+        }
+
+        // Configurar StatusBar
+        async function setupStatusBar() {
+            if (Capacitor && Capacitor.isNativePlatform()) {
+                try {
+                    await StatusBar.setStyle({ style: 'DARK' });
+                    await StatusBar.setBackgroundColor({ color: '#7289da' });
+                    await StatusBar.show();
+                } catch (error) {
+                    console.log('StatusBar no disponible:', error);
+                }
+            }
+        }
+
+        // Configurar SplashScreen
+        async function hideSplashScreen() {
+            if (Capacitor && Capacitor.isNativePlatform()) {
+                try {
+                    await SplashScreen.hide();
+                } catch (error) {
+                    console.log('SplashScreen no disponible:', error);
+                }
+            }
+        }
+
+        // Verificar conexión de red
+        async function checkNetworkConnection() {
+            if (Capacitor && Capacitor.isNativePlatform() && Network) {
+                try {
+                    const status = await Network.getStatus();
+                    if (!status.connected) {
+                        showError('Sin conexión a internet. Verifica tu conexión y vuelve a intentarlo.');
+                        return false;
+                    }
+                } catch (error) {
+                    console.log('Network no disponible:', error);
+                }
+            }
+            return true;
+        }
+
+        // Mostrar toast de notificación
+        async function showToast(message) {
+            if (Capacitor && Capacitor.isNativePlatform() && Toast) {
+                try {
+                    await Toast.show({
+                        text: message,
+                        duration: 'short',
+                        position: 'bottom'
+                    });
+                } catch (error) {
+                    console.log('Toast no disponible:', error);
+                    console.log(message);
+                }
+            } else {
+                console.log(message);
+            }
+        }
+
+        // Manejar el botón de retroceso en Android
+        function setupBackButtonHandler() {
+            if (Capacitor && Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android' && App) {
+                try {
+                    App.addListener('backButton', ({ canGoBack }) => {
+                        const webFrame = document.getElementById('webFrame');
+                        if (webFrame && webFrame.contentWindow) {
+                            // Enviar evento de retroceso al iframe
+                            webFrame.contentWindow.postMessage({ type: 'BACK_BUTTON' }, '*');
+                        }
+                    });
+                } catch (error) {
+                    console.log('BackButton handler no disponible:', error);
+                }
+            }
+        }
+
+
+        // Mostrar pantalla de configuración de URL
+        function showConfigScreen() {
+            document.getElementById('configContainer').style.display = 'flex';
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('errorContainer').style.display = 'none';
+            document.getElementById('webFrame').style.display = 'none';
+            document.getElementById('serverUrlInput').focus();
+        }
+
+        // Guardar la URL en localStorage
+        function saveServerUrl(url) {
+            localStorage.setItem('serverUrl', url);
+            serverUrl = url;
+        }
+
+        // Obtener la URL guardada
+        function getSavedServerUrl() {
+            return localStorage.getItem('serverUrl');
+        }        // Cargar la aplicación web
+        async function loadWebApp() {
+            serverUrl = getSavedServerUrl();
+            if (!serverUrl) {
+                showConfigScreen();
+                return;
+            }
+            console.log('Iniciando carga de la aplicación web en: ' + serverUrl);
+
+            // Verificar formato de URL
+            if (!serverUrl.startsWith('http://') && !serverUrl.startsWith('https://')) {
+                showError('URL inválida: debe comenzar con http:// o https://');
+                return;
+            }
+
+            // Verificar conexión
+            const hasConnection = await checkNetworkConnection();
+            if (!hasConnection) return;
+
+            const webFrame = document.getElementById('webFrame');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+
+            // Mostrar loading
+            loadingContainer.style.display = 'block';
+            errorContainer.style.display = 'none';
+            webFrame.style.display = 'none';
+
+            console.log('Configurando iframe para cargar:', serverUrl);
+            showToast('Conectando al servidor...');
+
+            // Configurar timeout para el iframe (más tiempo para servidores lentos)
+            let loadTimeout = setTimeout(() => {
+                console.error('Timeout: La aplicación web tardó demasiado en cargar');
+                showError(`Timeout conectando a: ${serverUrl}\n\nPosibles causas:\n• El servidor está lento o no responde\n• Problemas de firewall/red\n• URL incorrecta\n\nVerifica que el servidor esté ejecutándose y sea accesible desde la red móvil.`);
+            }, 30000); // 30 segundos            // Configurar evento de carga exitosa
+            webFrame.onload = function() {
+                console.log('✅ Aplicación web cargada exitosamente en iframe');
+                console.log('iframe.src:', webFrame.src);
+                console.log('iframe.contentWindow:', !!webFrame.contentWindow);
+                clearTimeout(loadTimeout);
+                
+                // Verificar que el iframe tenga contenido antes de mostrarlo
+                setTimeout(() => {
+                    try {
+                        // Intentar acceder al documento del iframe (puede fallar por CORS, es normal)
+                        const hasContent = webFrame.contentDocument !== null;
+                        console.log('iframe tiene documento:', hasContent);
+                    } catch (e) {
+                        console.log('iframe documento inaccesible (normal por CORS)');
+                    }
+                    
+                    // Mostrar el iframe
+                    loadingContainer.style.display = 'none';
+                    errorContainer.style.display = 'none';
+                    webFrame.style.display = 'block';
+                    
+                    console.log('🖼️ iframe mostrado. Estilos aplicados:');
+                    console.log('- display:', webFrame.style.display);
+                    console.log('- position:', getComputedStyle(webFrame).position);
+                    console.log('- width:', getComputedStyle(webFrame).width);
+                    console.log('- height:', getComputedStyle(webFrame).height);
+                    console.log('- zIndex:', getComputedStyle(webFrame).zIndex);
+                    
+                    showToast('✅ Aplicación cargada correctamente');
+                    hideSplashScreen();
+                }, 100);
+            };
+
+            // Configurar evento de error
+            webFrame.onerror = function(event) {
+                console.error('Error cargando iframe:', event);
+                clearTimeout(loadTimeout);
+                showError(`Error cargando: ${serverUrl}\n\nPosibles causas:\n• Servidor no accesible desde el móvil\n• Problemas de CORS\n• Certificado SSL inválido\n• IP/puerto bloqueado\n\nVerifica que el servidor permita conexiones externas.`);
+            };
+
+            // Detectar cuando el iframe no puede cargar (usando un enfoque más específico)
+            setTimeout(() => {
+                try {
+                    // Verificar si el iframe tiene contenido válido
+                    if (webFrame.contentDocument === null && webFrame.style.display === 'none') {
+                        console.warn('Iframe puede estar bloqueado por CORS o política de contenido');
+                    }
+                } catch (e) {
+                    console.log('No se puede acceder al contenido del iframe (normal por CORS)');
+                }
+            }, 5000);
+
+            // Cargar la URL en el iframe
+            console.log('Cargando iframe con URL:', serverUrl);
+            webFrame.src = serverUrl;
+        }
+
+        // Mostrar error
+        function showError(message) {
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            const webFrame = document.getElementById('webFrame');
+
+            loadingContainer.style.display = 'none';
+            errorContainer.style.display = 'block';
+            webFrame.style.display = 'none';
+
+            errorContainer.querySelector('.error-message').textContent = message;
+            hideSplashScreen();
+        }        // Escuchar mensajes del iframe
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'MOBILE_READY') {
+                console.log('La aplicación web está lista para móvil');
+                showToast('¡Bienvenido a Discord Bot Manager!');
+            }
+        });
+
+        // Función de diagnóstico
+        async function runDiagnostics() {
+            const serverUrl = getSavedServerUrl();
+            if (!serverUrl) {
+                alert('No hay URL configurada para diagnosticar');
+                return;
+            }
+
+            let diagnosticInfo = `🔍 DIAGNÓSTICO DE CONECTIVIDAD\n`;
+            diagnosticInfo += `══════════════════════════════\n`;
+            diagnosticInfo += `📡 URL configurada: ${serverUrl}\n`;
+            diagnosticInfo += `📱 Plataforma: ${Capacitor && Capacitor.isNativePlatform() ? 'Móvil nativa' : 'Web'}\n`;
+            
+            // Verificar formato de URL
+            if (serverUrl.startsWith('http://')) {
+                diagnosticInfo += `🔓 Protocolo: HTTP (no seguro)\n`;
+            } else if (serverUrl.startsWith('https://')) {
+                diagnosticInfo += `🔒 Protocolo: HTTPS (seguro)\n`;
+            } else {
+                diagnosticInfo += `❌ Protocolo: INVÁLIDO\n`;
+            }
+
+            // Verificar si es IP local
+            if (serverUrl.includes('localhost') || serverUrl.includes('127.0.0.1')) {
+                diagnosticInfo += `🏠 Tipo: Localhost (solo funciona en emulador)\n`;
+            } else if (serverUrl.includes('192.168.') || serverUrl.includes('10.0.') || serverUrl.includes('172.')) {
+                diagnosticInfo += `🏠 Tipo: Red local (IP privada)\n`;
+            } else {
+                diagnosticInfo += `🌐 Tipo: Internet público\n`;
+            }
+
+            // Verificar conexión de red
+            if (Capacitor && Capacitor.isNativePlatform() && Network) {
+                try {
+                    const status = await Network.getStatus();
+                    diagnosticInfo += `📶 Estado de red: ${status.connected ? 'Conectado' : 'Desconectado'}\n`;
+                    diagnosticInfo += `📡 Tipo de conexión: ${status.connectionType}\n`;
+                } catch (error) {
+                    diagnosticInfo += `📶 Estado de red: No disponible\n`;
+                }
+            }
+
+            diagnosticInfo += `\n💡 RECOMENDACIONES:\n`;
+            diagnosticInfo += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            
+            if (serverUrl.includes('localhost') || serverUrl.includes('127.0.0.1')) {
+                diagnosticInfo += `• Usa la IP real de tu PC en vez de localhost\n`;
+                diagnosticInfo += `• Ejemplo: http://192.168.1.100:8080\n`;
+            }
+            
+            if (serverUrl.startsWith('http://')) {
+                diagnosticInfo += `• HTTP está permitido en la app\n`;
+                diagnosticInfo += `• Verifica que el servidor permita conexiones externas\n`;
+            }
+            
+            diagnosticInfo += `• Verifica que el servidor esté ejecutándose\n`;
+            diagnosticInfo += `• Asegúrate de estar en la misma red WiFi\n`;
+            diagnosticInfo += `• Desactiva temporalmente el firewall del PC\n`;
+
+            alert(diagnosticInfo);
+        }        // Inicialización cuando Capacitor esté listo
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOM cargado, inicializando aplicación móvil...');
+
+            // Verificar que todos los elementos existan
+            const configContainer = document.getElementById('configContainer');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+            const webFrame = document.getElementById('webFrame');
+
+            console.log('Elementos encontrados:', {
+                configContainer: !!configContainer,
+                loadingContainer: !!loadingContainer,
+                errorContainer: !!errorContainer,
+                webFrame: !!webFrame
+            });
+
+            // Inicializar plugins de Capacitor
+            const capacitorReady = initializeCapacitorPlugins();
+            if (capacitorReady) {
+                console.log('Capacitor listo, configurando componentes nativos...');
+            }
+
+            // Configurar componentes nativos
+            await setupStatusBar();
+            setupBackButtonHandler();
+
+            // Escuchar cambios de red
+            if (Capacitor && Capacitor.isNativePlatform() && Network) {
+                try {
+                    Network.addListener('networkStatusChange', status => {
+                        if (!status.connected) {
+                            showToast('Conexión perdida');
+                        } else {
+                            showToast('Conexión restaurada');
+                            // Recargar si hay error
+                            if (document.getElementById('errorContainer').style.display !== 'none') {
+                                loadWebApp();
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.log('Network listener no disponible:', error);
+                }
+            }
+
+            // Configurar formulario de URL
+            document.getElementById('serverUrlForm').onsubmit = function(e) {
+                e.preventDefault();
+                const url = document.getElementById('serverUrlInput').value.trim();
+                console.log('URL introducida:', url);
+                if (url) {
+                    saveServerUrl(url);
+                    document.getElementById('configContainer').style.display = 'none';
+                    loadWebApp();
+                }
+            };
+
+            // Verificar URL guardada y decidir qué mostrar
+            const savedUrl = getSavedServerUrl();
+            console.log('URL guardada encontrada:', savedUrl);
+            
+            if (savedUrl) {
+                console.log('Cargando app con URL guardada:', savedUrl);
+                loadWebApp();
+            } else {
+                console.log('No hay URL guardada, mostrando pantalla de configuración');
+                showConfigScreen();
+            }
+        });// Manejar pausas de la aplicación
+        function setupAppStateListener() {
+            if (Capacitor && Capacitor.isNativePlatform() && App) {
+                try {
+                    App.addListener('appStateChange', ({ isActive }) => {
+                        if (isActive) {
+                            console.log('Aplicación activada');
+                            // Verificar si necesita recargar
+                            const webFrame = document.getElementById('webFrame');
+                            if (webFrame.style.display === 'none') {
+                                loadWebApp();
+                            }
+                        } else {
+                            console.log('Aplicación en segundo plano');
+                        }
+                    });
+                } catch (error) {
+                    console.log('App state listener no disponible:', error);
+                }
+            }
+        }        // Configurar listener de estado de la app después de la inicialización
+        setTimeout(() => {
+            setupAppStateListener();
+        }, 1000);
+
+        // Función para probar conectividad HTTP específicamente
+        async function testHttpConnectivity(url) {
+            return new Promise((resolve) => {
+                const timeout = setTimeout(() => {
+                    resolve({
+                        success: false,
+                        error: 'Timeout - el servidor no responde',
+                        details: 'La conexión tardó más de 10 segundos'
+                    });
+                }, 10000);
+
+                // Intentar con fetch (puede fallar por CORS pero indica si el servidor está disponible)
+                fetch(url, { 
+                    method: 'HEAD', 
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                })
+                .then(() => {
+                    clearTimeout(timeout);
+                    resolve({
+                        success: true,
+                        method: 'fetch'
+                    });
+                })
+                .catch((error) => {
+                    // Intentar cargando una imagen oculta como test de conectividad
+                    const img = new Image();
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        resolve({
+                            success: true,
+                            method: 'image_load'
+                        });
+                    };
+                    img.onerror = () => {
+                        clearTimeout(timeout);
+                        resolve({
+                            success: false,
+                            error: error.message || 'Conexión rechazada',
+                            details: 'El servidor no permite conexiones desde el móvil'
+                        });
+                    };
+                    img.src = url + '/favicon.ico?' + Date.now();
+                });
+            });
+        }
+
+        // Función mejorada para cargar la app con test de conectividad
+        async function loadWebAppWithTest() {
+            const serverUrl = getSavedServerUrl();
+            if (!serverUrl) {
+                showConfigScreen();
+                return;
+            }
+
+            showToast('Probando conectividad...');
+            
+            // Probar conectividad primero
+            const testResult = await testHttpConnectivity(serverUrl);
+            
+            if (!testResult.success) {
+                showError(`❌ Test de conectividad falló\n\n` +
+                    `🌐 URL: ${serverUrl}\n` +
+                    `❌ Error: ${testResult.error}\n` +
+                    `📋 Detalles: ${testResult.details}\n\n` +
+                    `💡 Sugerencias:\n` +
+                    `• Verifica que el servidor esté ejecutándose\n` +
+                    `• Confirma que el firewall permita el puerto\n` +
+                    `• Asegúrate de estar en la misma red WiFi\n` +
+                    `• Intenta desde el navegador del móvil primero`);
+                return;
+            }
+
+            showToast(`✅ Conectividad OK (${testResult.method})`);
+            
+            // Si la conectividad es exitosa, proceder con el iframe
+            setTimeout(() => {
+                loadWebApp();
+            }, 1000);
+        }
+
+        // Botón de test rápido en la pantalla de error
+        function addTestButton() {
+            const errorContainer = document.getElementById('errorContainer');
+            const existingTestBtn = errorContainer.querySelector('.test-button');
+            
+            if (!existingTestBtn) {
+                const testButton = document.createElement('button');
+                testButton.className = 'retry-button test-button';
+                testButton.textContent = 'Test Conectividad';
+                testButton.style.marginLeft = '10px';
+                testButton.onclick = loadWebAppWithTest;
+                
+                const retryButton = errorContainer.querySelector('.retry-button');
+                retryButton.parentNode.insertBefore(testButton, retryButton.nextSibling);
+            }
+        }
+
+        // Modificar la función showError para añadir el botón de test
+        const originalShowError = showError;
+        showError = function(message) {
+            originalShowError(message);
+            setTimeout(() => {
+                addTestButton();
+            }, 100);
+        };
+    </script>
+</body>
+</html>

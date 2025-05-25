@@ -22,6 +22,10 @@ public class Main {
      */
     public static void main(String[] args) {
         System.out.println("[INFO] Lanzador manual: este modo es solo para pruebas o uso sin API REST.");
+
+        // Configurar propiedades SSL antes de inicializar el bot
+        configureSSLProperties();
+
         try {
             // Usar FileConfigService para la configuración centralizada
             ConfigService configService = new FileConfigService("src/main/resources/config.properties");
@@ -67,6 +71,38 @@ public class Main {
             logger.logInfo("Ejecución interrumpida. Cerrando bot...");
         } catch (Exception e) {
             logger.logError("Error al iniciar el bot en modo manual", e);
+        }
+    }
+
+    /**
+     * Configura las propiedades del sistema para SSL/TLS.
+     * Esta configuración es crítica para evitar errores de handshake SSL
+     * con Java 21 al conectarse a servicios externos como Discord.
+     */
+    private static void configureSSLProperties() {
+        System.out.println("[INFO] Configurando propiedades SSL para Java 21...");
+
+        try {
+            // Protocolos TLS habilitados
+            System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
+            System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.3");
+
+            // Algoritmos deshabilitados (menos restrictivo para compatibilidad)
+            System.setProperty("jdk.tls.disabledAlgorithms",
+                    "SSLv3, RC4, DES, MD5withRSA, DH keySize < 1024, EC keySize < 224, anon, NULL");
+
+            // Configuraciones adicionales para mejorar compatibilidad
+            System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+            System.setProperty("sun.security.ssl.allowUnsafeRenegotiation", "true");
+            System.setProperty("sun.security.ssl.allowLegacyHelloMessages", "true");
+
+            // Configuraciones específicas para OkHttp (utilizado por JDA)
+            System.setProperty("okhttp.protocols", "http/1.1");
+
+            System.out.println("[INFO] Propiedades SSL configuradas correctamente");
+
+        } catch (Exception e) {
+            System.err.println("[ERROR] Error al configurar propiedades SSL: " + e.getMessage());
         }
     }
 }
