@@ -1,37 +1,61 @@
 package backend.config;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
  * Implementación de ConfigService que carga la configuración desde un archivo
- * de propiedades.
+ * de propiedades usando el classpath para compatibilidad con JAR empaquetado.
  * 
  * @author PelayoPS
  */
 public class FileConfigService implements ConfigService {
     private final Properties properties;
-    private final String filePath;
-    private static final backend.log.LoggingManager logger = new backend.log.LoggingManager();
-
-    /**
+    private final Path configFile;
+    private static final backend.log.LoggingManager logger = new backend.log.LoggingManager();    /**
      * Crea una instancia de FileConfigService y carga las propiedades desde el
-     * archivo especificado.
+     * classpath o archivo del sistema.
      *
-     * @param filePath Ruta del archivo de configuración
+     * @param resourcePath Ruta del recurso de configuración (ej: "config.properties")
      */
-    public FileConfigService(String filePath) {
-        this.filePath = filePath;
-        properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(filePath)) {
-            properties.load(fis);
+    public FileConfigService(String resourcePath) {
+        this.properties = new Properties();
+        
+        // Convertir ruta de desarrollo a nombre de recurso
+        String resourceName = resourcePath.replace("src/main/resources/", "")
+                                         .replace("src\\main\\resources\\", "");
+        
+        Path tempConfigFile = null;
+        
+        // Intentar cargar desde classpath primero (JAR empaquetado)
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(resourceName)) {
+            if (is != null) {
+                properties.load(is);
+                logger.logInfo("Configuración cargada desde classpath: " + resourceName);
+                // Para guardar cambios, crear archivo en directorio de trabajo
+                tempConfigFile = Paths.get(System.getProperty("user.dir"), resourceName);
+            } else {
+                throw new IOException("Recurso no encontrado en classpath: " + resourceName);
+            }
         } catch (IOException e) {
-            throw new RuntimeException("No se pudo cargar el archivo de configuración: " + filePath, e);
+            // Si falla classpath, intentar cargar como archivo del sistema (desarrollo)
+            try (FileInputStream fis = new FileInputStream(resourcePath)) {
+                properties.load(fis);
+                logger.logInfo("Configuración cargada desde archivo: " + resourcePath);
+                tempConfigFile = Paths.get(resourcePath);
+            } catch (IOException ex) {
+                throw new RuntimeException("No se pudo cargar el archivo de configuración: " + resourcePath, ex);
+            }
         }
-    }
-
-    /**
+        
+        this.configFile = tempConfigFile;
+    }/**
      * Establece el valor de una clave de configuración en memoria.
      *
      * @param key Clave de la configuración
@@ -47,10 +71,16 @@ public class FileConfigService implements ConfigService {
      */
     @Override
     public void save() {
-        try (java.io.FileOutputStream out = new java.io.FileOutputStream(filePath)) {
-            properties.store(out, "Configuración del bot actualizada");
+        try {
+            // Crear directorio padre si no existe
+            Files.createDirectories(configFile.getParent());
+            
+            try (FileOutputStream out = new FileOutputStream(configFile.toFile())) {
+                properties.store(out, "Configuración del bot actualizada");
+                logger.logInfo("Configuración guardada en: " + configFile.toString());
+            }
         } catch (IOException e) {
-            throw new RuntimeException("No se pudo guardar el archivo de configuración: " + filePath, e);
+            throw new RuntimeException("No se pudo guardar el archivo de configuración: " + configFile.toString(), e);
         }
     }
 
@@ -62,14 +92,18 @@ public class FileConfigService implements ConfigService {
      */
     @Override
     public String get(String key) {
-        try (FileInputStream fis = new FileInputStream(filePath)) {
-            properties.load(fis);
-        } catch (IOException e) {
-            logger.logWarn("No se pudo recargar el archivo de configuración: " + filePath);
+        // Recargar desde archivo si existe (para cambios externos)
+        if (Files.exists(configFile)) {
+            try (FileInputStream fis = new FileInputStream(configFile.toFile())) {
+                properties.load(fis);
+            } catch (IOException e) {
+                logger.logWarn("No se pudo recargar el archivo de configuración: " + configFile.toString());
+            }
         }
+        
         String value = properties.getProperty(key);
         if ("token".equals(key)) {
-            logger.logInfo("[DEBUG] get('token') desde '" + filePath + "' => ''");
+            logger.logInfo("[DEBUG] get('token') desde '" + configFile.toString() + "' => ''");
         }
         return value;
     }

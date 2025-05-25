@@ -42,7 +42,7 @@ java {
 
 application {
     mainClass = 'com.discordbot.BackendGUI'
-    applicationName = 'discord-manager-backend'
+    applicationName = 'discord-bot-manager'
 }
 
 tasks.withType(JavaCompile) {
@@ -52,14 +52,14 @@ tasks.withType(JavaCompile) {
 // Configurar el JAR para incluir todas las dependencias
 bootJar {
     enabled = true
-    archiveClassifier = ''
-    archiveBaseName = 'discord-manager-backend'
+    archiveClassifier = 'fat'
+    archiveBaseName = 'discord-bot-manager'
 }
 
 jar {
     enabled = true
     archiveClassifier = 'original'
-    archiveBaseName = 'discord-manager-backend'
+    archiveBaseName = 'discord-bot-manager'
 }
 
 // Sincroniza la versión de build.gradle con config.properties
@@ -112,17 +112,19 @@ runtime {
         'jdk.zipfs'
     ]
     launcher {
-        noConsole = true
+        noConsole = false
     }
     jpackage {
-        // Opciones de jpackage
+        // Opciones de jpackage usando la sintaxis correcta del plugin beryx
         installerType = 'msi'
         installerOptions = [
             '--win-dir-chooser',
             '--win-menu',
             '--win-shortcut',
             '--win-per-user-install',
-            '--win-menu-group', 'Discord Bot'
+            '--win-menu-group', 'Discord Bot Manager',
+            '--description', 'Aplicación de gestión para Discord Bot con interfaz gráfica',
+            '--vendor', 'Discord Bot Team'
         ]
     }
 }

@@ -342,7 +342,18 @@ public class BackendGUI extends JFrame {
 
     private void startBackend() {
         try {
-            applicationContext = SpringApplication.run(DiscordBotApplication.class);
+            // Ejecutar la aplicación Spring Boot backend en un hilo separado
+            Thread backendThread = new Thread(() -> {
+                try {
+                    applicationContext = SpringApplication.run(backend.BotApplication.class);
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(
+                            () -> appendToConsole("Error al iniciar el backend: " + e.getMessage() + "\n"));
+                }
+            });
+            backendThread.setDaemon(true);
+            backendThread.start();
+
             isRunning = true;
             updateButtonStates();
             updateStatusLabel();

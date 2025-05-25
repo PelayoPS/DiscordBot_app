@@ -53,6 +53,7 @@ yarn-debug.log*
 # Electron build outputs
 src/main/desktop/electron-build/
 src/main/desktop/dist/
+src/main/desktop/build-output/
 *.exe
 *.dmg
 *.AppImage
