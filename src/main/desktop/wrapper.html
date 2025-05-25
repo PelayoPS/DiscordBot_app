@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: #1e1e1e;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        .web-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            border: none;
+        }
+
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #888;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #7289da;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="web-container" class="web-container">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Cargando aplicación...</p>
+        </div>
+    </div>
+
+    <script>        // Función para cargar la web en el contenedor
+        function loadWebInContainer(url) {
+            const container = document.getElementById('web-container');
+            
+            // Crear iframe para cargar la web
+            const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.background = '#ffffff';
+            iframe.src = url;
+            
+            // Limpiar el contenedor y agregar el iframe
+            container.innerHTML = '';
+            container.appendChild(iframe);
+        }
+
+        // Función para mostrar error en el contenedor
+        function showErrorInContainer() {
+            const container = document.getElementById('web-container');
+            container.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #888; text-align: center; padding: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+                    <h2 style="margin-bottom: 10px; color: #e74c3c;">Error de conexión</h2>
+                    <p style="margin-bottom: 20px;">No se pudo conectar con el servidor backend</p>
+                    <button onclick="window.electronAPI?.retryBackendConnection?.()" 
+                            style="padding: 10px 20px; background: #7289da; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Reintentar conexión
+                    </button>
+                </div>
+            `;
+        }        // Función para redimensionar el contenedor web
+        function resizeWebContainer(width = '100%', height = '100vh', top = '0', left = '0') {
+            const container = document.getElementById('web-container');
+            container.style.width = width;
+            container.style.height = height;
+            container.style.top = top;
+            container.style.left = left;
+        }
+
+        // Exponer funciones globalmente para ser llamadas desde main.js
+        window.webContainerAPI = {
+            loadWeb: loadWebInContainer,
+            showError: showErrorInContainer,
+            resize: resizeWebContainer
+        };
+    </script>
+</body>
+</html>

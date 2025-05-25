@@ -1002,7 +1002,6 @@ body.light-theme .menu-item i {
 
 .theme-toggle {
     align-items: center;
-    border-top: 1px solid var(--color-border);
     display: flex;
     margin-top: auto;
     padding: 16px;
@@ -1020,7 +1019,6 @@ body.light-theme .menu-item i {
 
 body.light-theme .theme-toggle {
     background-color: #f4f6fa !important;
-    border-top: 1px solid #e0e4ea !important;
     color: #4f5660 !important;
 }
 
@@ -1151,20 +1149,18 @@ body.light-theme .theme-toggle {
 @media (max-width: 900px) {
     .main-interface {
         flex-direction: column !important;
-    }
-
-    .sidebar,
+    }    .sidebar,
     .sidebar.open {
         background: var(--color-sidebar);
         border-right: 1px solid var(--color-border);
         box-shadow: 2px 0 8px #0003;
         display: block;
-        height: 100vh;
+        height: calc(100vh - 40px);
         left: 0;
         min-width: 0;
         overflow: hidden;
         position: fixed;
-        top: 0;
+        top: 40px;
         transition: transform 0.3s, opacity 0.3s, width 0.3s;
         z-index: 2000;
     }
@@ -1193,16 +1189,14 @@ body.light-theme .theme-toggle {
 
     .menu-toggle-btn {
         display: flex !important;
-    }
-
-    .sidebar-overlay {
+    }    .sidebar-overlay {
     background: rgba(0, 0, 0, 0.3);
     display: none;
-    height: 100vh;
+    height: calc(100vh - 40px);
     left: 0;
     opacity: 0;
     position: fixed;
-    top: 0;
+    top: 40px;
     transition: opacity 0.3s;
     width: 100vw;
     z-index: 1999;
@@ -1243,12 +1237,11 @@ body.light-theme .theme-toggle {
 
     .screen-header .nav-btn.active {
         background: var(--color-primary-dark);
-    }
-
-    .dashboard-grid {
+    }    .dashboard-grid {
         grid-template-columns: 1fr !important;
+        height: calc(100vh - 40px) !important;
         max-height: calc(100vh - 40px) !important;
-        overflow-y: auto !important;
+        overflow: hidden !important;
     }
 
     .dashboard-card {
