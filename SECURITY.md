@@ -25,10 +25,10 @@ Este proyecto requiere configuración de credenciales sensibles que **NO DEBEN**
 3. Ve a "Bot" → "Token" → "Reset Token"
 4. **⚠️ IMPORTANTE:** Si tu token actual está comprometido, regénéralo
 
-#### API Key de Gemini:
-1. Ve a https://console.cloud.google.com/
-2. Selecciona tu proyecto
-3. Ve a "APIs & Services" → "Credentials"
+#### API Key AI openAI:
+1. Ve a https://platform.openai.com/signup
+2. Crea una nueva cuenta o inicia sesión
+3. Ve a "API Keys"
 4. Crea una nueva API Key
 
 ### 🛡️ Buenas Prácticas:
