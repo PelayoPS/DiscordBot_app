@@ -21,16 +21,22 @@ public class Main {
      * @param args Argumentos de línea de comandos
      */
     public static void main(String[] args) {
-        System.out.println("[INFO] Lanzador manual: este modo es solo para pruebas o uso sin API REST.");
-
-        // Configurar propiedades SSL antes de inicializar el bot
+        System.out.println("[INFO] Lanzador manual: este modo es solo para pruebas o uso sin API REST."); // Configurar
+                                                                                                          // propiedades
+                                                                                                          // SSL antes
+                                                                                                          // de
+                                                                                                          // inicializar
+                                                                                                          // el bot
         configureSSLProperties();
+
+        // Aplicar configuración SSL específica para jpackage
+        backend.core.JPackageSSLHelper.configureIfJPackage();
 
         try {
             // Usar FileConfigService para la configuración centralizada
-            ConfigService configService = new FileConfigService("src/main/resources/config.properties");
-
-            // Obtener token desde configService
+            ConfigService configService = new FileConfigService("src/main/resources/config.properties"); // Obtener
+                                                                                                         // token desde
+                                                                                                         // configService
             String token = configService.get("token");
             if (token == null || token.isEmpty()) {
                 logger.logError(
@@ -39,9 +45,18 @@ public class Main {
                 return;
             }
 
-            // Instanciar el bot directamente (sin exponer API REST)
+            // Crear DatabaseManager con el configService
+            backend.db.DatabaseManager databaseManager = new backend.db.DatabaseManager(configService);
+            logger.logInfo("DatabaseManager creado correctamente");
+
+            // Crear ServiceFactory con configService y databaseManager
             backend.commands.ModuleManager moduleManager = new backend.commands.ModuleManager();
-            Bot bot = new Bot(token, null, null, moduleManager);
+            backend.core.ServiceFactory serviceFactory = new backend.core.ServiceFactory(configService, databaseManager,
+                    moduleManager);
+            logger.logInfo("ServiceFactory creado correctamente");
+
+            // Instanciar el bot directamente (sin exponer API REST)
+            Bot bot = new Bot(token, serviceFactory, databaseManager, moduleManager);
             logger.logInfo("Bot instanciado correctamente (modo manual)");
 
             // Mostrar comandos disponibles

@@ -109,10 +109,26 @@ runtime {
         'java.transaction.xa',
         'java.compiler',
         'jdk.unsupported',
-        'jdk.zipfs'
+        'jdk.zipfs',
+        // Módulos adicionales para SSL/TLS
+        'jdk.crypto.ec',
+        'jdk.crypto.cryptoki',
+        'jdk.security.auth',
+        'jdk.security.jgss'
     ]
     launcher {
         noConsole = false
+        // JVM arguments para mejorar SSL en jpackage
+        jvmArgs = [
+            '-Djava.net.useSystemProxies=true',
+            '-Djavax.net.ssl.trustStoreType=JKS',
+            '-Dhttps.protocols=TLSv1.2,TLSv1.3',
+            '-Djdk.tls.client.protocols=TLSv1.2,TLSv1.3',
+            '-Dsun.security.ssl.allowUnsafeRenegotiation=true',
+            '-Dsun.security.ssl.allowLegacyHelloMessages=true',
+            '-Djdk.tls.useExtendedMasterSecret=false',
+            '-Dcom.sun.net.ssl.checkRevocation=false'
+        ]
     }
     jpackage {
         // Opciones de jpackage usando la sintaxis correcta del plugin beryx

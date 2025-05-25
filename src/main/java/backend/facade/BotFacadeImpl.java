@@ -21,8 +21,7 @@ import backend.modules.CommandManager;
 import backend.services.ModerationService;
 import backend.services.UsuarioService;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
+import backend.core.JPackageSSLHelper;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -174,28 +173,11 @@ public class BotFacadeImpl implements BotFacade {
             long minutes = uptime.toMinutes() % 60;
             long seconds = uptime.getSeconds() % 60;
             tiempoActivo = String.format("%d días, %d horas, %d min, %d seg", days, hours, minutes, seconds);
-            // RAM y CPU
-            Runtime runtime = Runtime.getRuntime();
-            long usedMem = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024);
-            long maxMem = runtime.maxMemory() / (1024 * 1024);
-            ram = usedMem + " MB / " + maxMem + " MB";
-            OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-            double cpuLoad = -1;
-            try {
-                if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-                    com.sun.management.OperatingSystemMXBean sunOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
-                    cpuLoad = sunOsBean.getProcessCpuLoad();
-                    if (cpuLoad >= 0) {
-                        cpu = String.format("%.2f%%", cpuLoad * 100);
-                    } else {
-                        cpu = "0%";
-                    }
-                } else {
-                    cpu = String.format("%.2f", osBean.getSystemLoadAverage());
-                }
-            } catch (Exception e) {
-                cpu = "-";
-            }
+
+            // Usar el helper de jpackage para información del sistema
+            String[] systemInfo = JPackageSSLHelper.getCompatibleSystemInfo();
+            ram = systemInfo[0];
+            cpu = systemInfo[1];
         }
         return new BotStatusDTO(estado, tiempoActivo, version, ram, cpu);
     }
