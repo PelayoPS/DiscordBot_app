@@ -1,0 +1,15 @@
+flowchart TD
+    %% Entidades
+    USUARIO["<b>USUARIO</b><br/>id_usuario<br/>tipo_usuario<br/>nivel<br/>puntos_xp<br/>timestamp_ultimo_mensaje"]
+    PENALIZACION["<b>PENALIZACION</b><br/>id_penalizacion<br/>tipo<br/>fecha<br/>razon<br/>duracion_segundos"]
+    
+    %% Relaciones
+    ES_SANCIONADO{"es sancionado"}
+    APLICA_SANCION{"aplica sanción"}
+    
+    %% Conexiones
+    USUARIO ---|1| ES_SANCIONADO
+    ES_SANCIONADO ---|N| PENALIZACION
+    
+    USUARIO ---|1| APLICA_SANCION
+    APLICA_SANCION ---|N| PENALIZACION
