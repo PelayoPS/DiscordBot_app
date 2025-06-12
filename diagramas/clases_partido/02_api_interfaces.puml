@@ -1,0 +1,57 @@
+@startuml API_Interfaces
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #e3f2fd
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title API Interfaces - Core Contracts
+
+' Clases externas JDA
+class SlashCommandInteractionEvent
+class EventListener
+
+package bot.api {
+  interface Command {
+    +getName(): String
+    +getDescription(): String
+    +execute(SlashCommandInteractionEvent event): void
+    +getSlashCommandData(): SlashCommandData
+  }
+  
+  interface EventHandler {
+    +handle(Event event): void
+    +getEventType(): Class<?>
+  }
+  
+  interface Module {
+    +getName(): String
+    +getVersion(): String
+    +initialize(): void
+    +shutdown(): void
+    +getCommands(): List<Command>
+    +getEventHandlers(): List<EventHandler>
+    +isEnabled(): boolean
+  }
+}
+
+note top of Command : "Interfaz base para todos\nlos comandos del bot"
+note top of EventHandler : "Interfaz para manejo\nde eventos de Discord"
+note top of Module : "Interfaz para módulos\nplugeables del bot"
+
+' Relaciones con clases externas
+Command ..> SlashCommandInteractionEvent : uses
+EventHandler ..> EventListener : extends concept
+Module --> Command : provides
+Module --> EventHandler : provides
+
+@enduml

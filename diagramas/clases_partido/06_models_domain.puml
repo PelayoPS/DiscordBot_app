@@ -1,0 +1,117 @@
+@startuml Models_Domain
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Domain Models - Core Business Entities
+
+' Clases externas
+class Instant
+class List
+
+package bot.models {
+  class Usuario {
+    -id: Long
+    -discordId: String
+    -guildId: String
+    -username: String
+    -experiencia: int
+    -nivel: int
+    -fechaRegistro: Instant
+    -penalizaciones: List<Penalizacion>
+    +getId(): Long
+    +getDiscordId(): String
+    +getGuildId(): String
+    +getUsername(): String
+    +getExperiencia(): int
+    +getNivel(): int
+    +getFechaRegistro(): Instant
+    +getPenalizaciones(): List<Penalizacion>
+    +addPenalizacion(Penalizacion pen): void
+    +removePenalizacion(Penalizacion pen): void
+    +addExperiencia(int exp): void
+    +calculateLevel(): int
+  }
+  
+  class Penalizacion {
+    -id: Long
+    -usuarioId: String
+    -adminModId: String
+    -tipo: TipoPenalizacion
+    -razon: String
+    -fechaCreacion: Instant
+    -fechaExpiracion: Instant
+    -activa: boolean
+    -usuario: Usuario
+    -adminMod: Usuario
+    +getId(): Long
+    +getUsuarioId(): String
+    +getAdminModId(): String
+    +getTipo(): TipoPenalizacion
+    +getRazon(): String
+    +getFechaCreacion(): Instant
+    +getFechaExpiracion(): Instant
+    +isActiva(): boolean
+    +getUsuario(): Usuario
+    +getAdminMod(): Usuario
+    +expire(): void
+    +isExpired(): boolean
+  }
+  
+  enum TipoPenalizacion {
+    BAN
+    KICK
+    MUTE
+    WARN
+    TIMEOUT
+    +getDisplayName(): String
+    +getDuration(): Duration
+  }
+  
+  class Experiencia {
+    -id: Long
+    -usuarioId: String
+    -guildId: String
+    -experiencia: int
+    -nivel: int
+    -fechaUltimaActualizacion: Instant
+    +getId(): Long
+    +getUsuarioId(): String
+    +getGuildId(): String
+    +getExperiencia(): int
+    +getNivel(): int
+    +getFechaUltimaActualizacion(): Instant
+    +addExperiencia(int exp): void
+    +calculateLevel(): int
+    +resetExperiencia(): void
+  }
+}
+
+' Relaciones entre modelos
+Usuario *-- Penalizacion : penalizaciones
+Penalizacion --> Usuario : usuario
+Penalizacion --> Usuario : adminMod
+Penalizacion --> TipoPenalizacion : tipo
+Usuario --> Experiencia : has
+
+' Dependencias externas
+Usuario --> Instant
+Usuario --> List
+Penalizacion --> Instant
+Experiencia --> Instant
+
+note top of Usuario : "Entidad principal que representa\nun usuario de Discord en el servidor"
+note right of Penalizacion : "Representa sanciones aplicadas\na usuarios por moderadores"
+note bottom of TipoPenalizacion : "Tipos de penalizaciones\ndisponibles en el sistema"
+
+@enduml

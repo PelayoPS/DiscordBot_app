@@ -1,0 +1,150 @@
+@startuml Package_Architecture_Overview
+scale 1.0
+skinparam backgroundColor white
+skinparam packageBackgroundColor #f8f9fa
+skinparam packageBorderColor #6c757d
+skinparam packageFontColor #212529
+skinparam packageFontSize 10
+skinparam classFontColor #212529
+skinparam classFontSize 9
+skinparam noteFontColor #212529
+skinparam noteFontSize 8
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing false
+skinparam linetype ortho
+skinparam minClassWidth 60
+skinparam packageStyle rect
+
+title Discord Bot - Arquitectura de Paquetes
+
+' === CAPA DE PRESENTACIÓN ===
+rectangle "CAPA DE PRESENTACIÓN" as PresentationLayer {
+  package "Commands\nSystem" as Commands #e3f2fd {
+    [ModuleManager]
+    [AdminCommands]
+    [ModCommands] 
+    [UserCommands]
+  }
+  
+  package "Web\nInterface" as WebFacade #e8f5e8 {
+    [BotFacade]
+    [RestController]
+    [DTOs]
+  }
+  
+  package "Event\nListeners" as Listeners #fff3e0 {
+    [ExperienceListener]
+    [AIChatListener]
+  }
+}
+
+' === CAPA DE APLICACIÓN ===
+rectangle "CAPA DE APLICACIÓN" as ApplicationLayer {
+  package "Core\nInfrastructure" as Core #ffebee {
+    [Bot]
+    [CommandRegistry]
+    [ServiceFactory]
+  }
+  
+  package "Controllers" as Controllers #f3e5f5 {
+    [AdminController]
+    [UserController]
+    [ModerationController]
+  }
+}
+
+' === CAPA DE DOMINIO ===
+rectangle "CAPA DE DOMINIO" as DomainLayer {
+  package "Business\nLogic" as Services #e8f5e8 {
+    [UserService]
+    [ModerationService]
+    [AIChatService]
+  }
+  
+  package "Domain\nModels" as Models #fff8e1 {
+    [Usuario]
+    [Penalizacion]
+    [Experiencia]
+  }
+}
+
+' === CAPA DE INFRAESTRUCTURA ===
+rectangle "CAPA DE INFRAESTRUCTURA" as InfrastructureLayer {
+  package "Data\nAccess" as Repositories #f1f8e9 {
+    [UsuarioRepository]
+    [PenalizacionRepository]
+  }
+  
+  package "Database" as Database #e3f2fd {
+    [DatabaseManager]
+    [ConnectionPool]
+  }
+  
+  package "Configuration" as Config #fce4ec {
+    [ConfigManager]
+    [ConfigService]
+  }
+  
+  package "Utilities" as Utils #f9fbe7 {
+    [LoggingManager]
+    [ValidationUtils]
+  }
+}
+
+' === RELACIONES ENTRE CAPAS ===
+PresentationLayer -down-> ApplicationLayer : "coordina"
+ApplicationLayer -down-> DomainLayer : "usa"
+DomainLayer -down-> InfrastructureLayer : "depende de"
+
+' === RELACIONES ESPECÍFICAS ===
+Commands --> Core : "registra en"
+Commands --> Controllers : "delega a"
+
+WebFacade --> Services : "expone"
+WebFacade --> Core : "gestiona"
+
+Listeners --> Services : "invoca"
+Listeners --> Core : "registrado en"
+
+Controllers --> Services : "utiliza"
+Services --> Repositories : "accede via"
+Services --> Models : "manipula"
+
+Repositories --> Database : "conecta a"
+Repositories --> Models : "persiste"
+
+Database --> Config : "configurado por"
+Core --> Config : "usa"
+Core --> Utils : "utiliza"
+
+' === NOTAS EXPLICATIVAS ===
+note right of PresentationLayer
+  **Punto de Entrada**
+  - Comandos de Discord
+  - API REST
+  - Eventos reactivos
+end note
+
+note right of ApplicationLayer  
+  **Coordinación**
+  - Orchestración de servicios
+  - Registro de componentes
+  - Control de flujo
+end note
+
+note right of DomainLayer
+  **Lógica de Negocio**
+  - Reglas del dominio
+  - Entidades del sistema
+  - Procesamiento central
+end note
+
+note right of InfrastructureLayer
+  **Servicios de Soporte**
+  - Persistencia de datos
+  - Configuración
+  - Utilidades transversales
+end note
+
+@enduml

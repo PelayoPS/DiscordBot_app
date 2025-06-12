@@ -1,0 +1,144 @@
+@startuml Web_Facade_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #e8f5e8
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Web Facade Module - REST API & Web Interface
+
+package bot.facade {
+  interface BotFacade {
+    +getBotStatus(): BotStatusDTO
+    +getIntegrationStatus(): BotIntegracionesDTO
+    +updateBotConfig(BotConfigDTO config): void
+    +getCommands(): List<CommandDTO>
+    +getModules(): List<ModuleDTO>
+    +restartBot(): void
+  }
+  
+  class BotFacadeImpl {
+    -serviceFactory: ServiceFactory
+    -configService: ConfigService
+    -logger: Logger
+    +getBotStatus(): BotStatusDTO
+    +getIntegrationStatus(): BotIntegracionesDTO
+    +updateBotConfig(BotConfigDTO config): void
+  }
+  
+  class BotRestController {
+    -botFacade: BotFacade
+    -moduleService: ModuleService
+    +getStatus(): ResponseEntity<BotStatusDTO>
+    +getConfig(): ResponseEntity<BotConfigDTO>
+    +updateConfig(BotConfigDTO config): ResponseEntity<?>
+    +getCommands(): ResponseEntity<List<CommandDTO>>
+    +getModules(): ResponseEntity<List<ModuleDTO>>
+  }
+}
+
+package bot.facade.controller {
+  class CustomErrorController {
+    +handleError(HttpServletRequest request): ResponseEntity<ErrorResponse>
+    +handleNotFoundException(): ResponseEntity<ErrorResponse>
+    +handleValidationException(): ResponseEntity<ErrorResponse>
+  }
+}
+
+package bot.facade.dto {
+  class BotStatusDTO {
+    -online: boolean
+    -uptime: long
+    -guilds: int
+    -users: int
+    -commands: int
+  }
+  
+  class BotConfigDTO {
+    -token: String
+    -prefix: String
+    -debugMode: boolean
+  }
+  
+  class BotIntegracionesDTO {
+    -jdaStatus: JdaStatus
+    -aiApiStatus: AiApiStatus
+    -databaseStatus: DatabaseStatus
+  }
+  
+  class BotPresenceDTO {
+    -status: String
+    -activity: String
+    -type: String
+  }
+  
+  class CommandDTO {
+    -name: String
+    -description: String
+    -module: String
+    -enabled: boolean
+  }
+  
+  class ModuleDTO {
+    -name: String
+    -version: String
+    -enabled: boolean
+    -commands: List<String>
+  }
+  
+  class JdaStatus {
+    -connected: boolean
+    -ping: long
+    -guilds: int
+  }
+  
+  class AiApiStatus {
+    -available: boolean
+    -responseTime: long
+  }
+  
+  class DatabaseStatus {
+    -connected: boolean
+    -health: String
+    -activeConnections: int
+  }
+}
+
+package bot.facade.service {
+  interface ModuleService {
+    +getAllModules(): List<ModuleDTO>
+    +getModule(String name): ModuleDTO
+    +enableModule(String name): void
+    +disableModule(String name): void
+  }
+  
+  class ModuleServiceImpl {
+    -moduleManager: ModuleManager
+    +getAllModules(): List<ModuleDTO>
+    +getModule(String name): ModuleDTO
+  }
+}
+
+' Implementaciones
+BotFacadeImpl ..|> BotFacade
+ModuleServiceImpl ..|> ModuleService
+
+' Controladores y sus dependencias
+BotRestController --> BotFacade
+BotRestController --> ModuleService
+
+' DTOs y sus relaciones
+BotIntegracionesDTO *-- JdaStatus
+BotIntegracionesDTO *-- AiApiStatus  
+BotIntegracionesDTO *-- DatabaseStatus
+
+@enduml

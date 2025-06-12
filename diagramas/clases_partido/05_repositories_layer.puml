@@ -1,0 +1,104 @@
+@startuml Repositories_Layer
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #ffe8e8
+skinparam abstractBackgroundColor #fff3cd
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Repositories Layer - Data Access
+
+' Clases externas
+class Connection
+class Logger
+
+package bot.repositories {
+  interface Repository {
+    +save(T entity): T
+    +findById(ID id): Optional<T>
+    +findAll(): List<T>
+    +delete(ID id): void
+    +update(T entity): T
+  }
+  
+  interface UsuarioRepository {
+    +findByDiscordId(String discordId): Optional<Usuario>
+    +findByGuildId(String guildId): List<Usuario>
+    +saveUsuario(Usuario usuario): Usuario
+    +updateExperience(String userId, int exp): void
+  }
+  
+  interface PenalizacionRepository {
+    +findByUsuarioId(String usuarioId): List<Penalizacion>
+    +findByTipo(TipoPenalizacion tipo): List<Penalizacion>
+    +savePenalizacion(Penalizacion pen): Penalizacion
+    +findActiveByUserId(String userId): List<Penalizacion>
+  }
+  
+  interface ExperienciaRepository {
+    +findByUsuarioId(String usuarioId): Optional<Experiencia>
+    +updateExperience(String usuarioId, int newExp): void
+    +getRankingByGuild(String guildId): List<Experiencia>
+    +saveExperiencia(Experiencia exp): Experiencia
+  }
+}
+
+package bot.repositories.impl {
+  abstract class AbstractRepository {
+    #connection: Connection
+    #logger: Logger
+    #executeQuery(String sql, Object... params): ResultSet
+    #executeUpdate(String sql, Object... params): int
+    #mapResultSet(ResultSet rs): T
+    #validateConnection(): void
+  }
+  
+  class UsuarioRepositoryImpl {
+    +findByDiscordId(String discordId): Optional<Usuario>
+    +findByGuildId(String guildId): List<Usuario>
+    +saveUsuario(Usuario usuario): Usuario
+    -mapUsuarioFromResultSet(ResultSet rs): Usuario
+  }
+  
+  class PenalizacionRepositoryImpl {
+    +findByUsuarioId(String usuarioId): List<Penalizacion>
+    +findByTipo(TipoPenalizacion tipo): List<Penalizacion>
+    +savePenalizacion(Penalizacion pen): Penalizacion
+    -mapPenalizacionFromResultSet(ResultSet rs): Penalizacion
+  }
+  
+  class ExperienciaRepositoryImpl {
+    +findByUsuarioId(String usuarioId): Optional<Experiencia>
+    +updateExperience(String usuarioId, int newExp): void
+    +getRankingByGuild(String guildId): List<Experiencia>
+    -mapExperienciaFromResultSet(ResultSet rs): Experiencia
+  }
+}
+
+' Relaciones de herencia/implementación
+AbstractRepository <|-- UsuarioRepositoryImpl
+AbstractRepository <|-- PenalizacionRepositoryImpl
+AbstractRepository <|-- ExperienciaRepositoryImpl
+
+UsuarioRepositoryImpl ..|> UsuarioRepository
+PenalizacionRepositoryImpl ..|> PenalizacionRepository
+ExperienciaRepositoryImpl ..|> ExperienciaRepository
+
+UsuarioRepository --|> Repository
+PenalizacionRepository --|> Repository
+ExperienciaRepository --|> Repository
+
+' Dependencias externas
+AbstractRepository --> Connection
+AbstractRepository --> Logger
+
+@enduml

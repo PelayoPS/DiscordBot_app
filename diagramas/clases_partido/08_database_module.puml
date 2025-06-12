@@ -1,0 +1,113 @@
+@startuml Database_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Database Module - Data Persistence
+
+' Clases externas
+class Connection
+class Logger
+class Properties
+
+package bot.db {
+  class DatabaseManager {
+    -connection: Connection
+    -configService: ConfigService
+    -logger: Logger
+    -connectionPool: ConnectionPool
+    -isConnected: boolean
+    +initialize(): void
+    +connect(): Connection
+    +disconnect(): void
+    +executeQuery(String sql, Object... params): ResultSet
+    +executeUpdate(String sql, Object... params): int
+    +executeBatch(List<String> queries): int[]
+    +getConnection(): Connection
+    +isHealthy(): boolean
+    +createTables(): void
+    +migrateTables(): void
+    +backup(): void
+    +restore(String backupFile): void
+    +getStatistics(): DatabaseStats
+  }
+  
+  class ConnectionPool {
+    -maxConnections: int
+    -activeConnections: int
+    -availableConnections: Queue<Connection>
+    -usedConnections: Set<Connection>
+    +getConnection(): Connection
+    +releaseConnection(Connection conn): void
+    +closeAllConnections(): void
+    +getActiveConnectionCount(): int
+    +getAvailableConnectionCount(): int
+  }
+  
+  class DatabaseStats {
+    -totalQueries: long
+    -successfulQueries: long
+    -failedQueries: long
+    -averageQueryTime: double
+    -connectionPoolSize: int
+    +getTotalQueries(): long
+    +getSuccessfulQueries(): long
+    +getFailedQueries(): long
+    +getAverageQueryTime(): double
+    +getConnectionPoolSize(): int
+    +getSuccessRate(): double
+  }
+  
+  class QueryBuilder {
+    -query: StringBuilder
+    -parameters: List<Object>
+    +select(String... columns): QueryBuilder
+    +from(String table): QueryBuilder
+    +where(String condition): QueryBuilder
+    +join(String table, String condition): QueryBuilder
+    +orderBy(String column): QueryBuilder
+    +limit(int count): QueryBuilder
+    +build(): String
+    +getParameters(): List<Object>
+  }
+  
+  class Migration {
+    -version: String
+    -description: String
+    -sqlScript: String
+    +getVersion(): String
+    +getDescription(): String
+    +execute(Connection conn): void
+    +rollback(Connection conn): void
+  }
+}
+
+' Relaciones internas
+DatabaseManager *-- ConnectionPool : composición
+DatabaseManager --> DatabaseStats : creates
+DatabaseManager o-- Logger : agregación
+DatabaseManager ..> QueryBuilder : uses
+DatabaseManager ..> Migration : uses
+
+ConnectionPool o-- Connection : manages
+QueryBuilder --> Connection : builds queries for
+
+' Dependencias externas
+DatabaseManager --> Connection
+ConnectionPool --> Connection
+
+note top of DatabaseManager : "Gestor principal de\nla base de datos"
+note right of ConnectionPool : "Pool de conexiones\npara optimizar rendimiento"
+note bottom of QueryBuilder : "Constructor de consultas\nSQL de forma fluida"
+
+@enduml

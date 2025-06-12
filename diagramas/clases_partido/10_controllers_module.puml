@@ -1,0 +1,120 @@
+@startuml Controllers_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Controllers Module - Command Execution Logic
+
+' Clases externas
+class SlashCommandInteractionEvent
+class User
+class Guild
+class Role
+
+package bot.controller {
+  class AdminController {
+    -roleService: RoleService
+    -logger: Logger
+    +createRole(Guild guild, String name, String color): Role
+    +deleteRole(Guild guild, String roleId): void
+    +assignRole(User user, Role role): void
+    +removeRole(User user, Role role): void
+    +listRoles(Guild guild): List<Role>
+    +updateRolePermissions(Role role, Permissions perms): void
+  }
+  
+  class UserController {
+    -userService: UserService
+    -aiChatService: AIChatService
+    -experienciaService: ExperienciaService
+    -logger: Logger
+    +getUserProfile(String userId): UserProfile
+    +updateUserSettings(String userId, UserSettings settings): void
+    +getAvatar(String userId): String
+    +processAIChat(String message, String userId): String
+    +getUserExperience(String userId): ExperienceInfo
+    +getUserRanking(String guildId): List<UserRank>
+  }
+  
+  class ModerationController {
+    -penalizacionService: PenalizacionService
+    -moderationService: ModerationService
+    -logger: Logger
+    +banUser(String userId, String reason, String moderatorId): void
+    +kickUser(String userId, String reason, String moderatorId): void
+    +muteUser(String userId, Duration duration, String reason): void
+    +warnUser(String userId, String reason, String moderatorId): void
+    +timeoutUser(String userId, Duration duration, String reason): void
+    +getUserHistory(String userId): List<Penalizacion>
+    +purgeMessages(String channelId, int count): int
+  }
+  
+  class UserProfile {
+    -userId: String
+    -username: String
+    -avatarUrl: String
+    -joinDate: Instant
+    -experience: int
+    -level: int
+    -rank: int
+  }
+  
+  class UserSettings {
+    -notifications: boolean
+    -language: String
+    -timezone: String
+    -aiChatEnabled: boolean
+  }
+  
+  class ExperienceInfo {
+    -currentExp: int
+    -level: int
+    -expToNextLevel: int
+    -totalExp: int
+    -rank: int
+  }
+  
+  class UserRank {
+    -userId: String
+    -username: String
+    -level: int
+    -experience: int
+    -position: int
+  }
+}
+
+' Relaciones con servicios
+AdminController --> RoleService : uses
+UserController --> UserService : uses
+UserController --> AIChatService : uses
+UserController --> ExperienciaService : uses
+ModerationController --> PenalizacionService : uses
+ModerationController --> ModerationService : uses
+
+' DTOs de controladores
+UserController --> UserProfile : creates
+UserController --> UserSettings : processes
+UserController --> ExperienceInfo : creates
+UserController --> UserRank : creates
+
+' Dependencias externas
+AdminController ..> Guild : works with
+AdminController ..> Role : manages
+UserController ..> User : manages
+ModerationController ..> User : moderates
+
+note top of AdminController : "Gestiona operaciones\nadministrativas del servidor"
+note right of UserController : "Maneja funcionalidades\nde usuarios finales"
+note bottom of ModerationController : "Controla acciones de\nmoderación del servidor"
+
+@enduml

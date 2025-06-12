@@ -1,0 +1,149 @@
+@startuml Commands_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam abstractBackgroundColor #fff3cd
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Commands Module - Command Management System
+
+interface Command {
+  +execute(event): void
+  +getName(): String
+}
+
+package bot.commands {
+  class ModuleManager {
+    -adminCommands: AdminCommands
+    -modCommands: ModCommands
+    -userCommands: UserCommands
+    +loadModules(): void
+    +registerCommands(): void
+  }
+}
+
+package bot.modules {
+  abstract class CommandManager {
+    #commands: List<Command>
+    +addCommand(Command cmd): void
+    +removeCommand(String name): void
+    +getCommands(): List<Command>
+  }
+  
+  class AdminCommands {
+    +registerAdminCommands(): void
+  }
+  
+  class ModCommands {
+    +registerModerationCommands(): void
+  }
+  
+  class UserCommands {
+    +registerUserCommands(): void
+  }
+}
+
+package bot.commands.admin {
+  class CreateRole {
+    +execute(event): void
+    +getName(): String
+  }
+  
+  class DeleteRole {
+    +execute(event): void
+    +getName(): String
+  }
+}
+
+package bot.commands.moderation {
+  class Ban {
+    +execute(event): void
+  }
+  
+  class Kick {
+    +execute(event): void
+  }
+  
+  class Mute {
+    +execute(event): void
+  }
+  
+  class WarnCommand {
+    +execute(event): void
+  }
+  
+  class TimeoutCommand {
+    +execute(event): void
+  }
+  
+  class PurgeCommand {
+    +execute(event): void
+  }
+  
+  class HistoryCommand {
+    +execute(event): void
+  }
+}
+
+package bot.commands.user {
+  class Avatar {
+    +execute(event): void
+  }
+  
+  class AIChat {
+    +execute(event): void
+  }
+  
+  class Exp {
+    +execute(event): void
+  }
+}
+
+' Relaciones de herencia
+CommandManager <|-- AdminCommands
+CommandManager <|-- ModCommands
+CommandManager <|-- UserCommands
+
+' Implementaciones de Command
+CreateRole ..|> Command
+DeleteRole ..|> Command
+Ban ..|> Command
+Kick ..|> Command
+Mute ..|> Command
+WarnCommand ..|> Command
+TimeoutCommand ..|> Command
+PurgeCommand ..|> Command
+HistoryCommand ..|> Command
+Avatar ..|> Command
+AIChat ..|> Command
+Exp ..|> Command
+
+' Composición del ModuleManager
+ModuleManager o-- AdminCommands
+ModuleManager o-- ModCommands
+ModuleManager o-- UserCommands
+
+' Agregación de comandos
+AdminCommands o-- CreateRole
+AdminCommands o-- DeleteRole
+ModCommands o-- Ban
+ModCommands o-- Kick
+ModCommands o-- Mute
+ModCommands o-- WarnCommand
+ModCommands o-- TimeoutCommand
+ModCommands o-- PurgeCommand
+ModCommands o-- HistoryCommand
+UserCommands o-- Avatar
+UserCommands o-- AIChat
+UserCommands o-- Exp
+
+@enduml

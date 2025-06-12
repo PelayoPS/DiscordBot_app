@@ -1,0 +1,97 @@
+@startuml Listeners_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #fff4e6
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Listeners Module - Event Handling
+
+' Clases externas
+class EventListener
+class MessageReceivedEvent
+class ThreadChannel
+class User
+
+interface EventHandler {
+  +handle(Event event): void
+  +getEventType(): Class<?>
+}
+
+package bot.listeners {
+  class MessageExperienceListener {
+    -usuarioService: UsuarioService
+    -configService: ConfigService
+    -logger: Logger
+    -lastMessageTime: Map<String, Instant>
+    -cooldownDuration: Duration
+    +onMessageReceived(MessageReceivedEvent event): void
+    +calculateExperience(String message): int
+    +isOnCooldown(String userId): boolean
+    +updateLastMessageTime(String userId): void
+    -validateMessage(String message): boolean
+    -isBot(User user): boolean
+  }
+}
+
+package bot.listeners.ai {
+  class AIChatThreadListener {
+    -aiChatService: AIChatService
+    -logger: Logger
+    -activeThreads: Set<String>
+    +onThreadCreated(ThreadChannel thread): void
+    +onThreadMessage(MessageReceivedEvent event): void
+    +onThreadDeleted(String threadId): void
+    +isAIChatThread(ThreadChannel thread): boolean
+    +processAIMessage(String message, String threadId): void
+    +closeInactiveThreads(): void
+  }
+  
+  class AIChatListener {
+    -userController: UserController
+    -aiChatService: AIChatService
+    -logger: Logger
+    -aiChannels: Set<String>
+    +onMessageReceived(MessageReceivedEvent event): void
+    +processAIRequest(String message, String userId): void
+    +isAIChannel(String channelId): boolean
+    +createAIThread(String channelId, String userId): ThreadChannel
+    -shouldProcessMessage(MessageReceivedEvent event): boolean
+    -extractPrompt(String message): String
+  }
+}
+
+' Implementaciones de EventHandler
+MessageExperienceListener ..|> EventHandler
+AIChatThreadListener ..|> EventHandler
+AIChatListener ..|> EventHandler
+
+' Dependencias con servicios
+MessageExperienceListener --> UsuarioService
+MessageExperienceListener --> ConfigService
+AIChatThreadListener --> AIChatService
+AIChatListener --> UserController
+AIChatListener --> AIChatService
+
+' Relaciones con eventos externos
+MessageExperienceListener ..> MessageReceivedEvent : handles
+AIChatThreadListener ..> ThreadChannel : monitors
+AIChatListener ..> MessageReceivedEvent : handles
+
+' Dependencias entre listeners
+AIChatListener --> AIChatThreadListener : creates threads for
+
+note top of MessageExperienceListener : "Otorga experiencia a usuarios\npor enviar mensajes"
+note right of AIChatThreadListener : "Gestiona hilos de chat\ncon inteligencia artificial"
+note bottom of AIChatListener : "Procesa mensajes dirigidos\nal sistema de IA"
+
+@enduml

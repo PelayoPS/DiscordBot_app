@@ -1,0 +1,124 @@
+@startuml Utils_Logging_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Utils & Logging Module - Support Utilities
+
+' Clases externas
+class Logger
+class Instant
+class Duration
+
+package bot.utils {
+  class Utils {
+    +formatTime(Instant time): String
+    +formatDuration(Duration duration): String
+    +parseTime(String timeStr): Instant
+    +validateDiscordId(String id): boolean
+    +generateRandomString(int length): String
+    +calculateHash(String input): String
+    +sanitizeInput(String input): String
+    +isValidUrl(String url): boolean
+    +formatFileSize(long bytes): String
+    +getTimeAgo(Instant time): String
+    +createEmbed(String title, String description): MessageEmbed
+    +parsePermissions(String permStr): Set<Permission>
+    +formatNumber(long number): String
+  }
+  
+  class TimeUtils {
+    +now(): Instant
+    +parseTimeString(String timeStr): Duration
+    +formatDuration(Duration duration): String
+    +isExpired(Instant expiry): boolean
+    +addDuration(Instant time, Duration duration): Instant
+    +getDurationBetween(Instant start, Instant end): Duration
+  }
+  
+  class ValidationUtils {
+    +isValidDiscordId(String id): boolean
+    +isValidEmail(String email): boolean
+    +sanitizeString(String input): String
+    +validateLength(String input, int min, int max): boolean
+    +isAlphanumeric(String input): boolean
+    +containsProfanity(String message): boolean
+  }
+  
+  class FormatUtils {
+    +formatUserMention(String userId): String
+    +formatChannelMention(String channelId): String
+    +formatRoleMention(String roleId): String
+    +formatCode(String code): String
+    +formatCodeBlock(String code, String language): String
+    +truncate(String text, int maxLength): String
+    +capitalize(String text): String
+  }
+}
+
+package bot.log {
+  class LoggingManager {
+    -logger: Logger
+    -logLevel: LogLevel
+    -logFile: String
+    -maxFileSize: long
+    -rotateFiles: boolean
+    +initialize(): void
+    +setLogLevel(LogLevel level): void
+    +info(String message): void
+    +debug(String message): void
+    +warn(String message): void
+    +error(String message, Throwable cause): void
+    +logCommand(String command, String user): void
+    +logSystemEvent(String event): void
+    +rotateLogFiles(): void
+    +getLogHistory(int lines): List<String>
+  }
+  
+  enum LogLevel {
+    TRACE
+    DEBUG
+    INFO
+    WARN
+    ERROR
+    +getLevel(): int
+    +shouldLog(LogLevel currentLevel): boolean
+  }
+  
+  class LogFormatter {
+    +formatMessage(LogLevel level, String message): String
+    +formatException(Throwable exception): String
+    +formatTimestamp(Instant time): String
+    +addContext(String key, String value): LogFormatter
+  }
+}
+
+' Relaciones internas
+LoggingManager --> Logger
+LoggingManager --> LogLevel
+LoggingManager --> LogFormatter
+LogFormatter --> LogLevel
+
+' Utilidades tiempo
+TimeUtils --> Instant
+TimeUtils --> Duration
+
+' Dependencias externas
+Utils --> Instant
+Utils --> Duration
+
+note top of Utils : "Utilidades generales\npara el bot"
+note right of LoggingManager : "Sistema centralizado\nde logging"
+note bottom of ValidationUtils : "Validaciones de entrada\ny sanitización"
+
+@enduml

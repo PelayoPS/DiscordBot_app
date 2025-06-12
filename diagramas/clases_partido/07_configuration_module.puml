@@ -1,0 +1,106 @@
+@startuml Configuration_Module
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #e8f4fd
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Configuration Module - Application Settings
+
+' Clases externas
+class Properties
+class Logger
+
+package bot.config {
+  interface ConfigService {
+    +getProperty(String key): String
+    +getProperty(String key, String defaultValue): String
+    +setProperty(String key, String value): void
+    +getBooleanProperty(String key): boolean
+    +getIntProperty(String key): int
+    +reload(): void
+  }
+  
+  class ConfigManager {
+    -properties: Properties
+    -configFile: String
+    +loadConfig(): void
+    +saveConfig(): void
+    +getConfig(String key): String
+    +setConfig(String key, String value): void
+  }
+  
+  class BotConfig {
+    -token: String
+    -prefix: String
+    -ownerId: String
+    -debugMode: boolean
+    -maxConnections: int
+    +getToken(): String
+    +getPrefix(): String
+    +getOwnerId(): String
+    +isDebugMode(): boolean
+    +getMaxConnections(): int
+    +validate(): boolean
+  }
+  
+  class BotConfigSpring {
+    -serverPort: int
+    -enableWeb: boolean
+    -databaseUrl: String
+    -aiApiKey: String
+    +getServerPort(): int
+    +isWebEnabled(): boolean
+    +getDatabaseUrl(): String
+    +getAiApiKey(): String
+  }
+  
+  class FileConfigService {
+    -configFile: String
+    -properties: Properties
+    -logger: Logger
+    +loadFromFile(): void
+    +saveToFile(): void
+    +getProperty(String key): String
+    +setProperty(String key, String value): void
+    +reload(): void
+  }
+  
+  class WebConfig {
+    -corsOrigins: List<String>
+    -enableSecurity: boolean
+    -sessionTimeout: int
+    +getCorsOrigins(): List<String>
+    +isSecurityEnabled(): boolean
+    +getSessionTimeout(): int
+    +configureCors(): CorsConfiguration
+  }
+}
+
+' Implementaciones
+FileConfigService ..|> ConfigService
+
+' Composición y agregación
+ConfigManager o-- Properties
+FileConfigService o-- Properties
+FileConfigService --> Logger
+
+' Dependencias
+BotConfig ..> ConfigService : uses
+BotConfigSpring ..> ConfigService : uses
+WebConfig ..> ConfigService : uses
+
+note top of ConfigService : "Interfaz para acceso\na configuraciones"
+note right of BotConfig : "Configuración específica\ndel bot de Discord"
+note bottom of WebConfig : "Configuración para\nel módulo web/REST"
+
+@enduml

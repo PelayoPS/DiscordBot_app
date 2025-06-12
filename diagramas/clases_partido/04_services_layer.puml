@@ -1,0 +1,132 @@
+@startuml Services_Layer
+scale 0.8
+skinparam backgroundColor white
+skinparam classBackgroundColor #f8f9fa
+skinparam classBorderColor #6c757d
+skinparam classFontColor #212529
+skinparam interfaceFontColor #212529
+skinparam interfaceBackgroundColor #e8f5e8
+skinparam abstractBackgroundColor #fff3cd
+skinparam noteFontColor #212529
+skinparam packageTitleColor #495057
+skinparam packageTitleFontColor #495057
+skinparam defaultFontColor #212529
+skinparam ArrowColor #007bff
+skinparam shadowing true
+skinparam linetype ortho
+
+title Services Layer - Business Logic
+
+package bot.services {
+  interface UsuarioService {
+    +getUsuario(String id): Usuario
+    +createUsuario(Usuario usuario): Usuario
+    +updateUsuario(Usuario usuario): Usuario
+  }
+  
+  interface UserService {
+    +getUserInfo(String id): UserInfo
+    +updateUserSettings(String id, Settings settings): void
+  }
+  
+  interface RoleService {
+    +createRole(String guildId, RoleData data): Role
+    +deleteRole(String roleId): void
+    +assignRole(String userId, String roleId): void
+  }
+  
+  interface PenalizacionService {
+    +createPenalizacion(Penalizacion pen): Penalizacion
+    +getPenalizaciones(String userId): List<Penalizacion>
+    +updatePenalizacion(Penalizacion pen): Penalizacion
+  }
+  
+  interface ModerationService {
+    +banUser(String userId, String reason): void
+    +kickUser(String userId, String reason): void
+    +muteUser(String userId, Duration duration): void
+  }
+  
+  interface ExperienciaService {
+    +addExperience(String userId, int amount): void
+    +getExperience(String userId): int
+    +getLevelFromExp(int exp): int
+  }
+  
+  interface AIChatService {
+    +processMessage(String message): String
+    +createThread(String channelId): ThreadChannel
+    +handleAIResponse(String prompt): String
+  }
+  
+  abstract class Service {
+    #logger: Logger
+    +logOperation(String operation): void
+  }
+}
+
+package bot.services.impl {
+  abstract class AbstractService {
+    #logger: Logger
+    #validateInput(Object input): void
+    #handleException(Exception e): void
+  }
+  
+  class UsuarioServiceImpl {
+    -usuarioRepository: UsuarioRepository
+    +getUsuario(String id): Usuario
+    +createUsuario(Usuario usuario): Usuario
+  }
+  
+  class UserServiceImpl {
+    -usuarioRepository: UsuarioRepository
+    +getUserInfo(String id): UserInfo
+  }
+  
+  class RoleServiceImpl {
+    -usuarioRepository: UsuarioRepository
+    +createRole(String guildId, RoleData data): Role
+  }
+  
+  class PenalizacionServiceImpl {
+    -penalizacionRepository: PenalizacionRepository
+    +createPenalizacion(Penalizacion pen): Penalizacion
+  }
+  
+  class ModerationServiceImpl {
+    -penalizacionService: PenalizacionService
+    +banUser(String userId, String reason): void
+  }
+  
+  class ExperienciaServiceImpl {
+    -experienciaRepository: ExperienciaRepository
+    +addExperience(String userId, int amount): void
+  }
+  
+  class AIChatServiceImpl {
+    -httpClient: HttpClient
+    +processMessage(String message): String
+  }
+}
+
+' Relaciones de herencia/implementación
+AbstractService <|-- UsuarioServiceImpl
+AbstractService <|-- UserServiceImpl
+AbstractService <|-- RoleServiceImpl
+AbstractService <|-- PenalizacionServiceImpl
+AbstractService <|-- ModerationServiceImpl
+AbstractService <|-- ExperienciaServiceImpl
+AbstractService <|-- AIChatServiceImpl
+
+UsuarioServiceImpl ..|> UsuarioService
+UserServiceImpl ..|> UserService
+RoleServiceImpl ..|> RoleService
+PenalizacionServiceImpl ..|> PenalizacionService
+ModerationServiceImpl ..|> ModerationService
+ExperienciaServiceImpl ..|> ExperienciaService
+AIChatServiceImpl ..|> AIChatService
+
+' Dependencias entre servicios
+ModerationServiceImpl --> PenalizacionService
+
+@enduml
